@@ -22,11 +22,11 @@ todos los usuarios.
 
 ## Manual de identidad
 
-
+[Manual_Identidad_TechCupV2.pptx](public/Manual_Identidad_TechCupV2.pptx)
 
 ## Mockups
 
-
+https://www.figma.com/proto/vnZ5KN4CDMi8ohz692xph6/TechCup?node-id=2-2302&t=qMDPiaCrZVJphzNy-1
 
 ## Módulos de la aplicación
 
