@@ -1,16 +1,32 @@
-# React + Vite
+Cristian Adrian Ducuara Quiñonez
+Cristian Ronaldo Guerrero Buitrago
+Javier Mauricio Romero Deaquiz
+Juan Esteban Tellez Valencia
+Juan Sebastian Gonzalez Aranguren
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Contexto del proyecto 
 
-Currently, two official plugins are available:
+- Esta aplicación surge para solucionar los problemas de organización del torneo relámpago de fútbol organizado por la 
+Decanatura de Ingeniería de Sistemas de la Escuela Colombiana de Ingeniería. 
+- Actualmente, la gestión del torneo se realiza de manera manual mediante mensajes en WhatsApp, formularios aislados y 
+hojas de cálculo, lo que genera desorden en la información y dificulta el acceso a datos importantes para los 
+participantes.
+- La plataforma propuesta busca centralizar la información del torneo en un solo sistema, permitiendo gestionar de 
+manera organizada aspectos como la inscripción de jugadores, la creación de equipos, el registro de partidos, la tabla 
+de posiciones y las llaves eliminatorias, brindando así mayor claridad y facilidad de acceso a la información para 
+todos los usuarios.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Logotipo
 
-## React Compiler
+![LogoTechCup.png](src/assets/LogoTechCup.png)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Manual de identidad
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+## Mockups
+
+
+
+## Módulos de la aplicación
+
