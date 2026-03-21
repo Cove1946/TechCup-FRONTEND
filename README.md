@@ -18,7 +18,7 @@ todos los usuarios.
 
 ## Logotipo
 
-![LogoTechCup.png](src/assets/LogoTechCup.png)
+![!LogoTechCup.png](src/assets/LogoTechCup.png)
 
 ## Manual de identidad
 
@@ -26,7 +26,6 @@ todos los usuarios.
 
 ## Mockups
 
-https://www.figma.com/proto/vnZ5KN4CDMi8ohz692xph6/TechCup?node-id=2-2302&t=qMDPiaCrZVJphzNy-1
-
+https://www.figma.com/design/vnZ5KN4CDMi8ohz692xph6/TechCup?node-id=0-1&t=7Wmyw3SoKcW07qkJ-1
 ## Módulos de la aplicación
 
