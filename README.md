@@ -1,8 +1,10 @@
-Cristian Adrian Ducuara Quiñonez
-Cristian Ronaldo Guerrero Buitrago
-Javier Mauricio Romero Deaquiz
-Juan Esteban Tellez Valencia
-Juan Sebastian Gonzalez Aranguren
+## Integrantes
+
+- Cristian Adrian Ducuara Quiñonez
+- Cristian Ronaldo Guerrero Buitrago
+- Javier Mauricio Romero Deaquiz
+- Juan Esteban Tellez Valencia
+- Juan Sebastian Gonzalez Aranguren
 
 ## Contexto del proyecto 
 
