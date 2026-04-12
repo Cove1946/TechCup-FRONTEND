@@ -20,7 +20,7 @@ todos los usuarios.
 
 ## Logotipo
 
-![!LogoTechCup.png](src/assets/LogoTechCup.png)
+![!LogoTechCup.png](src/assets/Logo.png)
 
 ## Manual de identidad
 

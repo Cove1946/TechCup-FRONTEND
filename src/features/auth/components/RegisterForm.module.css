@@ -1,0 +1,15 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+  margin-top: var(--spacing-xl);
+}
+
+.error {
+  padding: var(--spacing-md);
+  background: #FEE2E2;
+  color: #DC2626;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  text-align: center;
+}
