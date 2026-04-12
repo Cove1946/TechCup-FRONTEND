@@ -1,5 +1,5 @@
 import React from 'react';
-import logoImage from '@assets/images/logoText.png';
+import logoImage from '@assets/Logo.png';
 import styles from './Logo.module.css';
 
 export interface LogoProps {
