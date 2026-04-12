@@ -1,0 +1,26 @@
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  max-width: 200px;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.15));
+}
+
+.logo.small .image {
+  max-width: 50px;
+}
+
+.text {
+  font-weight: 800;
+  font-size: 24px;
+  color: var(--text-primary);
+}
+
+.logo.small .text {
+  font-size: 18px;
+}

@@ -1,0 +1,91 @@
+.teams {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.teamsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.teamCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.teamHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.teamName {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.teamCaptain {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.teamStats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: var(--spacing-lg);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--border-light);
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  text-align: center;
+}
+
+.statLabel {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.statValue {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.position {
+  color: #D97706;
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-lg);
+  }
+
+  .teamStats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
