@@ -5,10 +5,10 @@
 
 .main {
   width: 100%;
-  max-width: 1600px;
   margin: 0 auto;
-  padding: var(--spacing-2xl);
+  padding: 0;
   min-height: calc(100vh - var(--navbar-height));
+  background: #f3f4f6;
 }
 
 @media (max-width: 1200px) {
