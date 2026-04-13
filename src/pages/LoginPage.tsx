@@ -1,25 +1,28 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import logoImage from '@assets/Logo.png';
 import { LoginForm } from '@features/auth';
-import { Logo } from '@components/common';
 import styles from './LoginPage.module.css';
 
 export const LoginPage: React.FC = () => {
   return (
-    <div className={styles.container}>
-      <div className={styles.box}>
-        <Logo variant="default" />
-        <h1 className={styles.title}>Iniciar Sesión</h1>
-        <p className={styles.subtitle}>Ingresa a tu cuenta de TechCup</p>
+    <div className={styles.page}>
+      <Link to="/" className={styles.backLink}>
+        ← Volver al inicio
+      </Link>
 
-        <LoginForm />
+      <div className={styles.split}>
+        <div className={styles.leftPanel}>
+          <img src={logoImage} alt="TechCup Fútbol" className={styles.logo} />
+          <h2 className={styles.welcome}>Bienvenido de regreso</h2>
+          <p className={styles.tagline}>
+            Gestiona tu equipo, revisa el calendario y sigue el torneo desde un solo lugar.
+          </p>
+        </div>
 
-        <p className={styles.footer}>
-          ¿No tienes cuenta?{' '}
-          <Link to="/register" className={styles.link}>
-            Regístrate aquí
-          </Link>
-        </p>
+        <div className={styles.rightPanel}>
+          <LoginForm />
+        </div>
       </div>
     </div>
   );

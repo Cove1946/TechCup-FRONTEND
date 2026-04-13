@@ -1,0 +1,70 @@
+.page { padding: 32px 40px 60px; max-width: 1100px; margin: 0 auto; }
+.header { margin-bottom: 28px; }
+.title { font-size: 28px; font-weight: 800; color: #111; margin-bottom: 6px; }
+.activeBadge { display: flex; align-items: center; gap: 6px; font-size: 14px; color: #333; }
+.activeDot { width: 8px; height: 8px; border-radius: 50%; background: #16a34a; flex-shrink: 0; }
+
+.layout { display: grid; grid-template-columns: 1fr 280px; gap: 20px; align-items: start; }
+
+.main { display: flex; flex-direction: column; gap: 16px; }
+
+/* Stepper */
+.stepperCard { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 28px 32px; }
+.stepper { display: flex; align-items: center; justify-content: center; }
+
+.stepItem { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.stepCircle {
+  width: 36px; height: 36px; border-radius: 50%; background: #e5e7eb; color: #aaa;
+  display: flex; align-items: center; justify-content: center; font-size: 14px;
+}
+.stepDone { background: #16a34a; color: #fff; }
+.stepActive { background: #16a34a; color: #fff; }
+.stepRejected { background: #ef4444; color: #fff; }
+.stepLabel { font-size: 12px; color: #888; white-space: nowrap; }
+.stepLabelActive { color: #16a34a; font-weight: 600; }
+
+.stepLine { width: 80px; height: 2px; background: #e5e7eb; margin-bottom: 22px; }
+.stepLineDone { background: #16a34a; }
+.stepLineRed { background: #ef4444; }
+
+/* Info card */
+.infoCard { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 20px 24px; }
+.infoRow { display: flex; gap: 48px; }
+.infoKey { font-size: 12px; color: #888; margin-bottom: 4px; }
+.infoVal { font-size: 15px; font-weight: 700; color: #111; }
+
+/* Upload */
+.uploadCard {
+  background: #fff; border: 2px dashed #d1d5db; border-radius: 14px;
+  padding: 40px 24px; display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.uploadIcon {
+  width: 56px; height: 56px; border-radius: 50%; background: #f3f4f6;
+  display: flex; align-items: center; justify-content: center; font-size: 22px; color: #555;
+  margin-bottom: 8px;
+}
+.uploadTitle { font-size: 16px; font-weight: 700; color: #111; text-align: center; }
+.uploadSub { font-size: 14px; color: #111; text-align: center; }
+.uploadHint { font-size: 12px; color: #888; }
+.fileName { font-size: 13px; color: #16a34a; }
+.selectBtn { border: 1.5px solid #d1d5db; border-radius: 8px; background: #fff; padding: 8px 18px; font-size: 14px; cursor: pointer; color: #333; }
+.selectBtn:hover { border-color: #9ca3af; }
+.hiddenInput { display: none; }
+.submitBtn { padding: 10px 24px; background: #16a34a; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.submitBtn:hover:not(:disabled) { background: #15803d; }
+.submitDisabled { background: #9ca3af !important; cursor: not-allowed !important; }
+
+/* Sidebar */
+.sidebar { display: flex; flex-direction: column; gap: 10px; }
+
+.timelineItem {
+  background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+  padding: 14px 16px; display: flex; align-items: flex-start; gap: 10px;
+}
+.timelineDot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+.timelineLabel { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.timelineTime { font-size: 12px; color: #888; }
+
+.sideNote { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 12px 14px; font-size: 13px; color: #1e40af; display: flex; gap: 8px; }
+
+@media (max-width: 768px) { .layout { grid-template-columns: 1fr; } .page { padding: 20px 16px; } }

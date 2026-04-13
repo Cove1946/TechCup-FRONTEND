@@ -6,3 +6,7 @@ export { ProfilePage } from './ProfilePage';
 export { TeamsPage } from './TeamsPage';
 export { CalendarPage } from './CalendarPage';
 export { TournamentDetailPage } from './TournamentDetailPage';
+export { ResultadosPage } from './ResultadosPage';
+export { CreateTeamPage } from './CreateTeamPage';
+export { PaymentPage } from './PaymentPage';
+export { SearchPlayersPage } from './SearchPlayersPage';

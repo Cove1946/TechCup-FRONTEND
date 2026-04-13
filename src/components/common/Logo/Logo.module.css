@@ -18,7 +18,7 @@
 .text {
   font-weight: 800;
   font-size: 24px;
-  color: var(--text-primary);
+  color: #ffffff;
 }
 
 .logo.small .text {

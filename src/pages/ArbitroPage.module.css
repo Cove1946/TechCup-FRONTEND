@@ -1,0 +1,42 @@
+.page { padding: 32px 40px 60px; max-width: 1200px; margin: 0 auto; }
+
+.header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+.emoji { font-size: 32px; }
+.title { font-size: 28px; font-weight: 800; color: #111; margin-bottom: 4px; }
+.sub { font-size: 13px; color: #888; }
+
+.infoBanner {
+  background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px;
+  padding: 14px 18px; font-size: 14px; color: #1e40af;
+  display: flex; align-items: center; gap: 10px; margin-bottom: 28px;
+}
+.infoIcon { font-size: 16px; flex-shrink: 0; }
+
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+.card {
+  background: #fff; border: 1px solid #e5e7eb; border-radius: 14px;
+  padding: 24px 20px; display: flex; flex-direction: column; gap: 14px;
+}
+
+.badge {
+  display: inline-block; background: #ede9fe; color: #7c3aed;
+  border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 600;
+  align-self: flex-start;
+}
+
+.teams { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
+.team { font-size: 15px; font-weight: 700; color: #111; }
+.vs { font-size: 12px; color: #888; }
+
+.meta { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: #555; }
+
+.detailBtn {
+  width: 100%; padding: 12px; background: #16a34a; color: #fff;
+  border: none; border-radius: 8px; font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: background 0.15s;
+}
+.detailBtn:hover { background: #15803d; }
+
+@media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { .page { padding: 20px 16px; } }

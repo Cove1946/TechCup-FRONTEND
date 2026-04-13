@@ -1,78 +1,95 @@
-.profile {
-  max-width: 800px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xl);
+.page { padding: 32px 40px 60px; max-width: 1200px; margin: 0 auto; }
+.pageHeader { margin-bottom: 28px; }
+.title { font-size: 26px; font-weight: 800; color: #111; margin-bottom: 4px; }
+.subtitle { font-size: 13px; color: #888; }
+
+.grid { display: grid; grid-template-columns: 1fr 1.3fr; gap: 20px; align-items: start; }
+
+.leftCol { display: flex; flex-direction: column; gap: 16px; }
+.rightCol {}
+
+.card {
+  background: #fff; border: 1px solid #e5e7eb; border-radius: 14px;
+  padding: 22px; display: flex; flex-direction: column; gap: 0;
 }
 
-.title {
-  font-size: 32px;
-  font-weight: 800;
-  color: var(--text-primary);
+.cardTitle {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 15px; font-weight: 700; color: #111;
+  padding-bottom: 16px; border-bottom: 1px solid #f3f4f6; margin-bottom: 16px;
 }
 
-.avatarSection {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xl);
-  padding: var(--spacing-lg) 0;
+.section { margin-bottom: 20px; }
+.sectionLabel { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+
+.photoRow { display: flex; align-items: center; gap: 16px; }
+.photoCircle {
+  width: 64px; height: 64px; border-radius: 50%; border: 2px dashed #d1d5db;
+  background: #f9fafb; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; overflow: hidden; font-size: 22px;
 }
+.photoImg { width: 100%; height: 100%; object-fit: cover; }
+.photoAction { font-size: 13px; font-weight: 600; color: #111; margin-bottom: 2px; }
+.photoHint { font-size: 12px; color: #888; margin-bottom: 8px; }
+.fileBtn { border: 1px solid #d1d5db; border-radius: 7px; background: #fff; padding: 6px 12px; font-size: 12px; cursor: pointer; color: #444; }
+.fileBtn:hover { border-color: #16a34a; color: #16a34a; }
+.hiddenInput { display: none; }
 
-.avatarPlaceholder {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background: var(--color-primary);
-  color: var(--text-white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 48px;
-  font-weight: 800;
+.infoList { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
+.infoItem { display: flex; align-items: flex-start; gap: 10px; }
+.infoIco { font-size: 16px; margin-top: 2px; color: #16a34a; }
+.infoKey { font-size: 12px; color: #888; margin-bottom: 2px; }
+.infoVal { font-size: 14px; font-weight: 600; color: #111; }
+.infoNote { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #1e40af; }
+
+.teamRow {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0; border-bottom: 1px solid #f3f4f6;
 }
+.teamRow:last-child { border-bottom: none; }
+.teamName { font-size: 14px; font-weight: 700; color: #111; margin-bottom: 2px; }
+.teamSub { font-size: 12px; color: #888; }
+.btnSmallGreen { padding: 6px 14px; background: #16a34a; color: #fff; border: none; border-radius: 7px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.btnSmallOutline { padding: 6px 14px; background: #fff; color: #333; border: 1px solid #d1d5db; border-radius: 7px; font-size: 12px; cursor: pointer; }
 
-.avatarInfo h2 {
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: var(--spacing-xs);
+/* Deportiva */
+.field { margin-bottom: 22px; }
+.label { font-size: 13px; font-weight: 500; color: #333; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.posTag { background: #dcfce7; color: #16a34a; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; }
+.posTagGray { background: #f3f4f6; color: #888; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; }
+.req { color: #ef4444; }
+
+.posGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.posBtn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 12px; border: 1.5px solid #e5e7eb; border-radius: 10px;
+  background: #fff; font-size: 13px; font-weight: 500; color: #444;
+  cursor: pointer; transition: border-color 0.15s, color 0.15s, background 0.15s;
 }
+.posBtn:hover { border-color: #16a34a; color: #16a34a; }
+.posBtnSel { border-color: #16a34a !important; color: #16a34a !important; background: #f0fdf4 !important; font-weight: 700; }
 
-.avatarInfo p {
-  color: var(--text-secondary);
-  font-size: 16px;
+.dorsalWrap { display: flex; align-items: center; gap: 8px; border: 1.5px solid #d1d5db; border-radius: 10px; background: #f9fafb; padding: 0 14px; }
+.dorsalWrap:focus-within { border-color: #16a34a; background: #fff; }
+.dorsalIco { font-size: 14px; color: #9ca3af; flex-shrink: 0; }
+.dorsalInput { flex: 1; border: none; background: transparent; padding: 12px 0; font-size: 14px; color: #111; outline: none; }
+.hint { font-size: 12px; color: #888; margin-top: 4px; }
+
+.savedMsg { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 16px; }
+
+.actionRow { display: grid; grid-template-columns: 1fr 1.5fr; gap: 12px; margin-bottom: 16px; }
+.btnCancel { padding: 12px; background: #fff; color: #333; border: 1.5px solid #d1d5db; border-radius: 10px; font-size: 14px; cursor: pointer; }
+.btnSave { padding: 12px; background: #16a34a; color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.btnSave:hover { background: #15803d; }
+
+.btnLogout {
+  width: 100%; padding: 12px; background: #fff; color: #dc2626;
+  border: 1.5px solid #fecaca; border-radius: 10px; font-size: 14px; font-weight: 600;
+  cursor: pointer; margin-top: 8px; transition: background 0.15s;
 }
+.btnLogout:hover { background: #fef2f2; }
 
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xl);
-}
-
-.formTitle {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: var(--spacing-md);
-}
-
-.row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-lg);
-}
-
-.actions {
-  display: flex;
-  gap: var(--spacing-lg);
-  margin-top: var(--spacing-lg);
-}
-
-@media (max-width: 768px) {
-  .row {
-    grid-template-columns: 1fr;
-  }
-
-  .actions {
-    flex-direction: column;
-  }
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr; }
+  .page { padding: 20px 16px 40px; }
 }
