@@ -1,4 +1,6 @@
 .page { padding: 32px 40px 60px; max-width: 1200px; margin: 0 auto; }
+.backBtn { background: none; border: none; color: #6b7280; font-size: 14px; cursor: pointer; padding: 0; margin-bottom: 16px; display: flex; align-items: center; gap: 4px; font-family: inherit; }
+.backBtn:hover { color: #16a34a; }
 
 .header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
 .emoji { font-size: 32px; }

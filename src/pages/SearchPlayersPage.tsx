@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@components/layout';
 import styles from './SearchPlayersPage.module.css';
 
@@ -24,6 +25,7 @@ const PLAYERS: Player[] = [
 const SORT_OPTIONS = ['Posición', 'Nombre', 'Semestre', 'Edad'];
 
 export const SearchPlayersPage: React.FC = () => {
+  const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [posFilter, setPosFilter] = useState<Posicion[]>([]);
   const [semRange] = useState<[number, number]>([1, 10]);
@@ -70,6 +72,7 @@ export const SearchPlayersPage: React.FC = () => {
   return (
     <MainLayout>
       <div className={styles.page}>
+        <button className={styles.backBtn} onClick={() => navigate(-1)}>← Volver</button>
         {/* Header */}
         <div className={styles.header}>
           <div>

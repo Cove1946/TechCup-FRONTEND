@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@components/layout';
 import styles from './PaymentPage.module.css';
 
@@ -19,6 +20,7 @@ const TIMELINE = [
 ];
 
 export const PaymentPage: React.FC = () => {
+  const navigate = useNavigate();
   const fileRef = useRef<HTMLInputElement>(null);
   const [status] = useState<PayStatus>('revision');
   const [file, setFile] = useState<File | null>(null);
@@ -39,6 +41,7 @@ export const PaymentPage: React.FC = () => {
   return (
     <MainLayout>
       <div className={styles.page}>
+        <button className={styles.backBtn} onClick={() => navigate(-1)}>← Volver</button>
         <div className={styles.header}>
           <h1 className={styles.title}>Inscripción & Pago</h1>
           <p className={styles.activeBadge}>

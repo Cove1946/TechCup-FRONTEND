@@ -1,0 +1,51 @@
+.page { padding: 32px 40px 60px; max-width: 1200px; margin: 0 auto; }
+.backBtn { background: none; border: none; color: #6b7280; font-size: 14px; cursor: pointer; padding: 0; margin-bottom: 16px; display: flex; align-items: center; gap: 4px; font-family: inherit; }
+.backBtn:hover { color: #16a34a; }
+.headerRow { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+.title { font-size: 26px; font-weight: 800; color: #111; margin-bottom: 4px; }
+.sub { font-size: 13px; color: #888; }
+.badge { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; border-radius: 20px; padding: 6px 16px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+
+.statsRow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
+.statCard { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 4px; }
+.statIcon { font-size: 20px; margin-bottom: 4px; }
+.statLabel { font-size: 11px; color: #888; }
+.statNum { font-size: 28px; font-weight: 800; }
+.statSub { font-size: 11px; color: #888; }
+
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+.card { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+.card:last-child { margin-bottom: 0; }
+.cols .card { margin-bottom: 0; }
+.cardTitle { font-size: 15px; font-weight: 700; color: #111; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #f3f4f6; }
+
+.table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.table th { text-align: left; padding: 8px 10px; color: #888; font-size: 12px; border-bottom: 1px solid #f3f4f6; }
+.table td { padding: 10px; border-bottom: 1px solid #f9fafb; vertical-align: middle; }
+.table tr:last-child td { border-bottom: none; }
+
+.goleadorCell { display: flex; align-items: center; gap: 10px; }
+.goleadorRank { font-size: 13px; color: #888; width: 16px; text-align: center; }
+.goleadorAvatar { width: 28px; height: 28px; border-radius: 50%; background: #e5e7eb; flex-shrink: 0; }
+.goleadorName { font-size: 13px; font-weight: 600; color: #111; }
+.goleadorTeam { font-size: 11px; color: #888; }
+.goleadorNum { font-size: 14px; font-weight: 700; color: #111; }
+.goleadorSub { font-size: 11px; color: #888; }
+
+.bars { display: flex; flex-direction: column; gap: 8px; }
+.barRow { display: flex; align-items: center; gap: 10px; }
+.barTeam { font-size: 12px; color: #555; width: 80px; text-align: right; flex-shrink: 0; }
+.barTrack { flex: 1; background: #f3f4f6; border-radius: 4px; height: 22px; display: flex; align-items: center; position: relative; overflow: visible; }
+.barFill { height: 100%; background: #052e16; border-radius: 4px; min-width: 4px; }
+.barNum { position: absolute; right: -24px; font-size: 12px; font-weight: 700; color: #fff; background: #052e16; border-radius: 4px; padding: 1px 5px; }
+
+.mejoresList { display: flex; flex-direction: column; gap: 0; }
+.mejorRow { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f3f4f6; }
+.mejorRow:last-child { border-bottom: none; }
+.mejorMatch { font-size: 14px; font-weight: 600; color: #111; }
+.mejorDate { font-size: 12px; color: #888; margin-top: 2px; }
+.mejorDot { width: 8px; height: 8px; border-radius: 50%; background: #16a34a; flex-shrink: 0; }
+
+@media (max-width: 900px) { .statsRow { grid-template-columns: repeat(3, 1fr); } .cols { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { .page { padding: 20px 16px; } .statsRow { grid-template-columns: 1fr 1fr; } }

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@components/layout';
 import styles from './ResultadosPage.module.css';
 
@@ -73,6 +74,7 @@ const JORNADAS: Jornada[] = [
 const PAGE_SIZE = 2;
 
 export const ResultadosPage: React.FC = () => {
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const totalPages = Math.ceil(JORNADAS.length / PAGE_SIZE);
   const visible = JORNADAS.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -80,6 +82,7 @@ export const ResultadosPage: React.FC = () => {
   return (
     <MainLayout>
       <div className={styles.page}>
+        <button className={styles.backBtn} onClick={() => navigate(-1)}>← Volver</button>
         <div className={styles.header}>
           <div>
             <h1 className={styles.title}>Resultados</h1>

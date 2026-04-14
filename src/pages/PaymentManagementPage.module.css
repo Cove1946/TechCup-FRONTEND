@@ -1,0 +1,64 @@
+.page { padding: 32px 40px 60px; max-width: 1100px; margin: 0 auto; }
+.backBtn { background: none; border: none; color: #6b7280; font-size: 14px; cursor: pointer; padding: 0; margin-bottom: 16px; display: flex; align-items: center; gap: 4px; font-family: inherit; }
+.backBtn:hover { color: #16a34a; }
+.title { font-size: 26px; font-weight: 800; color: #111; margin-bottom: 4px; }
+.sub { font-size: 13px; color: #888; margin-bottom: 24px; }
+
+.statsRow { display: grid; grid-template-columns: repeat(3, 1fr) 1.2fr; gap: 14px; margin-bottom: 20px; }
+.statCard { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; }
+.statCardGreen { background: #16a34a; border-radius: 12px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; }
+.statIcon { font-size: 22px; }
+.statIconWhite { font-size: 22px; }
+.statNum { font-size: 28px; font-weight: 800; }
+.numOrange { color: #d97706; }
+.numGreen { color: #16a34a; }
+.numRed { color: #dc2626; }
+.statLabel { font-size: 13px; color: #888; }
+.totalNum { font-size: 28px; font-weight: 800; color: #fff; }
+.totalLabel { font-size: 13px; color: rgba(255,255,255,0.8); }
+
+.searchRow { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+.searchWrap { flex: 1; min-width: 200px; display: flex; align-items: center; gap: 10px; background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 8px 14px; }
+.searchIco { font-size: 14px; color: #9ca3af; }
+.searchInput { flex: 1; border: none; outline: none; font-size: 14px; color: #111; background: transparent; }
+.filters { display: flex; gap: 8px; flex-wrap: wrap; }
+.filterBtn { padding: 8px 16px; background: #fff; color: #333; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 13px; cursor: pointer; }
+.filterBtn:hover { border-color: #16a34a; color: #16a34a; }
+.filterActive { padding: 8px 16px; background: #16a34a; color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+
+.tableWrap { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; overflow: hidden; }
+.table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.table th { padding: 12px 16px; text-align: left; color: #888; font-size: 12px; font-weight: 600; background: #fff; border-bottom: 1px solid #f3f4f6; }
+.table td { padding: 14px 16px; border-bottom: 1px solid #f9fafb; color: #333; }
+.table tr:last-child td { border-bottom: none; }
+.table tr:hover td { background: #f9fafb; }
+.bold { font-weight: 700; color: #111; }
+
+.badgePending { background: #fef3c7; color: #92400e; border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.badgeApproved { background: #dcfce7; color: #16a34a; border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.badgeRejected { background: #fee2e2; color: #dc2626; border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+
+.actRow { display: flex; gap: 8px; align-items: center; }
+.actView { background: none; border: none; cursor: pointer; font-size: 16px; color: #2563eb; }
+.actApprove { background: none; border: none; cursor: pointer; font-size: 16px; color: #16a34a; font-weight: 800; }
+.actReject { background: none; border: none; cursor: pointer; font-size: 16px; color: #dc2626; font-weight: 800; }
+
+.modalOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.modal { background: #fff; border-radius: 16px; width: 100%; max-width: 400px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+.modalHeader { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px 14px; border-bottom: 1px solid #f3f4f6; }
+.modalTitle { font-size: 16px; font-weight: 700; color: #111; }
+.modalClose { background: none; border: none; font-size: 16px; cursor: pointer; color: #9ca3af; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.modalClose:hover { background: #f3f4f6; color: #333; }
+.modalBody { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+.modalRows { width: 100%; display: flex; flex-direction: column; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; }
+.modalRow { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid #f3f4f6; font-size: 13px; color: #555; }
+.modalRow:last-child { border-bottom: none; }
+.modalRow strong { color: #111; }
+.modalActions { display: flex; gap: 10px; justify-content: flex-end; }
+.modalActions .actApprove { background: #16a34a; color: #fff; border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.modalActions .actApprove:hover { background: #15803d; }
+.modalActions .actReject { background: #dc2626; color: #fff; border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.modalActions .actReject:hover { background: #b91c1c; }
+
+@media (max-width: 900px) { .statsRow { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 640px) { .page { padding: 20px 16px; } .statsRow { grid-template-columns: 1fr; } }

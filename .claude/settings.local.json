@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc:*)",
+      "Bash(grep -o \"^export const [A-Za-z]*Page\" /c/Cursos/TechCup-FRONTEND/src/pages/*.tsx)",
+      "Bash(grep:*)",
+      "Bash(ls C:/Cursos/TechCup-FRONTEND/src/pages/*.tsx)",
+      "Bash(xargs -I{} basename {} .tsx)"
+    ]
+  }
+}

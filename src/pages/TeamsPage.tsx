@@ -46,6 +46,7 @@ export const TeamsPage: React.FC = () => {
   return (
     <MainLayout>
       <div className={styles.teams}>
+        <button className={styles.backBtn} onClick={() => navigate(-1)}>← Volver</button>
         <div className={styles.header}>
           <h1 className={styles.title}>Equipos</h1>
           <Button variant="primary" onClick={() => navigate('/teams/create')}>

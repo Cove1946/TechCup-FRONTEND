@@ -1,121 +1,89 @@
-.tournament {
-  max-width: 1200px;
-  margin: 0 auto;
+.page { padding: 32px 40px 60px; max-width: 960px; margin: 0 auto; }
+
+.backBtn { background: none; border: none; color: #555; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 6px; margin-bottom: 20px; padding: 0; }
+.backBtn:hover { color: #16a34a; }
+
+/* Title row */
+.titleRow { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+.title { font-size: 26px; font-weight: 800; color: #111; margin-bottom: 4px; }
+.dates { font-size: 13px; color: #888; }
+
+.championBadge {
+  background: #fef9c3;
+  border: 1.5px solid #fde047;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-size: 15px;
+  color: #854d0e;
+  white-space: nowrap;
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: var(--spacing-2xl);
-}
-
-.title {
-  font-size: 36px;
-  font-weight: 800;
-  color: var(--text-primary);
-  margin-bottom: var(--spacing-sm);
-}
-
-.subtitle {
-  font-size: 18px;
-  color: var(--text-secondary);
-}
-
-.infoGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--spacing-xl);
-  margin-bottom: var(--spacing-3xl);
-}
-
-.infoItem {
+/* ── FINAL card ── */
+.finalCard {
+  background: #15803d;
+  border-radius: 16px;
+  padding: 36px 32px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: 10px;
+  margin-bottom: 32px;
+  color: #fff;
 }
+.finalIcon  { font-size: 48px; }
+.finalLabel { font-size: 13px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; opacity: 0.8; }
+.finalScore { display: flex; align-items: center; gap: 24px; }
+.finalTeam  { font-size: 18px; font-weight: 800; }
+.finalNumbers { font-size: 44px; font-weight: 900; letter-spacing: 4px; }
+.finalMeta  { font-size: 13px; opacity: 0.8; }
 
-.infoLabel {
-  font-size: 14px;
-  color: var(--text-secondary);
-  font-weight: 600;
-  text-transform: uppercase;
-}
+/* ── Round sections ── */
+.roundSection { margin-bottom: 32px; }
+.roundTitle { font-size: 17px; font-weight: 700; color: #111; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.roundFrac { background: #16a34a; color: #fff; border-radius: 6px; padding: 2px 8px; font-size: 13px; font-weight: 700; }
 
-.infoValue {
-  font-size: 32px;
-  font-weight: 800;
-  color: var(--color-primary);
-}
+.roundGrid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.roundGrid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
 
-.sectionTitle {
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: var(--spacing-xl);
-  color: var(--text-primary);
-}
-
-.table {
+/* Result card */
+.resultCard {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs);
+  gap: 8px;
 }
+.resultCardCompact { padding: 12px; }
 
-.tableHeader,
-.tableRow {
-  display: grid;
-  grid-template-columns: 60px 1fr repeat(5, 60px);
-  gap: var(--spacing-md);
-  padding: var(--spacing-md) var(--spacing-lg);
-  align-items: center;
-  font-size: 14px;
-}
-
-.tableHeader {
-  font-weight: 700;
-  color: var(--text-secondary);
-  border-bottom: 2px solid var(--border-light);
-  text-transform: uppercase;
-}
-
-.tableRow {
-  border-bottom: 1px solid var(--border-light);
-  transition: background var(--transition-base);
-}
-
-.tableRow:hover {
-  background: var(--bg-light-green);
-}
-
-.tableRow.qualified {
-  background: rgba(21, 128, 61, 0.05);
-}
-
-.pos {
-  font-weight: 700;
-  text-align: center;
-}
-
-.teamName {
+.finalizadoBadge {
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+  border-radius: 12px;
+  padding: 2px 10px;
+  font-size: 11px;
   font-weight: 600;
-  color: var(--text-primary);
+  align-self: flex-start;
 }
 
-.points {
-  font-weight: 800;
-  color: var(--color-primary);
-  text-align: center;
-}
+.scoreRow { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.teamName { font-size: 13px; font-weight: 700; color: #111; flex: 1; }
+.teamName:last-child { text-align: right; }
+.score { font-size: 22px; font-weight: 900; color: #16a34a; white-space: nowrap; }
 
-@media (max-width: 768px) {
-  .table {
-    overflow-x: auto;
-  }
+.matchMeta { display: flex; gap: 12px; font-size: 11px; color: #888; flex-wrap: wrap; }
 
-  .tableHeader,
-  .tableRow {
-    grid-template-columns: 50px 120px repeat(5, 50px);
-    font-size: 12px;
-  }
+/* En curso (existing) */
+.card { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 60px 40px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.trophyIco { font-size: 56px; opacity: 0.3; }
+.cardTitle { font-size: 18px; font-weight: 700; color: #374151; }
+.cardSub { font-size: 14px; color: #6b7280; text-align: center; max-width: 360px; }
+
+@media (max-width: 700px) {
+  .page { padding: 16px; }
+  .roundGrid2 { grid-template-columns: 1fr; }
+  .roundGrid4 { grid-template-columns: 1fr 1fr; }
+  .finalNumbers { font-size: 32px; }
 }

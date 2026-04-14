@@ -32,6 +32,7 @@ export const ProfilePage: React.FC = () => {
   return (
     <MainLayout>
       <div className={styles.page}>
+        <button className={styles.backBtn} onClick={() => navigate(-1)}>← Volver</button>
         <div className={styles.pageHeader}>
           <h1 className={styles.title}>Mi Perfil Deportivo</h1>
           <p className={styles.subtitle}>RF03 · RF04 — Completa tu información para ser visible en el torneo</p>

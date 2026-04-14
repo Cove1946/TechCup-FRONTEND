@@ -13,11 +13,13 @@
 
 .logoSection { display: flex; align-items: center; }
 
+.logoBtn { background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; border-radius: 6px; transition: opacity 0.15s; }
+.logoBtn:hover { opacity: 0.85; }
+
 .navLinks {
   display: flex;
   gap: 4px;
-  flex: 1;
-  justify-content: center;
+  margin-left: 16px;
 }
 
 /* ── Dropdown ── */

@@ -1,0 +1,39 @@
+.page { padding: 32px 40px 60px; max-width: 900px; margin: 0 auto; }
+.backBtn { background: none; border: none; color: #6b7280; font-size: 14px; cursor: pointer; padding: 0; margin-bottom: 16px; display: flex; align-items: center; gap: 4px; font-family: inherit; }
+.backBtn:hover { color: #16a34a; }
+.title { font-size: 28px; font-weight: 800; color: #111; margin-bottom: 4px; }
+.sub { font-size: 13px; color: #888; margin-bottom: 24px; }
+
+.statsRow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 28px; }
+.statCard { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; }
+.statSquare { width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0; }
+.statNum { font-size: 26px; font-weight: 800; color: #111; }
+.statLabel { font-size: 12px; color: #888; margin-top: 2px; }
+
+.list { display: flex; flex-direction: column; gap: 0; background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; overflow: hidden; }
+
+.torneoRow {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px; border-bottom: 1px solid #f3f4f6;
+  gap: 16px;
+}
+.torneoRow:last-child { border-bottom: none; }
+.torneoRow:hover { background: #f9fafb; }
+
+.torneoLeft { display: flex; align-items: flex-start; gap: 16px; flex: 1; }
+.torneoLogo { width: 44px; height: 44px; border-radius: 8px; background: #052e16; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.torneoLogoInner { width: 24px; height: 24px; background: rgba(255,255,255,0.2); border-radius: 50%; }
+
+.torneoInfo { display: flex; flex-direction: column; gap: 4px; }
+.torneoNameRow { display: flex; align-items: center; gap: 10px; }
+.torneoName { font-size: 15px; font-weight: 700; color: #111; }
+.badgeCurso { background: #dcfce7; color: #16a34a; border-radius: 20px; padding: 3px 10px; font-size: 12px; font-weight: 600; }
+.badgeFin { background: #f3f4f6; color: #555; border-radius: 20px; padding: 3px 10px; font-size: 12px; font-weight: 600; }
+
+.torneoDates { display: flex; gap: 14px; font-size: 12px; color: #888; flex-wrap: wrap; }
+.torneoChamp { display: flex; gap: 16px; font-size: 12px; color: #555; flex-wrap: wrap; }
+
+.detailLink { background: none; border: none; color: #555; font-size: 13px; cursor: pointer; white-space: nowrap; padding: 4px 0; }
+.detailLink:hover { color: #16a34a; text-decoration: underline; }
+
+@media (max-width: 640px) { .page { padding: 20px 16px; } .statsRow { grid-template-columns: 1fr; } .torneoDates { flex-direction: column; gap: 4px; } }
