@@ -6,6 +6,9 @@ import styles from './TeamsPage.module.css';
 
 export const TeamsPage: React.FC = () => {
   const navigate = useNavigate();
+  const userStr  = localStorage.getItem('user');
+  const role     = (userStr ? JSON.parse(userStr).role : 'jugador').toLowerCase();
+  const canCreate = ['capitan','admin','coordinador'].includes(role);
 
   const teams = [
     {
@@ -46,11 +49,14 @@ export const TeamsPage: React.FC = () => {
   return (
     <MainLayout>
       <div className={styles.teams}>
+        <button className={styles.backBtn} onClick={() => navigate(-1)}>← Volver</button>
         <div className={styles.header}>
           <h1 className={styles.title}>Equipos</h1>
-          <Button variant="primary" onClick={() => navigate('/teams/create')}>
-            + Crear Equipo
-          </Button>
+          {canCreate && (
+            <Button variant="primary" onClick={() => navigate('/teams/create')}>
+              + Crear Equipo
+            </Button>
+          )}
         </div>
 
         <div className={styles.teamsList}>

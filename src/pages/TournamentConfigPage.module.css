@@ -1,0 +1,30 @@
+.page { padding: 20px 40px 60px; max-width: 900px; margin: 0 auto; }
+.backBtn { background: none; border: none; color: #6b7280; font-size: 14px; cursor: pointer; padding: 0; margin-bottom: 8px; display: flex; align-items: center; gap: 4px; font-family: inherit; }
+.backBtn:hover { color: #16a34a; }
+.subtitle { font-size: 13px; color: #6b7280; margin: 0 0 6px; }
+.titleRow { margin-bottom: 20px; }
+.title { font-size: 22px; font-weight: 800; color: #111; margin: 0; }
+.savedBanner { background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d; border-radius: 8px; padding: 10px 16px; font-size: 14px; font-weight: 600; margin-bottom: 20px; }
+.form { display: flex; flex-direction: column; gap: 20px; }
+.section { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.sectionTitle { font-size: 15px; font-weight: 800; color: #111; margin: 0 0 4px; padding-bottom: 10px; border-bottom: 1px solid #f3f4f6; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.label { font-size: 12px; font-weight: 700; color: #374151; }
+.input { border: 1px solid #d1d5db; border-radius: 8px; padding: 9px 12px; font-size: 14px; font-family: inherit; color: #111; background: #fff; width: 100%; box-sizing: border-box; }
+.input:focus { outline: none; border-color: #16a34a; }
+.textarea { border: 1px solid #d1d5db; border-radius: 8px; padding: 9px 12px; font-size: 14px; font-family: inherit; color: #111; background: #fff; width: 100%; box-sizing: border-box; resize: vertical; }
+.textarea:focus { outline: none; border-color: #16a34a; }
+.formatoGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.formatoCard { background: #fff; border: 1.5px solid #e5e7eb; border-radius: 10px; padding: 14px; cursor: pointer; font-family: inherit; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; text-align: left; }
+.formatoCard:hover { border-color: #16a34a; }
+.formatoCardActive { background: #f0fdf4; border: 1.5px solid #16a34a; border-radius: 10px; padding: 14px; cursor: pointer; font-family: inherit; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; text-align: left; }
+.formatoLabel { font-size: 14px; font-weight: 700; color: #111; }
+.formatoDesc { font-size: 12px; color: #6b7280; line-height: 1.4; }
+.formActions { display: flex; justify-content: flex-end; gap: 12px; }
+.btnCancel { background: #fff; border: 1.5px solid #d1d5db; border-radius: 8px; padding: 9px 20px; font-size: 14px; font-weight: 600; color: #374151; cursor: pointer; font-family: inherit; }
+.btnCancel:hover { border-color: #9ca3af; }
+.btnPrimary { background: #15803d; border: none; border-radius: 8px; padding: 9px 22px; font-size: 14px; font-weight: 700; color: #fff; cursor: pointer; font-family: inherit; }
+.btnPrimary:hover { background: #166534; }
+@media (max-width: 768px) { .page { padding: 16px 16px 40px; } .grid2 { grid-template-columns: 1fr; } .grid3 { grid-template-columns: 1fr 1fr; } .formatoGrid { grid-template-columns: 1fr; } }

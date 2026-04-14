@@ -13,11 +13,19 @@
 
 .logoSection { display: flex; align-items: center; }
 
+.logoBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
 .navLinks {
   display: flex;
   gap: 4px;
-  flex: 1;
-  justify-content: center;
+  margin-left: 16px;
 }
 
 /* ── Dropdown ── */

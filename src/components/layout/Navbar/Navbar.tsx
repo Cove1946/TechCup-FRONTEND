@@ -19,35 +19,71 @@ interface Notification {
   unread?: boolean;
 }
 
-const NOTIFICATIONS: Notification[] = [
-  { id: 1, icon: '⚽', title: 'Aceptaste la invitación', body: 'Ahora eres miembro de FC KERNEL', time: 'Ahora', color: 'green', unread: true },
-  { id: 2, icon: '✅', title: 'Pago aprobado', body: 'Tu inscripción fue confirmada', time: '5h', color: 'blue' },
-  { id: 3, icon: '📅', title: 'Partido hoy', body: '3:00 PM · Cancha 2 · vs Debuggers', time: 'hoy', color: 'orange' },
-  { id: 4, icon: '🟥', title: 'Sanción automática', body: 'J. García suspendido 1 partido', time: 'ayer', color: 'red' },
-];
+const NOTIFICATIONS_BY_ROLE: Record<string, Notification[]> = {
+  jugador: [
+    { id: 1, icon: '⚽', title: 'Aceptaste la invitación', body: 'Ahora eres miembro de FC KERNEL', time: 'Ahora', color: 'green', unread: true },
+    { id: 2, icon: '✅', title: 'Pago aprobado', body: 'Tu inscripción fue confirmada', time: '5h', color: 'blue' },
+    { id: 3, icon: '📅', title: 'Partido hoy', body: '3:00 PM · Cancha 2 · vs Debuggers', time: 'hoy', color: 'orange' },
+    { id: 4, icon: '🟥', title: 'Sanción automática', body: 'J. García suspendido 1 partido', time: 'ayer', color: 'red' },
+  ],
+  capitan: [
+    { id: 1, icon: '👥', title: 'Nuevo jugador en equipo', body: 'Pablo K. se unió a FC KERNEL', time: 'Ahora', color: 'green', unread: true },
+    { id: 2, icon: '⚠️', title: 'Jugador suspendido', body: 'Rogelio B. no puede jugar el próximo partido', time: '2h', color: 'red', unread: true },
+    { id: 3, icon: '📅', title: 'Partido mañana', body: '3:00 PM · Cancha 2 · vs Debuggers', time: 'hoy', color: 'orange' },
+    { id: 4, icon: '💳', title: 'Pago pendiente', body: '2 jugadores pendientes de pago', time: 'ayer', color: 'blue' },
+  ],
+  admin: [
+    { id: 1, icon: '👤', title: 'Nuevo usuario registrado', body: 'Carlos Pérez solicita acceso', time: 'Ahora', color: 'blue', unread: true },
+    { id: 2, icon: '⚙️', title: 'Configuración actualizada', body: 'Torneo 2026-1 modificado', time: '1h', color: 'green' },
+    { id: 3, icon: '🔐', title: 'Cambio de rol', body: 'Rogelio B. ahora es Capitán', time: '3h', color: 'orange' },
+  ],
+  coordinador: [
+    { id: 1, icon: '💳', title: 'Pago pendiente', body: 'FC KERNEL aún no confirma pago', time: 'Ahora', color: 'orange', unread: true },
+    { id: 2, icon: '🛡️', title: 'Equipo registrado', body: 'DATA KNIGHTS completó inscripción', time: '2h', color: 'green', unread: true },
+    { id: 3, icon: '📋', title: 'Partido por confirmar', body: 'Semifinal 1 sin árbitro asignado', time: 'hoy', color: 'red' },
+  ],
+  arbitro: [
+    { id: 1, icon: '📅', title: 'Nuevo partido asignado', body: 'FC KERNEL vs Debuggers · 18 Mar', time: 'Ahora', color: 'green', unread: true },
+    { id: 2, icon: '🟨', title: 'Recordatorio', body: 'Partido mañana a las 3:00 PM', time: '4h', color: 'orange' },
+    { id: 3, icon: '📝', title: 'Acta pendiente', body: 'Completa el acta del partido anterior', time: 'ayer', color: 'red' },
+  ],
+};
 
 const DOT_COLOR: Record<Notification['color'], string> = {
   green: '#16a34a', blue: '#3b82f6', orange: '#f59e0b', red: '#ef4444',
 };
 
-const MI_EQUIPO_ITEMS = [
-  { label: 'Mi perfil deportivo', to: '/profile' },
-  { label: 'Ver mi equipo', to: '/teams' },
-  { label: 'Buscar jugadores', to: '/search-players' },
-  { label: 'Inscripción & Pago', to: '/payment' },
-  { label: 'Crear equipo', to: '/teams/create' },
+const PROFILE_BY_ROLE: Record<string, string> = {
+  jugador:     '/profile',
+  capitan:     '/profile',
+  coordinador: '/profile/coordinador',
+  arbitro:     '/profile/arbitro',
+  admin:       '/profile/admin',
+};
+
+const MI_EQUIPO_ALL  = [
+  { label: 'Mi perfil deportivo', to: '__profile__', roles: ['jugador','capitan','coordinador','arbitro','admin'] },
+  { label: 'Mi equipo',           to: '/my-team',      roles: ['jugador','capitan'] },
+  { label: 'Alineación',          to: '/alineacion',   roles: ['jugador','capitan'] },
+  { label: 'Buscar jugadores',    to: '/search-players',roles: ['jugador','capitan'] },
+  { label: 'Inscripción & Pago',  to: '/payment',      roles: ['capitan'] },
+  { label: 'Crear equipo',        to: '/teams/create', roles: ['capitan'] },
 ];
 
 const PARTIDOS_ITEMS = [
-  { label: 'Dashboard', to: '/dashboard' },
-  { label: 'Resultados', to: '/results' },
-  { label: 'Calendario', to: '/calendar' },
+  { label: 'Calendario',          to: '/calendar' },
+  { label: 'Resultados',          to: '/results' },
+  { label: 'Tabla de posiciones', to: '/tabla' },
+  { label: 'Estadísticas',        to: '/estadisticas' },
+  { label: 'Llaves',              to: '/llaves' },
+  { label: 'VS — Ambos equipos',  to: '/vs/alineacion' },
 ];
 
-const ADMIN_ITEMS = [
-  { label: 'Gestionar torneos', to: '/admin/tournaments' },
-  { label: 'Gestionar equipos', to: '/admin/teams' },
-  { label: 'Gestionar jugadores', to: '/admin/players' },
+const ADMIN_ALL = [
+  { label: 'Gestión de roles',  to: '/admin/roles',         roles: ['admin'] },
+  { label: 'Gestión de pagos',  to: '/organizer/payments',  roles: ['admin','coordinador'] },
+  { label: 'Configurar torneo', to: '/organizer/config',    roles: ['admin','coordinador'] },
+  { label: 'Panel árbitro',     to: '/arbitro',             roles: ['admin','coordinador'] },
 ];
 
 function NavDropdown({ label, items }: { label: string; items: { label: string; to: string }[] }) {
@@ -86,10 +122,24 @@ function NavDropdown({ label, items }: { label: string; items: { label: string; 
   );
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ userName, userAvatar, isAdmin }) => {
+export const Navbar: React.FC<NavbarProps> = ({ userName, userAvatar }) => {
   const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const unreadCount = NOTIFICATIONS.filter(n => n.unread).length;
+
+  const userStr  = localStorage.getItem('user');
+  const userObj  = userStr ? JSON.parse(userStr) : null;
+  const userRole = (userObj?.role ?? 'jugador').toLowerCase();
+  const profileTo = PROFILE_BY_ROLE[userRole] ?? '/profile';
+
+  const miEquipoItems = MI_EQUIPO_ALL
+    .filter(i => i.roles.includes(userRole))
+    .map(i => ({ label: i.label, to: i.to === '__profile__' ? profileTo : i.to }));
+
+  const adminItems = ADMIN_ALL.filter(i => i.roles.includes(userRole));
+  const showAdmin  = adminItems.length > 0;
+
+  const notifications = NOTIFICATIONS_BY_ROLE[userRole] ?? NOTIFICATIONS_BY_ROLE['jugador'];
+  const unreadCount   = notifications.filter(n => n.unread).length;
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -101,13 +151,15 @@ export const Navbar: React.FC<NavbarProps> = ({ userName, userAvatar, isAdmin })
     <>
       <nav className={styles.navbar}>
         <div className={styles.logoSection}>
-          <Logo variant="small" showText />
+          <button className={styles.logoBtn} onClick={() => navigate('/dashboard')}>
+            <Logo variant="small" showText />
+          </button>
         </div>
 
         <div className={styles.navLinks}>
-          <NavDropdown label="Mi Equipo" items={MI_EQUIPO_ITEMS} />
-          <NavDropdown label="Partidos" items={PARTIDOS_ITEMS} />
-          {isAdmin && <NavDropdown label="Administrador" items={ADMIN_ITEMS} />}
+          <NavDropdown label="Mi Equipo"    items={miEquipoItems} />
+          <NavDropdown label="Partidos"     items={PARTIDOS_ITEMS} />
+          {showAdmin && <NavDropdown label="Administrador" items={adminItems} />}
         </div>
 
         <div className={styles.userSection}>
@@ -140,7 +192,7 @@ export const Navbar: React.FC<NavbarProps> = ({ userName, userAvatar, isAdmin })
           <button className={styles.drawerClose} onClick={() => setDrawerOpen(false)}>✕</button>
         </div>
         <div className={styles.notifList}>
-          {NOTIFICATIONS.map(n => (
+          {notifications.map(n => (
             <div key={n.id} className={`${styles.notifItem} ${n.unread ? styles.notifUnread : ''}`}>
               <div className={styles.notifIcon}>{n.icon}</div>
               <div className={styles.notifBody}>
@@ -155,7 +207,7 @@ export const Navbar: React.FC<NavbarProps> = ({ userName, userAvatar, isAdmin })
           ))}
         </div>
         <div className={styles.drawerFooter}>
-          <button className={styles.seeAllBtn} onClick={() => setDrawerOpen(false)}>Ver todas →</button>
+          <button className={styles.seeAllBtn} onClick={() => setDrawerOpen(false)}>Cerrar</button>
         </div>
       </div>
     </>
