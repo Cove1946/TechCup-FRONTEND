@@ -11,6 +11,58 @@
   background: #f3f4f6;
 }
 
+/* Public header (no session) */
+.publicHeader {
+  height: 56px;
+  background: #052e16;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.backBtn {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.85);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.backBtn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+.publicBrand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.publicLogo { width: 32px; height: 32px; object-fit: contain; }
+.publicName { color: #fff; font-size: 16px; font-weight: 700; }
+
+.loginBtn {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.loginBtn:hover { background: rgba(255,255,255,0.25); }
+
 @media (max-width: 1200px) {
   .main {
     padding: var(--spacing-xl);

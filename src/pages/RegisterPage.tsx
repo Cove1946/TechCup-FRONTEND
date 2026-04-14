@@ -159,7 +159,7 @@ export const RegisterPage: React.FC = () => {
             </div>
 
             <div className={styles.field}>
-              <label className={styles.label}>Tipo de usuario <span className={styles.req}>*</span></label>
+              <label className={styles.label}>Vínculo institucional <span className={styles.req}>*</span></label>
               <div className={styles.optionGrid}>
                 {TIPOS.map(t => (
                   <button
@@ -170,6 +170,7 @@ export const RegisterPage: React.FC = () => {
                 ))}
               </div>
               {errors.tipoUsuario && <span className={styles.errMsg}>{errors.tipoUsuario}</span>}
+              <span className={styles.hint}>Tu rol en el torneo será <strong>Jugador</strong>. Los roles de Árbitro, Coordinador y Administrador son asignados por el staff.</span>
             </div>
 
             <div className={styles.field}>

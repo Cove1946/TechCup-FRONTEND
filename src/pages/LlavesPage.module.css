@@ -1,0 +1,215 @@
+/* ── Page ── */
+.page { padding: 32px 40px 60px; max-width: 1200px; margin: 0 auto; }
+
+.backBtn { background: none; border: none; color: #6b7280; font-size: 14px; cursor: pointer; padding: 0; margin-bottom: 16px; display: flex; align-items: center; gap: 4px; font-family: inherit; }
+.backBtn:hover { color: #16a34a; }
+
+.header { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
+.trophyIco { font-size: 36px; }
+.title { font-size: 26px; font-weight: 800; color: #111; margin-bottom: 2px; }
+.sub { font-size: 13px; color: #888; }
+
+/* ── Bracket scroll wrapper ── */
+.bracketWrap {
+  overflow-x: auto;
+  padding-bottom: 20px;
+}
+
+/* ── Bracket container ── */
+.bracket {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  min-width: 860px;  /* prevents too-narrow collapse */
+}
+
+/* ── Stage column ── */
+.stage {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.stageLabel {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  color: #16a34a;
+  text-align: center;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #16a34a;
+  margin-bottom: 16px;
+  white-space: nowrap;
+}
+
+/* QF stage body: two pairs with a gap between them */
+.stageBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.qfPair {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+.qfGap { height: 48px; flex-shrink: 0; }
+
+/* SF stage body: two cards vertically centered in each half */
+.stageBodySF {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+/* Final stage body: single card centered */
+.stageBodyFinal {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ── Match card ── */
+.card {
+  width: 220px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.teamRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  transition: background 0.1s;
+}
+
+.winnerRow { background: #f0fdf4; }
+.loserRow  { background: #fafafa; }
+
+.teamDot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+.teamName {
+  flex: 1;
+  font-size: 12px;
+  font-weight: 600;
+  color: #111;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.winnerRow .teamName { color: #15803d; font-weight: 800; }
+.loserRow  .teamName { color: #9ca3af; }
+
+.score { font-size: 14px; font-weight: 800; color: #374151; margin-left: 4px; }
+.scoreWin { color: #15803d; }
+
+.cardDivider { height: 1px; background: #f3f4f6; }
+
+.cardFooter { padding: 7px 14px; }
+.badgeFin  { font-size: 11px; color: #16a34a; font-weight: 700; }
+.badgeProx { font-size: 11px; color: #2563eb; font-weight: 600; }
+.badgePor  { font-size: 11px; color: #9ca3af; }
+
+/* ── Bracket connector columns ── */
+.connCol {
+  width: 32px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  /* Offset to start after the stageLabel area */
+  padding-top: 38px; /* matches stageLabel height (label + padding + border + margin) */
+}
+
+/* Each arm covers the span of one QF pair and draws the ┤ bracket shape */
+.connArm {
+  flex: 1;
+  border-top: 2px solid #d1fae5;
+  border-bottom: 2px solid #d1fae5;
+  border-right: 2px solid #d1fae5;
+  border-radius: 0 6px 6px 0;
+}
+
+/* The gap between the two arms matches the qfGap */
+.connArmGap { height: 48px; flex-shrink: 0; }
+
+/* SF → Final: single arm spanning the two SF cards */
+.connArmSingle {
+  flex: 1;
+  border-top: 2px solid #d1fae5;
+  border-bottom: 2px solid #d1fae5;
+  border-right: 2px solid #d1fae5;
+  border-radius: 0 6px 6px 0;
+}
+
+/* Connector from Final to Champion */
+.connSingle {
+  width: 32px;
+  flex-shrink: 0;
+  align-self: center;
+  height: 2px;
+  background: #d1fae5;
+}
+
+/* ── Champion column ── */
+.champCol {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.champCard {
+  background: linear-gradient(135deg, #fef9c3 0%, #fef08a 100%);
+  border: 2px solid #fbbf24;
+  border-radius: 16px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 130px;
+  box-shadow: 0 4px 16px rgba(251, 191, 36, 0.25);
+}
+
+.champTrophy { font-size: 40px; }
+.champLabel  { font-size: 13px; font-weight: 800; color: #92400e; text-transform: uppercase; letter-spacing: 0.5px; }
+.champName   { font-size: 12px; color: #b45309; font-weight: 600; }
+
+/* ── Legend ── */
+.legend {
+  display: flex;
+  gap: 24px;
+  margin-top: 28px;
+  padding-top: 16px;
+  border-top: 1px solid #f3f4f6;
+  flex-wrap: wrap;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #555;
+}
+
+.finDot  { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #16a34a; }
+.proxDot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #2563eb; }
+.porDot  { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #d1d5db; }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .page { padding: 20px 16px 40px; }
+  /* On mobile, the bracket scrolls horizontally — handled by bracketWrap overflow-x: auto */
+}

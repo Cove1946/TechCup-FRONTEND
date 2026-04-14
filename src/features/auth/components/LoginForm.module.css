@@ -221,3 +221,95 @@
 .registerLink:hover {
   text-decoration: underline;
 }
+
+/* ── Demo accounts ── */
+.demoSection {
+  margin-top: 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.demoToggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #f9fafb;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  text-align: left;
+}
+
+.demoToggle:hover {
+  background: #f3f4f6;
+}
+
+.demoChevron {
+  margin-left: auto;
+  transition: transform 0.2s;
+}
+
+.demoChevronOpen {
+  transform: rotate(180deg);
+}
+
+.demoBox {
+  padding: 12px 14px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.demoNote {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.demoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.demoCard {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  border: 1.5px solid;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  transition: opacity 0.15s;
+}
+
+.demoCard:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.demoCard:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.demoRole {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.demoEmail {
+  font-size: 10px;
+  color: #555;
+  word-break: break-all;
+}
+
+.demoPass {
+  font-size: 11px;
+  color: #888;
+}

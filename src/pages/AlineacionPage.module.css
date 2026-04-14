@@ -1,0 +1,160 @@
+/* ── Page ── */
+.page { padding: 20px 40px 60px; max-width: 1200px; margin: 0 auto; }
+
+.backBtn { background: none; border: none; color: #555; font-size: 14px; cursor: pointer; padding: 0; margin-bottom: 8px; }
+.backBtn:hover { color: #16a34a; }
+
+.subtitle { font-size: 13px; color: #6b7280; margin: 0 0 6px; }
+
+/* ── Title row ── */
+.titleRow { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 12px; flex-wrap: wrap; }
+.titleLeft { display: flex; flex-direction: column; gap: 4px; }
+.title { font-size: 22px; font-weight: 800; color: #111; margin: 0; }
+.title strong { font-weight: 900; }
+.titleVs { font-weight: 400; color: #6b7280; }
+.statusBadge { display: inline-block; background: #dbeafe; color: #1d4ed8; border-radius: 12px; padding: 2px 10px; font-size: 12px; font-weight: 600; align-self: flex-start; }
+.matchMeta { font-size: 13px; color: #6b7280; margin: 0; }
+.titleActions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+.btnOutline { background: #fff; border: 1.5px solid #d1d5db; border-radius: 8px; padding: 8px 16px; font-size: 14px; font-weight: 600; color: #374151; cursor: pointer; white-space: nowrap; }
+.btnOutline:hover { border-color: #16a34a; color: #16a34a; }
+.btnPrimary { background: #15803d; border: none; border-radius: 8px; padding: 8px 18px; font-size: 14px; font-weight: 700; color: #fff; cursor: pointer; white-space: nowrap; }
+.btnPrimary:hover { background: #166534; }
+
+.savedBanner { background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d; border-radius: 8px; padding: 10px 16px; font-size: 14px; font-weight: 600; margin-bottom: 12px; }
+
+/* ── View toggle tabs ── */
+.viewTabs { display: flex; gap: 0; border-bottom: 2px solid #e5e7eb; margin-bottom: 16px; }
+.viewTab { padding: 9px 22px; background: none; border: none; font-size: 14px; color: #888; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; font-family: inherit; }
+.viewTab:hover { color: #16a34a; }
+.viewTabActive { padding: 9px 22px; background: none; border: none; font-size: 14px; font-weight: 700; color: #16a34a; cursor: pointer; border-bottom: 2px solid #16a34a; margin-bottom: -2px; font-family: inherit; }
+
+/* ── Stats bar ── */
+.statsBar { display: flex; align-items: stretch; background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; margin-bottom: 16px; overflow: hidden; flex-wrap: wrap; }
+.statBox { display: flex; flex-direction: column; gap: 4px; padding: 12px 20px; }
+.statLabel { font-size: 12px; color: #6b7280; }
+.statValue { font-size: 24px; font-weight: 900; color: #111; line-height: 1; }
+.statDivider { width: 1px; background: #e5e7eb; align-self: stretch; }
+.warnBox { display: flex; align-items: center; gap: 8px; background: #fffbeb; border-left: 1px solid #fde68a; padding: 12px 20px; flex: 1; min-width: 180px; }
+.warnIcon { font-size: 15px; flex-shrink: 0; }
+.warnText { font-size: 13px; color: #92400e; }
+
+/* ── Single team layout ── */
+.mainLayout { display: grid; grid-template-columns: 300px 1fr; gap: 20px; align-items: start; }
+.fieldCol { display: flex; justify-content: center; }
+
+/* ── Soccer field ── */
+.field { width: 300px; aspect-ratio: 2 / 3; background: #16a34a; border-radius: 10px; position: relative; border: 3px solid #15803d; overflow: hidden; flex-shrink: 0; }
+
+.fieldInner { position: absolute; inset: 6px; border: 2px solid rgba(255,255,255,0.45); }
+
+.centerLine { position: absolute; top: 50%; left: 0; right: 0; height: 2px; background: rgba(255,255,255,0.45); }
+.centerCircle { position: absolute; top: 50%; left: 50%; width: 22%; aspect-ratio: 1; transform: translate(-50%,-50%); border: 2px solid rgba(255,255,255,0.45); border-radius: 50%; }
+.penaltyTop { position: absolute; top: 0; left: 20%; right: 20%; height: 20%; border: 2px solid rgba(255,255,255,0.45); border-top: none; }
+.goalTop { position: absolute; top: 0; left: 35%; right: 35%; height: 8%; border: 2px solid rgba(255,255,255,0.45); border-top: none; }
+.penaltyBottom { position: absolute; bottom: 0; left: 20%; right: 20%; height: 20%; border: 2px solid rgba(255,255,255,0.45); border-bottom: none; }
+.goalBottom { position: absolute; bottom: 0; left: 35%; right: 35%; height: 8%; border: 2px solid rgba(255,255,255,0.45); border-bottom: none; }
+
+/* ── Field players ── */
+.fieldPlayer { position: absolute; transform: translate(-50%,-50%); display: flex; flex-direction: column; align-items: center; gap: 3px; background: none; border: none; cursor: pointer; padding: 0; z-index: 10; }
+.playerCircle { width: 38px; height: 38px; border-radius: 50%; color: #fff; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; border: 2px solid rgba(255,255,255,0.7); box-shadow: 0 2px 6px rgba(0,0,0,0.4); transition: transform 0.15s, box-shadow 0.15s; letter-spacing: 0.5px; }
+.fieldPlayer:hover .playerCircle, .fieldPlayerSel .playerCircle { transform: scale(1.2); box-shadow: 0 0 0 3px rgba(255,255,255,0.9), 0 4px 8px rgba(0,0,0,0.4); }
+.posLabel { font-size: 9px; font-weight: 700; color: #fff; background: rgba(0,0,0,0.55); border-radius: 3px; padding: 1px 5px; white-space: nowrap; letter-spacing: 0.5px; }
+
+/* ── Right panel ── */
+.panel { display: flex; flex-direction: column; gap: 14px; }
+
+/* Formation selector */
+.formationRow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+.formCard { background: #fff; border: 1.5px solid #e5e7eb; border-radius: 10px; padding: 14px 10px 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: border-color 0.15s; font-family: inherit; }
+.formCard:hover { border-color: #16a34a; }
+.formCardActive { background: #15803d; border: 1.5px solid #15803d; border-radius: 10px; padding: 14px 10px 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; font-family: inherit; }
+
+/* Dot diagram */
+.dotDiagram { display: flex; flex-direction: column; align-items: center; gap: 6px; height: 52px; justify-content: center; }
+.dotRow { display: flex; gap: 6px; justify-content: center; }
+.dot { width: 9px; height: 9px; border-radius: 50%; background: #16a34a; opacity: 0.7; }
+.dotActive { width: 9px; height: 9px; border-radius: 50%; background: #fff; opacity: 0.9; }
+.formLabel { font-size: 13px; font-weight: 600; color: #374151; }
+.formLabelActive { font-size: 13px; font-weight: 700; color: #fff; }
+
+/* Selected player card */
+.selectedCard { display: flex; align-items: center; gap: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 12px 16px; }
+.selectedAvatar { width: 40px; height: 40px; border-radius: 50%; color: #fff; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.selectedName { font-size: 14px; font-weight: 700; color: #111; }
+.selectedPos { font-size: 12px; color: #16a34a; font-weight: 600; }
+.deselectBtn { margin-left: auto; background: none; border: none; font-size: 14px; color: #9ca3af; cursor: pointer; padding: 4px 8px; border-radius: 4px; }
+.deselectBtn:hover { background: #fee2e2; color: #dc2626; }
+
+/* Section cards */
+.sectionCard { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; }
+.sectionTitle { font-size: 14px; font-weight: 700; color: #111; padding: 10px 14px; margin: 0; border-bottom: 1px solid #f3f4f6; background: #f9fafb; }
+.benchGrid { display: grid; grid-template-columns: 1fr 1fr; }
+.benchItem { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-bottom: 1px solid #f3f4f6; border-right: 1px solid #f3f4f6; }
+.benchItem:nth-child(even) { border-right: none; }
+.benchItem:nth-last-child(-n+2) { border-bottom: none; }
+
+.benchAvatar { width: 32px; height: 32px; border-radius: 50%; color: #fff; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.benchAvatarGray { width: 32px; height: 32px; border-radius: 50%; background: #9ca3af; color: #fff; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; opacity: 0.6; }
+.benchInfo { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.benchName { font-size: 12px; font-weight: 600; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.benchNameGray { font-size: 12px; font-weight: 600; color: #9ca3af; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.benchDetail { font-size: 11px; color: #6b7280; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.suspBadge { background: #fee2e2; color: #dc2626; border-radius: 6px; padding: 2px 7px; font-size: 10px; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
+
+/* ── VS Layout ── */
+.vsWrapper { display: flex; flex-direction: column; gap: 20px; }
+
+.vsMatchBar { display: flex; align-items: center; justify-content: center; gap: 20px; font-size: 18px; font-weight: 800; margin-top: 4px; }
+.vsMatchTeam { font-size: 16px; font-weight: 800; }
+.vsMatchBadge { background: #f3f4f6; color: #6b7280; border-radius: 20px; padding: 4px 14px; font-size: 13px; font-weight: 700; }
+.vsMatchMeta { text-align: center; font-size: 13px; color: #6b7280; margin-top: -12px; }
+
+.vsLayout { display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: start; }
+.vsCol { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.vsLabel { color: #fff; font-size: 13px; font-weight: 700; border-radius: 20px; padding: 5px 20px; }
+.vsSep { font-size: 24px; font-weight: 900; color: #9ca3af; display: flex; align-items: center; padding-top: 60px; }
+
+/* In VS mode, fields fill their column */
+.vsLayout .field { width: 100%; max-width: 340px; }
+
+/* ── VS Info row (below both fields) ── */
+.vsInfoRow { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; }
+.vsInfoSep { width: 1px; background: #e5e7eb; margin: 0 20px; }
+
+/* Team info panel */
+.vsTeamInfo { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+
+.vsTeamInfoHeader { display: flex; justify-content: space-between; align-items: center; border-left: 4px solid; padding-left: 10px; }
+.vsTeamInfoName { font-size: 15px; font-weight: 800; color: #111; }
+.vsTeamInfoFormation { font-size: 12px; font-weight: 700; background: #f0fdf4; border-radius: 6px; padding: 3px 8px; }
+
+/* Stats row */
+.vsStatsRow { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; background: #f9fafb; border-radius: 8px; padding: 10px 8px; }
+.vsStatItem { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.vsStatNum { font-size: 16px; font-weight: 800; color: #111; line-height: 1; }
+.vsStatLbl { font-size: 10px; font-weight: 600; color: #9ca3af; text-transform: uppercase; }
+
+/* Team meta */
+.vsTeamMeta { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #6b7280; }
+.vsTeamMeta strong { color: #111; }
+
+/* Player list */
+.vsPlayerListTitle { font-size: 12px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: -4px; }
+.vsPlayerList { display: flex; flex-direction: column; gap: 0; border: 1px solid #f3f4f6; border-radius: 8px; overflow: hidden; }
+.vsPlayerRow { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-bottom: 1px solid #f9fafb; }
+.vsPlayerRow:last-child { border-bottom: none; }
+.vsPlayerAvatar { width: 26px; height: 26px; border-radius: 50%; color: #fff; font-size: 9px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.vsPlayerName { font-size: 12px; font-weight: 600; color: #111; flex: 1; }
+.vsPlayerPos { font-size: 10px; font-weight: 700; background: #f0fdf4; border-radius: 4px; padding: 2px 6px; }
+
+/* ── Responsive ── */
+@media (max-width: 960px) {
+  .mainLayout { grid-template-columns: 1fr; }
+  .page { padding: 16px 16px 40px; }
+  .vsLayout { grid-template-columns: 1fr; }
+  .vsSep { padding-top: 0; justify-content: center; }
+  .vsInfoRow { grid-template-columns: 1fr; }
+  .vsInfoSep { width: 100%; height: 1px; margin: 4px 0; }
+}

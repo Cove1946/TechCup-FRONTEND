@@ -9,21 +9,17 @@ const IconEnvelope = () => (
     <path d="m2 7 10 7 10-7" />
   </svg>
 );
-
 const IconLock = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
   </svg>
 );
-
 const IconEye = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-    <circle cx="12" cy="12" r="3" />
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" />
   </svg>
 );
-
 const IconEyeOff = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
@@ -31,7 +27,6 @@ const IconEyeOff = () => (
     <line x1="1" y1="1" x2="23" y2="23" />
   </svg>
 );
-
 const IconGoogle = () => (
   <svg width="18" height="18" viewBox="0 0 24 24">
     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -41,11 +36,19 @@ const IconGoogle = () => (
   </svg>
 );
 
+const DEMO_ACCOUNTS = [
+  { role: 'Administrador', email: 'admin@escuelaing.edu.co',        password: '123456', color: '#7c3aed', bg: '#faf5ff' },
+  { role: 'Coordinador',   email: 'coordinador@escuelaing.edu.co',  password: '123456', color: '#0891b2', bg: '#ecfeff' },
+  { role: 'Árbitro',       email: 'arbitro@escuelaing.edu.co',      password: '123456', color: '#d97706', bg: '#fffbeb' },
+  { role: 'Capitán',       email: 'capitan@escuelaing.edu.co',      password: '123456', color: '#16a34a', bg: '#f0fdf4' },
+];
+
 export const LoginForm: React.FC = () => {
   const { login, loading, error } = useAuth();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [emailError, setEmailError] = useState('');
+  const [showDemo, setShowDemo] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -56,7 +59,7 @@ export const LoginForm: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      setEmailError('Ingrese un correo valido (ej: nombre.apellido-a@escuelaing.edu.co)');
+      setEmailError('Ingrese un correo válido (ej: nombre.apellido@escuelaing.edu.co)');
       return;
     }
     login(formData);
@@ -70,57 +73,33 @@ export const LoginForm: React.FC = () => {
       <form onSubmit={handleSubmit} className={styles.form}>
         {error && <div className={styles.errorBanner}>{error}</div>}
 
-        {/* Email */}
         <div className={styles.fieldGroup}>
-          <label className={styles.label}>
-            Correo electrónico <span className={styles.required}>*</span>
-          </label>
+          <label className={styles.label}>Correo electrónico <span className={styles.required}>*</span></label>
           <div className={`${styles.inputWrapper} ${emailError ? styles.hasError : ''}`}>
             <span className={styles.inputIcon}><IconEnvelope /></span>
             <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="usuario@escuelaing.edu.co"
-              className={styles.input}
+              type="email" name="email" value={formData.email} onChange={handleChange}
+              placeholder="usuario@escuelaing.edu.co" className={styles.input}
             />
           </div>
-          {emailError && (
-            <div className={styles.fieldError}>
-              <span>✗</span> {emailError}
-            </div>
-          )}
+          {emailError && <div className={styles.fieldError}>✗ {emailError}</div>}
         </div>
 
-        {/* Contraseña */}
         <div className={styles.fieldGroup}>
-          <label className={styles.label}>
-            Contraseña <span className={styles.required}>*</span>
-          </label>
+          <label className={styles.label}>Contraseña <span className={styles.required}>*</span></label>
           <div className={styles.inputWrapper}>
             <span className={styles.inputIcon}><IconLock /></span>
             <input
-              type={showPassword ? 'text' : 'password'}
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="••••••••••••"
-              className={styles.input}
+              type={showPassword ? 'text' : 'password'} name="password"
+              value={formData.password} onChange={handleChange}
+              placeholder="••••••••••••" className={styles.input}
             />
-            <button
-              type="button"
-              className={styles.eyeBtn}
-              onClick={() => setShowPassword(p => !p)}
-              aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
-            >
+            <button type="button" className={styles.eyeBtn} onClick={() => setShowPassword(p => !p)}>
               {showPassword ? <IconEyeOff /> : <IconEye />}
             </button>
           </div>
           <div className={styles.forgotRow}>
-            <Link to="/forgot-password" className={styles.forgotLink}>
-              ¿Olvidaste tu contraseña?
-            </Link>
+            <Link to="/forgot-password" className={styles.forgotLink}>¿Olvidaste tu contraseña?</Link>
           </div>
         </div>
 
@@ -131,15 +110,49 @@ export const LoginForm: React.FC = () => {
         <div className={styles.divider}><span>o continúa con</span></div>
 
         <button type="button" className={styles.googleBtn}>
-          <IconGoogle />
-          Continuar con Google (Familiares)
+          <IconGoogle /> Continuar con Google (Familiares)
         </button>
 
         <p className={styles.registerRow}>
           ¿No tienes cuenta?{' '}
-          <Link to="/register" className={styles.registerLink}>Regístrate</Link>
+          <Link to="/register" className={styles.registerLink}>Regístrate como jugador</Link>
         </p>
       </form>
+
+      {/* Accesos de demostración */}
+      <div className={styles.demoSection}>
+        <button type="button" className={styles.demoToggle} onClick={() => setShowDemo(p => !p)}>
+          <span>🔑</span> Accesos de demostración
+          <svg
+            className={`${styles.demoChevron} ${showDemo ? styles.demoChevronOpen : ''}`}
+            width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
+          ><path d="m6 9 6 6 6-6" /></svg>
+        </button>
+
+        {showDemo && (
+          <div className={styles.demoBox}>
+            <p className={styles.demoNote}>
+              Los roles de <strong>Admin, Coordinador y Árbitro</strong> son asignados por el administrador del sistema — no se pueden registrar públicamente.
+            </p>
+            <div className={styles.demoGrid}>
+              {DEMO_ACCOUNTS.map(acc => (
+                <button
+                  key={acc.role}
+                  type="button"
+                  className={styles.demoCard}
+                  style={{ borderColor: acc.color, background: acc.bg }}
+                  onClick={() => login({ email: acc.email, password: acc.password })}
+                  disabled={loading}
+                >
+                  <div className={styles.demoRole} style={{ color: acc.color }}>{acc.role}</div>
+                  <div className={styles.demoEmail}>{acc.email}</div>
+                  <div className={styles.demoPass}>Clave: <strong>{acc.password}</strong></div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

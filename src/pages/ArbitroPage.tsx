@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@components/layout';
 import styles from './ArbitroPage.module.css';
 
@@ -9,9 +10,11 @@ const matches = [
 ];
 
 export const ArbitroPage: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <MainLayout>
       <div className={styles.page}>
+        <button className={styles.backBtn} onClick={() => navigate(-1)}>← Volver</button>
         <div className={styles.header}>
           <span className={styles.emoji}>🟨</span>
           <div>
@@ -38,7 +41,7 @@ export const ArbitroPage: React.FC = () => {
                 <span>📅 {m.fecha} · {m.hora}</span>
                 <span>📍 {m.cancha}</span>
               </div>
-              <button className={styles.detailBtn}>Ver detalles del partido</button>
+              <button className={styles.detailBtn} onClick={() => navigate(`/alineacion`)}>Ver detalles del partido</button>
             </div>
           ))}
         </div>

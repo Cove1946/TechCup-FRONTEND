@@ -1,0 +1,57 @@
+.page { padding: 32px 40px 60px; max-width: 1000px; margin: 0 auto; }
+.backBtn { background: none; border: none; color: #6b7280; font-size: 14px; cursor: pointer; padding: 0; margin-bottom: 16px; display: flex; align-items: center; gap: 4px; font-family: inherit; }
+.backBtn:hover { color: #16a34a; }
+.title { font-size: 26px; font-weight: 800; color: #111; margin-bottom: 4px; }
+.sub { font-size: 13px; color: #888; margin-bottom: 24px; }
+.roleLabel { font-size: 13px; font-weight: 600; color: #555; }
+
+.layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; align-items: start; }
+.leftCol { display: flex; flex-direction: column; gap: 12px; }
+
+.card { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+.cardTitle { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; color: #111; padding-bottom: 12px; border-bottom: 1px solid #f3f4f6; }
+
+.tableTitle { font-size: 15px; font-weight: 700; color: #111; }
+.table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.table th { text-align: left; padding: 8px 10px; color: #888; font-size: 12px; border-bottom: 1px solid #f3f4f6; }
+.table td { padding: 10px 10px; border-bottom: 1px solid #f9fafb; color: #333; cursor: pointer; }
+.table tr:hover td { background: #f9fafb; }
+.rowSelected td { background: #f0fdf4 !important; }
+
+.userCell { display: flex; align-items: center; gap: 10px; }
+.avatar { width: 28px; height: 28px; border-radius: 50%; color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.rolCell { color: #555; }
+
+.actions { display: flex; gap: 4px; }
+.actView { background: none; border: none; cursor: pointer; font-size: 14px; color: #2563eb; }
+.actEdit { background: none; border: none; cursor: pointer; font-size: 14px; color: #16a34a; }
+.actDel { background: none; border: none; cursor: pointer; font-size: 14px; color: #dc2626; }
+
+.addBtn { width: 100%; padding: 10px; background: #fff; color: #16a34a; border: 1.5px solid #16a34a; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.addBtn:hover { background: #f0fdf4; }
+
+.cancelBtn { width: 100%; padding: 12px; background: #fff; color: #333; border: 1.5px solid #d1d5db; border-radius: 10px; font-size: 14px; cursor: pointer; }
+.cancelBtn:hover { border-color: #9ca3af; }
+
+/* Right panel */
+.photoBig { width: 100px; height: 100px; border-radius: 50%; border: 2px dashed #d1d5db; background: #f9fafb; display: flex; align-items: center; justify-content: center; align-self: center; font-size: 28px; }
+.cameraIco { font-size: 28px; }
+
+.infoBox { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.infoBoxTitle { font-size: 13px; font-weight: 600; color: #333; margin-bottom: 4px; }
+.infoItem { display: flex; align-items: flex-start; gap: 10px; }
+.infoIco { font-size: 16px; color: #16a34a; }
+.infoKey { font-size: 11px; color: #888; margin-bottom: 2px; }
+.infoVal { font-size: 14px; font-weight: 600; color: #111; }
+
+.roleSelector { display: flex; gap: 10px; flex-wrap: wrap; }
+.roleBtn { padding: 8px 18px; background: #fff; color: #333; border: 1.5px solid #d1d5db; border-radius: 8px; font-size: 13px; cursor: pointer; }
+.roleBtn:hover { border-color: #16a34a; color: #16a34a; }
+.roleBtnActive { padding: 8px 18px; background: #fff; color: #16a34a; border: 2px solid #16a34a; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; }
+
+.savedMsg { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px 14px; font-size: 13px; }
+
+.saveBtn { width: 100%; padding: 12px; background: #16a34a; color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.saveBtn:hover { background: #15803d; }
+
+@media (max-width: 768px) { .layout { grid-template-columns: 1fr; } .page { padding: 20px 16px; } }
