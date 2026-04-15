@@ -1,81 +1,50 @@
-.page { padding: 32px 40px 60px; max-width: 1100px; margin: 0 auto; }
-
-.header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; }
+.page { padding: 28px 0 60px; }
+.header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; flex-wrap: wrap; gap: 12px; }
 .title { font-size: 28px; font-weight: 800; color: #111; margin-bottom: 4px; }
 .sub { font-size: 13px; color: #888; }
 .badge { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; border-radius: 20px; padding: 6px 16px; font-size: 13px; font-weight: 600; white-space: nowrap; }
 
-.jornada { margin-bottom: 24px; }
-
-.jornadaHeader {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 13px; color: #555; font-weight: 600;
-  background: #f9fafb; border: 1px solid #e5e7eb;
-  border-radius: 10px 10px 0 0; padding: 10px 16px;
-}
+.jornadasGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 28px; }
+.jornada { }
+.jornadaHeader { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #555; font-weight: 600; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px 10px 0 0; padding: 10px 16px; }
 .dot { color: #aaa; }
 
-.matchCard {
-  background: #fff; border: 1px solid #e5e7eb; border-top: none;
-  border-radius: 0 0 10px 10px; padding: 24px;
-}
+.matchCard { background: #fff; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 14px 14px; overflow: hidden; }
 
-.scoreLine {
-  display: flex; align-items: center; justify-content: center;
-  gap: 20px; margin-bottom: 24px;
-}
+/* Score header */
+.scoreRow { display: flex; align-items: center; padding: 20px 24px; gap: 0; border-bottom: 1px solid #f3f4f6; }
+.teamSide { display: flex; align-items: center; gap: 12px; flex: 1; }
+.teamSideRight { display: flex; align-items: center; gap: 12px; flex: 1; justify-content: flex-end; }
+.teamDot { width: 38px; height: 38px; border-radius: 50%; color: #fff; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.teamName { font-size: 14px; font-weight: 700; color: #888; }
+.winner { color: #15803d; }
+.scoreBox { display: flex; align-items: center; gap: 10px; background: #f9fafb; border-radius: 12px; padding: 10px 20px; flex-shrink: 0; }
+.scoreNum { font-size: 28px; font-weight: 900; color: #111; }
+.scoreSep { font-size: 20px; color: #ccc; font-weight: 300; }
 
-.team {
-  font-size: 15px; font-weight: 700; color: #888;
-  text-align: center; flex: 1;
-}
+/* Timeline */
+.timeline { padding: 16px 0; }
+.timelineRow { display: grid; grid-template-columns: 1fr 80px 1fr; align-items: center; min-height: 34px; }
+.timelineRow:hover { background: #f9fafb; }
+.eventLeft { display: flex; align-items: center; justify-content: flex-end; gap: 8px; padding: 4px 12px 4px 24px; }
+.eventRight { display: flex; align-items: center; justify-content: flex-start; gap: 8px; padding: 4px 24px 4px 12px; }
+.eventPlayer { font-size: 13px; color: #333; font-weight: 500; }
+.eventIcon { font-size: 16px; flex-shrink: 0; }
+.minuteCol { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.minuteDot { width: 5px; height: 5px; border-radius: 50%; background: #e5e7eb; }
+.minuteLabel { font-size: 12px; font-weight: 700; color: #6b7280; background: #f3f4f6; border-radius: 6px; padding: 2px 8px; white-space: nowrap; }
 
-.winner { color: #16a34a; }
+/* Final tag */
+.finalTag { background: #f9fafb; text-align: center; padding: 8px; font-size: 12px; font-weight: 600; color: #9ca3af; border-top: 1px solid #f3f4f6; }
 
-.scoreBox {
-  display: flex; align-items: center; gap: 10px;
-  background: #f9fafb; border-radius: 12px; padding: 12px 20px;
-}
-
-.teamLogo {
-  width: 40px; height: 40px; border-radius: 50%;
-  background: #e5e7eb; display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
-}
-
-.scoreNum { font-size: 28px; font-weight: 800; color: #111; }
-.scoreSep { font-size: 20px; color: #aaa; }
-
-.scorers { border-top: 1px solid #f3f4f6; padding-top: 16px; }
-.scorersTitle { font-size: 13px; font-weight: 700; color: #555; margin-bottom: 12px; }
-.scorersCols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-.scorerCol { display: flex; flex-direction: column; gap: 8px; }
-
-.scorerRow { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #333; }
-.ballIco { font-size: 14px; flex-shrink: 0; }
-.scorerName { flex: 1; }
-.goals { color: #888; font-size: 12px; }
-.scorerTime { color: #aaa; font-size: 12px; flex-shrink: 0; }
-
-/* Paginación */
+/* Pagination */
 .pagination { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 32px; }
-.pgBtn {
-  padding: 8px 18px; background: #fff; border: 1px solid #e5e7eb;
-  border-radius: 8px; font-size: 14px; cursor: pointer; color: #333;
-  transition: border-color 0.15s;
-}
+.pgBtn { padding: 8px 18px; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px; cursor: pointer; color: #333; font-family: inherit; }
 .pgBtn:hover:not(:disabled) { border-color: #16a34a; color: #16a34a; }
 .pgBtn:disabled { opacity: 0.4; cursor: not-allowed; }
-.pgNum {
-  width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
-  background: #fff; border: 1px solid #e5e7eb; border-radius: 8px;
-  font-size: 14px; cursor: pointer; color: #333; transition: all 0.15s;
-}
+.pgNum { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px; cursor: pointer; color: #333; font-family: inherit; }
 .pgNum:hover { border-color: #16a34a; color: #16a34a; }
 .pgActive { background: #16a34a !important; color: #fff !important; border-color: #16a34a !important; }
 
-@media (max-width: 768px) {
-  .page { padding: 20px 16px; }
-  .scoreLine { flex-direction: column; gap: 12px; }
-  .scorersCols { grid-template-columns: 1fr; }
-}
+@media (max-width: 900px) { .jornadasGrid { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { .page { padding: 20px 0 40px; } .scoreRow { padding: 16px 12px; } .teamName { font-size: 12px; } .scoreNum { font-size: 22px; } .timelineRow { grid-template-columns: 1fr 64px 1fr; } .eventLeft, .eventRight { padding: 4px 6px; } .eventPlayer { font-size: 11px; } }

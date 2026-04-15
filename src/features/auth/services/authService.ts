@@ -3,16 +3,16 @@ import { LoginCredentials, RegisterData, AuthResponse } from '../types';
 // Mock users for testing (no backend required)
 const MOCK_USERS = [
   {
-    email: 'admin@escuelaing.edu.co',
+    email: 'jugador@escuelaing.edu.co',
     password: '123456',
-    user: { id: '1', name: 'Ana Torres', email: 'admin@escuelaing.edu.co', role: 'admin' },
-    token: 'mock-token-admin',
+    user: { id: '5', name: 'Pablo Kernel', email: 'jugador@escuelaing.edu.co', role: 'jugador' },
+    token: 'mock-token-jugador',
   },
   {
-    email: 'arbitro@escuelaing.edu.co',
+    email: 'capitan@escuelaing.edu.co',
     password: '123456',
-    user: { id: '2', name: 'Roberto Sanchez', email: 'arbitro@escuelaing.edu.co', role: 'arbitro' },
-    token: 'mock-token-arbitro',
+    user: { id: '4', name: 'Carlos Pérez', email: 'capitan@escuelaing.edu.co', role: 'capitan' },
+    token: 'mock-token-capitan',
   },
   {
     email: 'coordinador@escuelaing.edu.co',
@@ -21,10 +21,16 @@ const MOCK_USERS = [
     token: 'mock-token-coordinador',
   },
   {
-    email: 'capitan@escuelaing.edu.co',
+    email: 'arbitro@escuelaing.edu.co',
     password: '123456',
-    user: { id: '4', name: 'Carlos Pérez', email: 'capitan@escuelaing.edu.co', role: 'capitan' },
-    token: 'mock-token-capitan',
+    user: { id: '2', name: 'Luis Durán', email: 'arbitro@escuelaing.edu.co', role: 'arbitro' },
+    token: 'mock-token-arbitro',
+  },
+  {
+    email: 'admin@escuelaing.edu.co',
+    password: '123456',
+    user: { id: '1', name: 'Ana Torres', email: 'admin@escuelaing.edu.co', role: 'admin' },
+    token: 'mock-token-admin',
   },
 ];
 

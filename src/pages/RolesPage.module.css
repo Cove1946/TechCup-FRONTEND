@@ -1,0 +1,44 @@
+.page { padding: 20px 40px 60px; max-width: 1100px; margin: 0 auto; }
+.backBtn { background: none; border: none; color: #6b7280; font-size: 14px; cursor: pointer; padding: 0; margin-bottom: 8px; display: flex; align-items: center; gap: 4px; font-family: inherit; }
+.backBtn:hover { color: #16a34a; }
+.subtitle { font-size: 13px; color: #6b7280; margin: 0 0 6px; }
+.titleRow { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+.title { font-size: 22px; font-weight: 800; color: #111; margin: 0; }
+.btnPrimary { background: #15803d; border: none; border-radius: 8px; padding: 8px 18px; font-size: 14px; font-weight: 700; color: #fff; cursor: pointer; white-space: nowrap; font-family: inherit; }
+.btnPrimary:hover { background: #166534; }
+.savedBanner { background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d; border-radius: 8px; padding: 10px 16px; font-size: 14px; font-weight: 600; margin-bottom: 16px; }
+.addForm { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; margin-bottom: 20px; }
+.addFormTitle { font-size: 14px; font-weight: 700; color: #111; margin: 0 0 12px; }
+.addFormFields { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.input { border: 1px solid #d1d5db; border-radius: 8px; padding: 8px 12px; font-size: 14px; font-family: inherit; color: #111; background: #fff; min-width: 160px; }
+.input:focus { outline: none; border-color: #16a34a; }
+.select { border: 1px solid #d1d5db; border-radius: 8px; padding: 8px 10px; font-size: 14px; font-family: inherit; color: #111; background: #fff; cursor: pointer; }
+.select:focus { outline: none; border-color: #16a34a; }
+.tableWrap { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; margin-bottom: 20px; }
+.table { width: 100%; border-collapse: collapse; }
+.table thead tr { background: #f9fafb; border-bottom: 1px solid #e5e7eb; }
+.table th { text-align: left; padding: 10px 14px; font-size: 12px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.4px; }
+.table td { padding: 10px 14px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
+.table tbody tr:last-child td { border-bottom: none; }
+.table tbody tr:hover { background: #f9fafb; }
+.userCell { display: flex; align-items: center; gap: 10px; }
+.avatar { width: 32px; height: 32px; border-radius: 50%; color: #fff; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.userName { font-size: 14px; font-weight: 600; color: #111; }
+.emailCell { font-size: 13px; color: #6b7280; }
+.roleLabel { display: inline-block; border-radius: 6px; padding: 3px 10px; font-size: 12px; font-weight: 700; }
+.actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.btnEdit { background: #eff6ff; border: none; border-radius: 6px; padding: 5px 12px; font-size: 12px; font-weight: 600; color: #1e40af; cursor: pointer; font-family: inherit; }
+.btnEdit:hover { background: #dbeafe; }
+.btnSave { background: #f0fdf4; border: none; border-radius: 6px; padding: 5px 12px; font-size: 12px; font-weight: 600; color: #15803d; cursor: pointer; font-family: inherit; }
+.btnSave:hover { background: #dcfce7; }
+.btnCancel { background: #f3f4f6; border: none; border-radius: 6px; padding: 5px 12px; font-size: 12px; font-weight: 600; color: #6b7280; cursor: pointer; font-family: inherit; }
+.btnCancel:hover { background: #e5e7eb; }
+.btnDelete { background: none; border: 1px solid #fca5a5; border-radius: 6px; padding: 5px 12px; font-size: 12px; font-weight: 600; color: #dc2626; cursor: pointer; font-family: inherit; }
+.btnDelete:hover { background: #fee2e2; }
+.btnDanger { background: #dc2626; border: none; border-radius: 6px; padding: 5px 12px; font-size: 12px; font-weight: 700; color: #fff; cursor: pointer; font-family: inherit; }
+.btnDanger:hover { background: #b91c1c; }
+.summary { display: flex; gap: 20px; flex-wrap: wrap; background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px 20px; }
+.summaryItem { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 70px; }
+.summaryCount { font-size: 24px; font-weight: 900; line-height: 1; }
+.summaryLabel { font-size: 11px; font-weight: 600; color: #6b7280; text-transform: uppercase; }
+@media (max-width: 768px) { .page { padding: 16px 16px 40px; } .addFormFields { flex-direction: column; align-items: stretch; } .table th:nth-child(2), .table td:nth-child(2) { display: none; } }

@@ -5,20 +5,18 @@
 
 .main {
   width: 100%;
+  max-width: 1600px;
   margin: 0 auto;
-  padding: 0;
+  padding: 0 48px;
   min-height: calc(100vh - var(--navbar-height));
   background: #f3f4f6;
+  box-sizing: border-box;
 }
 
-@media (max-width: 1200px) {
-  .main {
-    padding: var(--spacing-xl);
-  }
+@media (max-width: 1024px) {
+  .main { padding: 0 28px; }
 }
 
-@media (max-width: 768px) {
-  .main {
-    padding: var(--spacing-lg);
-  }
+@media (max-width: 640px) {
+  .main { padding: 0 16px; }
 }

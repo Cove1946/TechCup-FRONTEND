@@ -1,22 +1,25 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@components/layout';
 import styles from './ArbitroPage.module.css';
 
 const matches = [
-  { id: 1, local: 'FC KERNEL', visitante: 'LOS DEBUGGERS', fecha: '18 Mar', hora: '3:00 PM', cancha: 'Cancha 2' },
+  { id: 1, local: 'FC KERNEL',   visitante: 'LOS DEBUGGERS', fecha: '18 Mar', hora: '3:00 PM', cancha: 'Cancha 2' },
   { id: 2, local: 'NULL PTR FC', visitante: 'STACK OVERFLOW', fecha: '18 Mar', hora: '5:00 PM', cancha: 'Cancha 1' },
-  { id: 3, local: 'SEGFAULT SC', visitante: 'FC KERNEL II', fecha: '20 Mar', hora: '4:00 PM', cancha: 'Cancha 3' },
+  { id: 3, local: 'SEGFAULT SC', visitante: 'FC KERNEL II',   fecha: '20 Mar', hora: '4:00 PM', cancha: 'Cancha 3' },
 ];
 
 export const ArbitroPage: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <MainLayout>
       <div className={styles.page}>
+        <button className={styles.backBtn} onClick={() => navigate(-1)}>← Volver</button>
         <div className={styles.header}>
           <span className={styles.emoji}>🟨</span>
           <div>
             <h1 className={styles.title}>Panel del Árbitro</h1>
-            <p className={styles.sub}>RF10 · RF15 --- Mis partidos asignados</p>
+            <p className={styles.sub}>RF10 · RF15 — Mis partidos asignados</p>
           </div>
         </div>
 
@@ -38,7 +41,9 @@ export const ArbitroPage: React.FC = () => {
                 <span>📅 {m.fecha} · {m.hora}</span>
                 <span>📍 {m.cancha}</span>
               </div>
-              <button className={styles.detailBtn}>Ver detalles del partido</button>
+              <button className={styles.detailBtn} onClick={() => navigate('/alineacion')}>
+                Ver detalles del partido
+              </button>
             </div>
           ))}
         </div>

@@ -1,0 +1,49 @@
+.page { padding: 20px 40px 60px; max-width: 1100px; margin: 0 auto; }
+.backBtn { background: none; border: none; color: #6b7280; font-size: 14px; cursor: pointer; padding: 0; margin-bottom: 8px; display: flex; align-items: center; gap: 4px; font-family: inherit; }
+.backBtn:hover { color: #16a34a; }
+.subtitle { font-size: 13px; color: #6b7280; margin: 0 0 6px; }
+.titleRow { margin-bottom: 16px; }
+.title { font-size: 22px; font-weight: 800; color: #111; margin: 0; }
+.summaryBar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+.summaryBtn { background: #fff; border: 1.5px solid #e5e7eb; border-radius: 10px; padding: 10px 16px; cursor: pointer; font-family: inherit; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 80px; }
+.summaryBtn:hover { border-color: #16a34a; }
+.summaryBtnActive { background: #f0fdf4; border-color: #16a34a; }
+.summaryCount { font-size: 20px; font-weight: 900; color: #111; line-height: 1; }
+.summaryLabel { font-size: 11px; font-weight: 600; color: #6b7280; }
+.tableWrap { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; }
+.table { width: 100%; border-collapse: collapse; }
+.table thead tr { background: #f9fafb; border-bottom: 1px solid #e5e7eb; }
+.table th { text-align: left; padding: 10px 14px; font-size: 12px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.4px; }
+.table td { padding: 10px 14px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
+.table tbody tr:last-child td { border-bottom: none; }
+.table tbody tr:hover { background: #fafafa; }
+.teamName { font-size: 13px; font-weight: 700; color: #111; }
+.captainCell { font-size: 13px; color: #374151; }
+.montoCell { font-size: 14px; font-weight: 700; color: #15803d; }
+.fechaCell { font-size: 12px; color: #6b7280; white-space: nowrap; }
+.metodCell { font-size: 12px; color: #6b7280; }
+.estadoBadge { display: inline-block; border-radius: 20px; padding: 3px 10px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.actions { display: flex; gap: 6px; align-items: center; }
+.viewBtn { background: #f3f4f6; border: none; border-radius: 6px; padding: 5px 12px; font-size: 12px; font-weight: 600; color: #374151; cursor: pointer; font-family: inherit; }
+.viewBtn:hover { background: #e5e7eb; }
+.approveBtn { background: #f0fdf4; border: none; border-radius: 6px; padding: 5px 10px; font-size: 13px; font-weight: 700; color: #15803d; cursor: pointer; font-family: inherit; }
+.approveBtn:hover { background: #dcfce7; }
+.rejectBtn { background: #fef2f2; border: none; border-radius: 6px; padding: 5px 10px; font-size: 13px; font-weight: 700; color: #dc2626; cursor: pointer; font-family: inherit; }
+.rejectBtn:hover { background: #fee2e2; }
+.empty { padding: 32px; text-align: center; color: #9ca3af; font-size: 14px; }
+.modalOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 16px; }
+.modal { background: #fff; border-radius: 14px; width: 100%; max-width: 440px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+.modalHeader { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #e5e7eb; }
+.modalTitle { font-size: 16px; font-weight: 800; color: #111; margin: 0; }
+.closeBtn { background: none; border: none; font-size: 18px; color: #9ca3af; cursor: pointer; padding: 4px; line-height: 1; }
+.closeBtn:hover { color: #374151; }
+.modalBody { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.detailRow { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 14px; }
+.detailKey { color: #6b7280; font-weight: 500; }
+.detailVal { color: #111; font-weight: 600; text-align: right; }
+.modalActions { display: flex; gap: 10px; padding: 16px 20px; border-top: 1px solid #e5e7eb; }
+.modalApprove { flex: 1; background: #15803d; border: none; border-radius: 8px; padding: 10px; font-size: 14px; font-weight: 700; color: #fff; cursor: pointer; font-family: inherit; }
+.modalApprove:hover { background: #166534; }
+.modalReject { flex: 1; background: #fff; border: 1.5px solid #fca5a5; border-radius: 8px; padding: 10px; font-size: 14px; font-weight: 700; color: #dc2626; cursor: pointer; font-family: inherit; }
+.modalReject:hover { background: #fee2e2; }
+@media (max-width: 768px) { .page { padding: 16px 16px 40px; } .table th:nth-child(4), .table td:nth-child(4), .table th:nth-child(5), .table td:nth-child(5) { display: none; } }

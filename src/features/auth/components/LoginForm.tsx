@@ -41,6 +41,14 @@ const IconGoogle = () => (
   </svg>
 );
 
+const QUICK_ROLES = [
+  { label: 'Jugador',      email: 'jugador@escuelaing.edu.co',     color: '#6b7280', bg: '#f3f4f6' },
+  { label: 'Capitán',      email: 'capitan@escuelaing.edu.co',     color: '#15803d', bg: '#f0fdf4' },
+  { label: 'Coordinador',  email: 'coordinador@escuelaing.edu.co', color: '#1e3a8a', bg: '#eff6ff' },
+  { label: 'Árbitro',      email: 'arbitro@escuelaing.edu.co',     color: '#7c3aed', bg: '#f5f3ff' },
+  { label: 'Admin',        email: 'admin@escuelaing.edu.co',       color: '#dc2626', bg: '#fef2f2' },
+];
+
 export const LoginForm: React.FC = () => {
   const { login, loading, error } = useAuth();
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -60,6 +68,10 @@ export const LoginForm: React.FC = () => {
       return;
     }
     login(formData);
+  };
+
+  const handleQuickLogin = (email: string) => {
+    login({ email, password: '123456' });
   };
 
   return (
@@ -140,6 +152,25 @@ export const LoginForm: React.FC = () => {
           <Link to="/register" className={styles.registerLink}>Regístrate</Link>
         </p>
       </form>
+
+      {/* ── Inicio Rápido ── */}
+      <div className={styles.quickSection}>
+        <p className={styles.quickTitle}>⚡ Inicio Rápido</p>
+        <p className={styles.quickSub}>Accede directamente con un rol de prueba</p>
+        <div className={styles.quickGrid}>
+          {QUICK_ROLES.map(r => (
+            <button
+              key={r.email}
+              className={styles.quickBtn}
+              style={{ background: r.bg, color: r.color, borderColor: r.color + '33' }}
+              onClick={() => handleQuickLogin(r.email)}
+              disabled={loading}
+            >
+              {r.label}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
