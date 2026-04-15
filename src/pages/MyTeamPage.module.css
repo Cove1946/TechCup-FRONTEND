@@ -1,4 +1,4 @@
-.page { padding: 32px 40px 60px; max-width: 1200px; margin: 0 auto; position: relative; }
+.page { padding: 28px 0 60px; position: relative; }
 
 /* Toast */
 .toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: #052E16; color: #fff; padding: 10px 24px; border-radius: 10px; font-size: 14px; font-weight: 600; z-index: 200; box-shadow: 0 4px 16px rgba(0,0,0,0.2); }
@@ -48,6 +48,7 @@
 .avatar { width: 30px; height: 30px; border-radius: 50%; color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .playerName { font-weight: 600; color: #111; font-size: 13px; transition: color 0.12s; }
 .suspTag { background: #fee2e2; color: #dc2626; border-radius: 4px; padding: 1px 6px; font-size: 10px; font-weight: 600; display: inline-block; margin-top: 2px; }
+.captainBadge { display: inline-flex; align-items: center; justify-content: center; background: #fbbf24; color: #fff; font-size: 10px; font-weight: 800; width: 17px; height: 17px; border-radius: 50%; margin-left: 6px; vertical-align: middle; line-height: 1; }
 .badgeTitular { background: #dcfce7; color: #16a34a; border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 600; }
 .badgeReserva { background: #dbeafe; color: #2563eb; border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 600; }
 .badgeSuspendido { background: #fee2e2; color: #dc2626; border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 600; }
@@ -78,4 +79,4 @@
 .modalStatNum { font-size: 20px; font-weight: 900; color: #111; line-height: 1; }
 .modalStatLbl { font-size: 10px; font-weight: 600; color: #9ca3af; text-align: center; }
 
-@media (max-width: 768px) { .page { padding: 20px 16px 40px; } .teamCard { flex-direction: column; } .validationStrip { gap: 12px; } }
+@media (max-width: 768px) { .page { padding: 20px 0 40px; } .teamCard { flex-direction: column; } .validationStrip { gap: 12px; } }

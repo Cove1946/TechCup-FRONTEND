@@ -108,7 +108,7 @@ export const MyTeamPage: React.FC = () => {
             <table className={styles.table}>
               <thead>
                 <tr>
-                  <th>#</th><th>Jugador</th><th>Posición</th><th>Semestre</th><th>Programa</th><th>Estado</th><th>Rol</th>
+                  <th>#</th><th>Jugador</th><th>Posición</th><th>Estado</th>
                   {canEdit && <th>Acciones</th>}
                 </tr>
               </thead>
@@ -120,7 +120,10 @@ export const MyTeamPage: React.FC = () => {
                       <div className={styles.playerCell} onClick={() => setSelectedPlayer(p)} style={{ cursor: 'pointer' }}>
                         <div className={styles.avatar} style={{ background: AVATAR_COLORS[i % AVATAR_COLORS.length] }}>{p.initials}</div>
                         <div>
-                          <div className={styles.playerName}>{p.name}</div>
+                          <div className={styles.playerName}>
+                              {p.name}
+                              {p.rol === 'Capitán' && <span className={styles.captainBadge} title="Capitán">©</span>}
+                            </div>
                           {p.suspended && <span className={styles.suspTag}>Suspendido</span>}
                         </div>
                       </div>
@@ -130,8 +133,6 @@ export const MyTeamPage: React.FC = () => {
                         ? <input className={styles.inlineInput} value={editPos} onChange={e => setEditPos(e.target.value)} />
                         : p.pos}
                     </td>
-                    <td>{p.sem}</td>
-                    <td>{p.prog}</td>
                     <td>
                       {canEdit && editingNum === p.num
                         ? (
@@ -145,7 +146,6 @@ export const MyTeamPage: React.FC = () => {
                           </span>
                         )}
                     </td>
-                    <td>{p.rol}</td>
                     {canEdit && (
                       <td>
                         <div className={styles.actions}>

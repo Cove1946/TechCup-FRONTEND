@@ -5,9 +5,9 @@ import styles from './AlineacionPage.module.css';
 
 type PosType = 'GK' | 'DEF' | 'MID' | 'FWD';
 
-interface PlayerBase { id: number; initials: string; name: string; color: string; }
-interface PosSlot { top: number; left: number; pos: PosType; }
+interface FieldPlayer { id: number; initials: string; name: string; color: string; }
 interface BenchPlayer { id: number; initials: string; name: string; detail: string; color: string; suspReason?: string; }
+interface PosSlot { top: number; left: number; pos: PosType; }
 
 const FORMATION_SLOTS: Record<string, PosSlot[]> = {
   '2-3-1': [
@@ -30,7 +30,7 @@ const FORMATION_SLOTS: Record<string, PosSlot[]> = {
 const FORMATIONS = ['2-3-1', '3-2-1', '2-2-2'];
 const FORMATION_ROWS: Record<string, number[]> = { '2-3-1': [1,3,2], '3-2-1': [1,2,3], '2-2-2': [2,2,2] };
 
-const LOCAL_PLAYERS: PlayerBase[] = [
+const INIT_FIELD: FieldPlayer[] = [
   { id: 7, initials: 'CM', name: 'Carlos M.',  color: '#78350f' },
   { id: 5, initials: 'LD', name: 'Luis D.',    color: '#1e3a8a' },
   { id: 6, initials: 'RS', name: 'Rodrigo S.', color: '#5b21b6' },
@@ -40,10 +40,10 @@ const LOCAL_PLAYERS: PlayerBase[] = [
   { id: 1, initials: 'PK', name: 'Pablo K.',   color: '#7f1d1d' },
 ];
 
-const RESERVAS: BenchPlayer[] = [
+const INIT_BENCH: BenchPlayer[] = [
   { id: 10, initials: 'PH', name: 'Pablo H.',  detail: 'MED · 1G · 2A', color: '#0891b2' },
   { id: 11, initials: 'DR', name: 'Diego R.',  detail: 'FWD · 3G',       color: '#dc2626' },
-  { id: 12, initials: 'DR', name: 'Diego R.',  detail: 'MED · 1A',       color: '#7c3aed' },
+  { id: 12, initials: 'FG', name: 'Felipe G.', detail: 'MED · 1A',       color: '#7c3aed' },
   { id: 13, initials: 'MA', name: 'Malon A.',  detail: 'MED · 2G',       color: '#16a34a' },
   { id: 14, initials: 'KR', name: 'Kriay R.',  detail: 'MID · 1G',       color: '#15803d' },
   { id: 15, initials: 'EH', name: 'Erimes H.', detail: 'MED · 1G',       color: '#d97706' },
@@ -69,40 +69,54 @@ const FormationDots: React.FC<{ label: string; active: boolean }> = ({ label, ac
   );
 };
 
-const SoccerField: React.FC<{ players: PlayerBase[]; formation: string; selectedId: number | null; onSelect: (p: PlayerBase) => void }> = ({ players, formation, selectedId, onSelect }) => {
-  const slots = FORMATION_SLOTS[formation] ?? FORMATION_SLOTS['2-3-1'];
-  return (
-    <div className={styles.field}>
-      <div className={styles.fieldInner}>
-        <div className={styles.centerLine} /><div className={styles.centerCircle} />
-        <div className={styles.penaltyTop} /><div className={styles.goalTop} />
-        <div className={styles.penaltyBottom} /><div className={styles.goalBottom} />
-        {players.map((p, i) => {
-          const slot = slots[i]; if (!slot) return null;
-          return (
-            <button key={p.id} className={`${styles.fieldPlayer} ${selectedId === p.id ? styles.fieldPlayerSel : ''}`}
-              style={{ top: `${slot.top}%`, left: `${slot.left}%` }} onClick={() => onSelect(p)}>
-              <div className={styles.playerCircle} style={{ background: p.color }}>{p.initials}</div>
-              <span className={styles.posLabel}>{slot.pos}</span>
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
-
 export const AlineacionPage: React.FC = () => {
   const navigate = useNavigate();
   const userStr  = localStorage.getItem('user');
   const role     = (userStr ? JSON.parse(userStr).role : 'jugador').toLowerCase();
   const canEdit  = role === 'capitan';
 
-  const [formation, setFormation] = useState('2-3-1');
-  const [selected, setSelected]   = useState<PlayerBase | null>(null);
-  const [saved, setSaved]         = useState(false);
+  const [formation, setFormation]         = useState('2-3-1');
+  const [fieldPlayers, setFieldPlayers]   = useState<FieldPlayer[]>([...INIT_FIELD]);
+  const [benchPlayers, setBenchPlayers]   = useState<BenchPlayer[]>([...INIT_BENCH]);
+  const [selectedIdx, setSelectedIdx]     = useState<number | null>(null); // index in fieldPlayers
+  const [saved, setSaved]                 = useState(false);
+  const [swapMsg, setSwapMsg]             = useState('');
 
+  const showMsg = (msg: string) => { setSwapMsg(msg); setTimeout(() => setSwapMsg(''), 2200); };
   const handleSave = () => { setSaved(true); setTimeout(() => setSaved(false), 3000); };
+
+  const handleFieldClick = (idx: number) => {
+    if (!canEdit) return;
+    if (selectedIdx === null) {
+      setSelectedIdx(idx);
+    } else if (selectedIdx === idx) {
+      setSelectedIdx(null);
+    } else {
+      // Swap two field players
+      setFieldPlayers(prev => {
+        const arr = [...prev];
+        [arr[selectedIdx], arr[idx]] = [arr[idx], arr[selectedIdx]];
+        return arr;
+      });
+      showMsg(`↔ ${fieldPlayers[selectedIdx].name} ⇄ ${fieldPlayers[idx].name}`);
+      setSelectedIdx(null);
+    }
+  };
+
+  const handleBenchClick = (benchIdx: number) => {
+    if (!canEdit || selectedIdx === null) return;
+    const outPlayer   = fieldPlayers[selectedIdx];
+    const inPlayer    = benchPlayers[benchIdx];
+    const newField: FieldPlayer   = { id: inPlayer.id, initials: inPlayer.initials, name: inPlayer.name, color: inPlayer.color };
+    const newBench: BenchPlayer   = { id: outPlayer.id, initials: outPlayer.initials, name: outPlayer.name, detail: '', color: outPlayer.color };
+    setFieldPlayers(prev => { const arr = [...prev]; arr[selectedIdx] = newField; return arr; });
+    setBenchPlayers(prev => { const arr = [...prev]; arr[benchIdx] = newBench; return arr; });
+    showMsg(`↕ ${inPlayer.name} entra · ${outPlayer.name} sale`);
+    setSelectedIdx(null);
+  };
+
+  const slots = FORMATION_SLOTS[formation] ?? FORMATION_SLOTS['2-3-1'];
+  const selectedPlayer = selectedIdx !== null ? fieldPlayers[selectedIdx] : null;
 
   return (
     <MainLayout>
@@ -123,66 +137,110 @@ export const AlineacionPage: React.FC = () => {
         </div>
 
         {saved && <div className={styles.savedBanner}>✓ Alineación guardada correctamente</div>}
+        {swapMsg && <div className={styles.swapBanner}>{swapMsg}</div>}
 
         <div className={styles.statsBar}>
           <div className={styles.statBox}><span className={styles.statLabel}>Jugadores en cancha:</span><span className={styles.statValue}>7 / 7</span></div>
           <div className={styles.statDivider} />
           <div className={styles.statBox}><span className={styles.statLabel}>Cambios disponibles:</span><span className={styles.statValue}>5 / 5</span></div>
-          <div className={styles.warnBox}><span className={styles.warnIcon}>⚠️</span><span className={styles.warnText}>Este jugador está suspendido y no puede ser incluido en la alineación</span></div>
+          <div className={styles.warnBox}>
+            <span className={styles.warnIcon}>⚠️</span>
+            <span className={styles.warnText}>
+              {canEdit && selectedPlayer
+                ? `Seleccionado: ${selectedPlayer.name} — elige un jugador de reservas o en cancha para cambiar`
+                : 'Jugadores suspendidos no pueden ser incluidos en la alineación'}
+            </span>
+          </div>
         </div>
 
         <div className={styles.mainLayout}>
+          {/* Field */}
           <div className={styles.fieldCol}>
-            <SoccerField players={LOCAL_PLAYERS} formation={formation} selectedId={selected?.id ?? null}
-              onSelect={canEdit ? p => setSelected(prev => prev?.id === p.id ? null : p) : () => {}} />
+            <div className={styles.field}>
+              <div className={styles.fieldInner}>
+                <div className={styles.centerLine} /><div className={styles.centerCircle} />
+                <div className={styles.penaltyTop} /><div className={styles.goalTop} />
+                <div className={styles.penaltyBottom} /><div className={styles.goalBottom} />
+                {fieldPlayers.map((p, i) => {
+                  const slot = slots[i]; if (!slot) return null;
+                  const isSel = selectedIdx === i;
+                  return (
+                    <button key={p.id} className={`${styles.fieldPlayer} ${isSel ? styles.fieldPlayerSel : ''}`}
+                      style={{ top: `${slot.top}%`, left: `${slot.left}%` }}
+                      onClick={() => handleFieldClick(i)}>
+                      <div className={styles.playerCircle} style={{ background: p.color, boxShadow: isSel ? `0 0 0 3px #fff, 0 0 0 5px ${p.color}` : undefined }}>
+                        {p.initials}
+                      </div>
+                      <span className={styles.posLabel}>{slot.pos}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
+          {/* Panel */}
           <div className={styles.panel}>
             {!canEdit && (
               <div className={styles.readOnlyBanner}>👁 Modo solo lectura — solo el capitán puede modificar la alineación</div>
             )}
-            {canEdit && (
-            <div className={styles.formationRow}>
-              {FORMATIONS.map(f => (
-                <button key={f} className={formation === f ? styles.formCardActive : styles.formCard}
-                  onClick={() => { setFormation(f); setSelected(null); }}>
-                  <FormationDots label={f} active={formation === f} />
-                  <span className={formation === f ? styles.formLabelActive : styles.formLabel}>{f}</span>
-                </button>
-              ))}
-            </div>
-            )}
 
-            {selected && (
-              <div className={styles.selectedCard}>
-                <div className={styles.selectedAvatar} style={{ background: selected.color }}>{selected.initials}</div>
-                <div>
-                  <div className={styles.selectedName}>{selected.name}</div>
-                  <div className={styles.selectedPos}>{FORMATION_SLOTS[formation]?.[LOCAL_PLAYERS.findIndex(p => p.id === selected.id)]?.pos ?? ''}</div>
-                </div>
-                <button className={styles.deselectBtn} onClick={() => setSelected(null)}>✕</button>
+            {canEdit && (
+              <div className={styles.formationRow}>
+                {FORMATIONS.map(f => (
+                  <button key={f} className={formation === f ? styles.formCardActive : styles.formCard}
+                    onClick={() => { setFormation(f); setSelectedIdx(null); }}>
+                    <FormationDots label={f} active={formation === f} />
+                    <span className={formation === f ? styles.formLabelActive : styles.formLabel}>{f}</span>
+                  </button>
+                ))}
               </div>
             )}
 
+            {/* Selected player card */}
+            {selectedPlayer && canEdit && (
+              <div className={styles.selectedCard}>
+                <div className={styles.selectedAvatar} style={{ background: selectedPlayer.color }}>{selectedPlayer.initials}</div>
+                <div>
+                  <div className={styles.selectedName}>{selectedPlayer.name}</div>
+                  <div className={styles.selectedPos}>{slots[selectedIdx!]?.pos} — Selecciona con quién cambiar</div>
+                </div>
+                <button className={styles.deselectBtn} onClick={() => setSelectedIdx(null)}>✕</button>
+              </div>
+            )}
+
+            {/* Reservas */}
             <div className={styles.sectionCard}>
-              <h3 className={styles.sectionTitle}>Reservas</h3>
+              <h3 className={styles.sectionTitle}>
+                Reservas
+                {canEdit && selectedPlayer && <span className={styles.sectionHint}> — toca para cambiar</span>}
+              </h3>
               <div className={styles.benchGrid}>
-                {RESERVAS.map(p => (
-                  <div key={p.id} className={styles.benchItem}>
+                {benchPlayers.map((p, bi) => (
+                  <div key={p.id}
+                    className={`${styles.benchItem} ${canEdit && selectedPlayer ? styles.benchItemClickable : ''}`}
+                    onClick={() => handleBenchClick(bi)}>
                     <div className={styles.benchAvatar} style={{ background: p.color }}>{p.initials}</div>
-                    <div className={styles.benchInfo}><span className={styles.benchName}>{p.name}</span><span className={styles.benchDetail}>{p.detail}</span></div>
+                    <div className={styles.benchInfo}>
+                      <span className={styles.benchName}>{p.name}</span>
+                      {p.detail && <span className={styles.benchDetail}>{p.detail}</span>}
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
 
+            {/* Suspendidos */}
             <div className={styles.sectionCard}>
               <h3 className={styles.sectionTitle}>Suspendidos</h3>
               <div className={styles.benchGrid}>
                 {SUSPENDIDOS.map(p => (
                   <div key={p.id} className={styles.benchItem}>
                     <div className={styles.benchAvatarGray}>{p.initials}</div>
-                    <div className={styles.benchInfo}><span className={styles.benchNameGray}>{p.name}</span><span className={styles.benchDetail}>{p.detail} · {p.suspReason}</span></div>
+                    <div className={styles.benchInfo}>
+                      <span className={styles.benchNameGray}>{p.name}</span>
+                      <span className={styles.benchDetail}>{p.detail} · {p.suspReason}</span>
+                    </div>
                     <span className={styles.suspBadge}>Suspendido</span>
                   </div>
                 ))}

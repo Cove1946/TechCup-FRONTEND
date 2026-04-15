@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@components/layout';
 import styles from './CreateTeamPage.module.css';
 
-const PROGRAMAS = ['Ingeniería de Sistemas', 'Ingeniería Civil', 'Ingeniería Industrial', 'Ingeniería Eléctrica', 'Ingeniería en Ciberseguridad'];
+const PROGRAMAS = ['Ingeniería de Sistemas', 'Ingeniería Inteligencia Artificial', 'Ingeniería Biotecnologia', 'Ingeniería Estadistica', 'Ingeniería en Ciberseguridad'];
 const CAPITANES = ['Carlos Pérez', 'María González', 'Pedro Martínez', 'Ana Torres', 'Luis Rodríguez'];
 
 export const CreateTeamPage: React.FC = () => {

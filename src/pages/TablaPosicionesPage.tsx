@@ -1,20 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@components/layout';
 import styles from './TablaPosicionesPage.module.css';
 
 interface Equipo {
-  pos: number;
-  nombre: string;
-  initials: string;
-  color: string;
-  pj: number;
-  pg: number;
-  pe: number;
-  pp: number;
-  gf: number;
-  gc: number;
-  pts: number;
+  pos: number; nombre: string; initials: string; color: string;
+  pj: number; pg: number; pe: number; pp: number; gf: number; gc: number; pts: number;
 }
 
 const EQUIPOS: Equipo[] = [
@@ -30,6 +21,7 @@ const EQUIPOS: Equipo[] = [
 
 export const TablaPosicionesPage: React.FC = () => {
   const navigate = useNavigate();
+  const [selected, setSelected] = useState<Equipo | null>(null);
 
   return (
     <MainLayout>
@@ -42,12 +34,13 @@ export const TablaPosicionesPage: React.FC = () => {
           <button className={styles.btnOutline} onClick={() => navigate('/estadisticas')}>📈 Estadísticas</button>
         </div>
 
+        <p className={styles.hint}>Haz click en un equipo para ver sus detalles</p>
+
         <div className={styles.tableWrap}>
           <table className={styles.table}>
             <thead>
               <tr>
-                <th>#</th>
-                <th>Equipo</th>
+                <th>#</th><th>Equipo</th>
                 <th title="Partidos jugados">PJ</th>
                 <th title="Partidos ganados">PG</th>
                 <th title="Partidos empatados">PE</th>
@@ -63,11 +56,12 @@ export const TablaPosicionesPage: React.FC = () => {
                 const dg = e.gf - e.gc;
                 const isTop4 = idx < 4;
                 return (
-                  <tr key={e.nombre} className={isTop4 ? styles.topRow : ''}>
+                  <tr key={e.nombre} className={`${isTop4 ? styles.topRow : ''} ${styles.clickableRow}`}
+                    onClick={() => setSelected(e)}>
                     <td className={styles.posCell}>
-                      {idx < 4 ? (
-                        <span className={styles.posBadge} style={{ background: e.color }}>{e.pos}</span>
-                      ) : e.pos}
+                      {idx < 4
+                        ? <span className={styles.posBadge} style={{ background: e.color }}>{e.pos}</span>
+                        : e.pos}
                     </td>
                     <td>
                       <div className={styles.teamCell}>
@@ -95,6 +89,45 @@ export const TablaPosicionesPage: React.FC = () => {
         <div className={styles.legend}>
           <div className={styles.legendItem}><div className={styles.legendDot} style={{ background: '#15803d' }} />Clasifican a cuartos de final</div>
         </div>
+
+        {/* Team popup */}
+        {selected && (
+          <div className={styles.overlay} onClick={() => setSelected(null)}>
+            <div className={styles.modal} onClick={e => e.stopPropagation()}>
+              <div className={styles.modalHeader} style={{ borderTop: `4px solid ${selected.color}` }}>
+                <div className={styles.modalAvatar} style={{ background: selected.color }}>{selected.initials}</div>
+                <div className={styles.modalInfo}>
+                  <div className={styles.modalName}>{selected.nombre}</div>
+                  <div className={styles.modalPos}>Posición #{selected.pos} · Temporada 2026-1</div>
+                </div>
+                <button className={styles.modalClose} onClick={() => setSelected(null)}>✕</button>
+              </div>
+              <div className={styles.modalBody}>
+                <div className={styles.modalGrid}>
+                  <div className={styles.modalStat}><span className={styles.modalNum}>{selected.pts}</span><span className={styles.modalLbl}>Puntos</span></div>
+                  <div className={styles.modalStat}><span className={styles.modalNum}>{selected.pj}</span><span className={styles.modalLbl}>Jugados</span></div>
+                  <div className={styles.modalStat}><span className={styles.modalNum} style={{ color: '#16a34a' }}>{selected.pg}</span><span className={styles.modalLbl}>Ganados</span></div>
+                  <div className={styles.modalStat}><span className={styles.modalNum} style={{ color: '#6b7280' }}>{selected.pe}</span><span className={styles.modalLbl}>Empatados</span></div>
+                  <div className={styles.modalStat}><span className={styles.modalNum} style={{ color: '#dc2626' }}>{selected.pp}</span><span className={styles.modalLbl}>Perdidos</span></div>
+                </div>
+                <div className={styles.modalDivider} />
+                <div className={styles.modalGrid}>
+                  <div className={styles.modalStat}><span className={styles.modalNum}>{selected.gf}</span><span className={styles.modalLbl}>Goles a favor</span></div>
+                  <div className={styles.modalStat}><span className={styles.modalNum}>{selected.gc}</span><span className={styles.modalLbl}>Goles en contra</span></div>
+                  <div className={styles.modalStat}>
+                    <span className={styles.modalNum} style={{ color: selected.gf - selected.gc > 0 ? '#16a34a' : '#dc2626' }}>
+                      {selected.gf - selected.gc > 0 ? '+' : ''}{selected.gf - selected.gc}
+                    </span>
+                    <span className={styles.modalLbl}>Diferencia</span>
+                  </div>
+                </div>
+                {selected.pos <= 4 && (
+                  <div className={styles.classifiedBanner}>✓ Clasificado a cuartos de final</div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </MainLayout>
   );
