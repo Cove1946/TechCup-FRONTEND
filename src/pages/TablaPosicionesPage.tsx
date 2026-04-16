@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@components/layout';
+import { matchService } from '../api/matchService';
 import styles from './TablaPosicionesPage.module.css';
 
 interface Equipo {
@@ -8,20 +9,32 @@ interface Equipo {
   pj: number; pg: number; pe: number; pp: number; gf: number; gc: number; pts: number;
 }
 
-const EQUIPOS: Equipo[] = [
-  { pos: 1, nombre: 'FC KERNEL',      initials: 'FCK', color: '#15803d', pj: 6, pg: 5, pe: 0, pp: 1, gf: 14, gc: 6,  pts: 15 },
-  { pos: 2, nombre: 'LOS DEBUGGERS',  initials: 'DBG', color: '#1e3a8a', pj: 6, pg: 4, pe: 0, pp: 2, gf: 11, gc: 9,  pts: 12 },
-  { pos: 3, nombre: 'STACK OVERFLOW', initials: 'SOF', color: '#dc2626', pj: 6, pg: 3, pe: 2, pp: 1, gf: 10, gc: 8,  pts: 11 },
-  { pos: 4, nombre: 'BYTE FORCE',     initials: 'BTF', color: '#7c3aed', pj: 6, pg: 3, pe: 1, pp: 2, gf: 9,  gc: 9,  pts: 10 },
-  { pos: 5, nombre: 'NULL POINTERS',  initials: 'NLP', color: '#d97706', pj: 6, pg: 2, pe: 2, pp: 2, gf: 7,  gc: 10, pts: 8  },
-  { pos: 6, nombre: 'RUNTIME ERROR',  initials: 'RTE', color: '#0f766e', pj: 6, pg: 2, pe: 1, pp: 3, gf: 6,  gc: 11, pts: 7  },
-  { pos: 7, nombre: 'GIT PUSH FORCE', initials: 'GPF', color: '#4b5563', pj: 6, pg: 1, pe: 2, pp: 3, gf: 5,  gc: 9,  pts: 5  },
-  { pos: 8, nombre: '404 NOT FOUND',  initials: '404', color: '#6b7280', pj: 6, pg: 0, pe: 2, pp: 4, gf: 3,  gc: 13, pts: 2  },
-];
-
 export const TablaPosicionesPage: React.FC = () => {
   const navigate = useNavigate();
   const [selected, setSelected] = useState<Equipo | null>(null);
+  const [equipos, setEquipos] = useState<Equipo[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // TODO: backend endpoint needed – obtain active tournamentId for the current user's context
+  const ACTIVE_TOURNAMENT_ID = 1;
+
+  useEffect(() => {
+    const fetchStandings = async () => {
+      try {
+        const data = await matchService.getStandings(ACTIVE_TOURNAMENT_ID);
+        setEquipos(data);
+      } catch {
+        setError('No se pudo cargar la tabla de posiciones');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStandings();
+  }, []);
+
+  if (loading) return <MainLayout><div className={styles.page}>Cargando tabla...</div></MainLayout>;
+  if (error) return <MainLayout><div className={styles.page}>{error}</div></MainLayout>;
 
   return (
     <MainLayout>
@@ -52,7 +65,7 @@ export const TablaPosicionesPage: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {EQUIPOS.map((e, idx) => {
+              {equipos.map((e, idx) => {
                 const dg = e.gf - e.gc;
                 const isTop4 = idx < 4;
                 return (
@@ -90,7 +103,6 @@ export const TablaPosicionesPage: React.FC = () => {
           <div className={styles.legendItem}><div className={styles.legendDot} style={{ background: '#15803d' }} />Clasifican a cuartos de final</div>
         </div>
 
-        {/* Team popup */}
         {selected && (
           <div className={styles.overlay} onClick={() => setSelected(null)}>
             <div className={styles.modal} onClick={e => e.stopPropagation()}>

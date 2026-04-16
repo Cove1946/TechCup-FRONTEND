@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@components/layout';
+import { paymentService } from '../api/paymentService';
 import styles from './PaymentManagementPage.module.css';
 
 type EstadoPago = 'pendiente' | 'aprobado' | 'rechazado';
@@ -16,30 +17,50 @@ interface Payment {
   comprobante: string;
 }
 
-const INITIAL_PAYMENTS: Payment[] = [
-  { id: 1, equipo: 'FC KERNEL',      capitan: 'Carlos Pérez',    monto: '$500',  fecha: '10 Mar 2026', metodo: 'Transferencia', estado: 'pendiente',  comprobante: 'COMP-2026-001' },
-  { id: 2, equipo: 'LOS DEBUGGERS',  capitan: 'Santiago Mora',   monto: '$500',  fecha: '11 Mar 2026', metodo: 'Efectivo',      estado: 'aprobado',   comprobante: 'COMP-2026-002' },
-  { id: 3, equipo: 'STACK OVERFLOW', capitan: 'Andrés Tapia',    monto: '$500',  fecha: '12 Mar 2026', metodo: 'Transferencia', estado: 'pendiente',  comprobante: 'COMP-2026-003' },
-  { id: 4, equipo: 'NULL POINTERS',  capitan: 'Luis Salas',      monto: '$500',  fecha: '9 Mar 2026',  metodo: 'Tarjeta',       estado: 'rechazado',  comprobante: 'COMP-2026-004' },
-  { id: 5, equipo: 'BYTE FORCE',     capitan: 'Pablo Herrera',   monto: '$500',  fecha: '13 Mar 2026', metodo: 'Transferencia', estado: 'pendiente',  comprobante: 'COMP-2026-005' },
-];
-
 const ESTADO_LABELS: Record<EstadoPago, string> = { pendiente: 'Pendiente', aprobado: 'Aprobado', rechazado: 'Rechazado' };
 const ESTADO_COLORS: Record<EstadoPago, string> = { pendiente: '#d97706', aprobado: '#15803d', rechazado: '#dc2626' };
 const ESTADO_BG:    Record<EstadoPago, string> = { pendiente: '#fffbeb', aprobado: '#f0fdf4', rechazado: '#fef2f2' };
 
+// TODO: backend endpoint needed – obtain active tournamentId for the current user's context
+const ACTIVE_TOURNAMENT_ID = 1;
+
 export const PaymentManagementPage: React.FC = () => {
   const navigate = useNavigate();
-  const [payments, setPayments]         = useState<Payment[]>(INITIAL_PAYMENTS);
+  const [payments, setPayments]         = useState<Payment[]>([]);
   const [filterEstado, setFilterEstado] = useState<EstadoPago | 'todos'>('todos');
   const [viewPayment, setViewPayment]   = useState<Payment | null>(null);
+  const [loading, setLoading]           = useState(true);
+  const [error, setError]               = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchPayments = async () => {
+      try {
+        const data = await paymentService.getPaymentsByTournament(ACTIVE_TOURNAMENT_ID);
+        setPayments(data);
+      } catch {
+        setError('No se pudieron cargar los pagos');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPayments();
+  }, []);
+
+  const updateEstado = async (id: number, estado: EstadoPago) => {
+    try {
+      if (estado === 'aprobado') {
+        await paymentService.approvePayment(id);
+      } else if (estado === 'rechazado') {
+        await paymentService.rejectPayment(id);
+      }
+      setPayments(prev => prev.map(p => p.id === id ? { ...p, estado } : p));
+      setViewPayment(prev => prev?.id === id ? { ...prev, estado } : prev);
+    } catch {
+      // Error handled silently; state remains unchanged
+    }
+  };
 
   const filtered = filterEstado === 'todos' ? payments : payments.filter(p => p.estado === filterEstado);
-
-  const updateEstado = (id: number, estado: EstadoPago) => {
-    setPayments(prev => prev.map(p => p.id === id ? { ...p, estado } : p));
-    setViewPayment(prev => prev?.id === id ? { ...prev, estado } : prev);
-  };
 
   const counts = {
     todos: payments.length,
@@ -47,6 +68,9 @@ export const PaymentManagementPage: React.FC = () => {
     aprobado:  payments.filter(p => p.estado === 'aprobado').length,
     rechazado: payments.filter(p => p.estado === 'rechazado').length,
   };
+
+  if (loading) return <MainLayout><div className={styles.page}>Cargando pagos...</div></MainLayout>;
+  if (error) return <MainLayout><div className={styles.page}>{error}</div></MainLayout>;
 
   return (
     <MainLayout>

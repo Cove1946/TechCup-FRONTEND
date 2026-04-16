@@ -1,50 +1,52 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { MainLayout } from '@components/layout';
 import { Card, Badge, Button } from '@components/ui';
 import { useNavigate } from 'react-router-dom';
+import { teamService } from '../api/teamService';
 import styles from './TeamsPage.module.css';
+
+interface Team {
+  id: number;
+  name: string;
+  captain: string;
+  players: number;
+  wins: number;
+  losses: number;
+  draws: number;
+  position: number;
+  status: 'active' | 'inactive';
+}
 
 export const TeamsPage: React.FC = () => {
   const navigate = useNavigate();
   const userStr  = localStorage.getItem('user');
   const role     = (userStr ? JSON.parse(userStr).role : 'jugador').toLowerCase();
-  const canCreate = ['capitan','admin','coordinador'].includes(role);
+  const canCreate = ['capitan', 'admin', 'coordinador'].includes(role);
 
-  const teams = [
-    {
-      id: 1,
-      name: 'Ingeniería de Sistemas',
-      captain: 'Carlos Rodríguez',
-      players: 18,
-      wins: 8,
-      losses: 2,
-      draws: 2,
-      position: 2,
-      status: 'active' as const,
-    },
-    {
-      id: 2,
-      name: 'Ingeniería Civil',
-      captain: 'María González',
-      players: 16,
-      wins: 10,
-      losses: 1,
-      draws: 1,
-      position: 1,
-      status: 'active' as const,
-    },
-    {
-      id: 3,
-      name: 'Ingeniería Industrial',
-      captain: 'Pedro Martínez',
-      players: 15,
-      wins: 5,
-      losses: 5,
-      draws: 2,
-      position: 4,
-      status: 'inactive' as const,
-    },
-  ];
+  // TODO: backend endpoint needed – obtain active tournamentId for the current user's context
+  // Replace ACTIVE_TOURNAMENT_ID with the real tournamentId once that endpoint exists
+  const ACTIVE_TOURNAMENT_ID = 1;
+
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const data = await teamService.getTeamsByTournament(ACTIVE_TOURNAMENT_ID);
+        setTeams(data);
+      } catch {
+        setError('No se pudieron cargar los equipos');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTeams();
+  }, []);
+
+  if (loading) return <MainLayout><div className={styles.teams}>Cargando equipos...</div></MainLayout>;
+  if (error) return <MainLayout><div className={styles.teams}>{error}</div></MainLayout>;
 
   return (
     <MainLayout>
