@@ -29,9 +29,9 @@ interface PlayerStats {
   tarjetasAmarillas: number | null;
 }
 
-const BANNER_ACTIONS: Record<string, { label: string; to: string; outline?: boolean }[]> = {
+const BANNER_ACTIONS: Record<string, { label: string; to: string; outline?: boolean; disabled?: boolean }[]> = {
   jugador:     [{ label: 'Mi Equipo', to: '/my-team' }],
-  capitan:     [{ label: 'Mi Equipo', to: '/my-team' }, { label: 'Alineación', to: '/alineacion', outline: true }, { label: 'Crear Equipo +', to: '/teams/create', outline: true }],
+  capitan:     [{ label: 'Mi Equipo', to: '/my-team' }, { label: 'Alineación', to: '/alineacion', outline: true }, { label: 'Crear Equipo +', to: '/teams/create', outline: true, disabled: true }],
   coordinador: [{ label: 'Ver Torneos', to: '/torneos' }, { label: 'Gestión de Pagos', to: '/organizer/payments', outline: true }, { label: 'Configurar Torneo', to: '/organizer/config', outline: true }],
   arbitro:     [{ label: 'Panel Árbitro', to: '/arbitro' }, { label: 'Ver Calendario', to: '/calendar', outline: true }],
   admin:       [{ label: 'Gestión de Pagos', to: '/organizer/payments' }, { label: 'Gestión de Roles', to: '/admin/roles', outline: true }, { label: 'Configurar Torneo', to: '/organizer/config', outline: true }],
@@ -135,7 +135,9 @@ export const DashboardPage: React.FC = () => {
                 <button
                   key={a.to}
                   className={a.outline ? styles.bannerBtnOutline : styles.bannerBtn}
-                  onClick={() => navigate(a.to)}
+                  onClick={() => !a.disabled && navigate(a.to)}
+                  disabled={a.disabled}
+                  title={a.disabled ? 'Ya tienes un equipo creado' : undefined}
                 >
                   {a.label}
                 </button>
