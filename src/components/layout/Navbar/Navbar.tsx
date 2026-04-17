@@ -127,7 +127,8 @@ export const Navbar: React.FC<NavbarProps> = ({ userName, userAvatar }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const userStr  = localStorage.getItem('user');
-  const userObj  = userStr ? JSON.parse(userStr) : null;
+  let userObj = null;
+  try { if (userStr) userObj = JSON.parse(userStr); } catch { localStorage.removeItem('user'); }
   const userRole = (userObj?.role ?? 'jugador').toLowerCase();
   const profileTo = PROFILE_BY_ROLE[userRole] ?? '/profile';
 

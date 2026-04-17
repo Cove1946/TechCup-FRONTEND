@@ -12,7 +12,8 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
   showNavbar = true
 }) => {
   const userString = localStorage.getItem('user');
-  const user = userString ? JSON.parse(userString) : null;
+  let user = null;
+  try { if (userString) user = JSON.parse(userString); } catch { localStorage.removeItem('user'); }
 
   return (
     <div className={styles.layout}>
