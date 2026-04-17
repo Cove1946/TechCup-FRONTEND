@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@components/layout';
-import { teamService } from '../api/teamService';
 import styles from './MyTeamPage.module.css';
 
 interface Player {
@@ -20,8 +19,27 @@ interface TeamData {
 
 const AVATAR_COLORS = ['#16a34a','#2563eb','#9333ea','#ea580c','#0891b2','#be185d'];
 
-// TODO: backend endpoint needed – obtain current user's teamId from session/profile
-const MY_TEAM_ID = 1;
+const MOCK_ROSTER: Player[] = [
+  { num: 7,  initials: 'CM', name: 'Carlos M.',  pos: 'Portero',        sem: '6', prog: 'Ing. Sistemas',        estado: 'Titular',    rol: 'Capitán', suspended: false, goles: 0, asistencias: 2, partidos: 8, tarjAm: 1, tarjRoj: 0 },
+  { num: 5,  initials: 'LD', name: 'Luis D.',    pos: 'Defensa',        sem: '4', prog: 'Ing. Sistemas',        estado: 'Titular',    rol: 'Jugador', suspended: false, goles: 1, asistencias: 3, partidos: 8, tarjAm: 0, tarjRoj: 0 },
+  { num: 6,  initials: 'RS', name: 'Rodrigo S.', pos: 'Defensa',        sem: '5', prog: 'Ing. IA',              estado: 'Titular',    rol: 'Jugador', suspended: false, goles: 2, asistencias: 1, partidos: 7, tarjAm: 2, tarjRoj: 0 },
+  { num: 2,  initials: 'PH', name: 'Pablo H.',   pos: 'Mediocampista',  sem: '3', prog: 'Ing. Sistemas',        estado: 'Titular',    rol: 'Jugador', suspended: false, goles: 1, asistencias: 2, partidos: 8, tarjAm: 0, tarjRoj: 0 },
+  { num: 3,  initials: 'AT', name: 'Andrés T.',  pos: 'Mediocampista',  sem: '5', prog: 'Ing. Ciberseguridad',  estado: 'Titular',    rol: 'Jugador', suspended: false, goles: 0, asistencias: 1, partidos: 6, tarjAm: 1, tarjRoj: 0 },
+  { num: 4,  initials: 'JV', name: 'Juan V.',    pos: 'Mediocampista',  sem: '4', prog: 'Ing. IA',              estado: 'Titular',    rol: 'Jugador', suspended: false, goles: 3, asistencias: 2, partidos: 8, tarjAm: 0, tarjRoj: 0 },
+  { num: 1,  initials: 'PK', name: 'Pablo K.',   pos: 'Delantero',      sem: '6', prog: 'Ing. Estadística',     estado: 'Titular',    rol: 'Jugador', suspended: false, goles: 5, asistencias: 1, partidos: 8, tarjAm: 1, tarjRoj: 0 },
+  { num: 10, initials: 'PH', name: 'Pablo H.',   pos: 'Mediocampista',  sem: '3', prog: 'Ing. Sistemas',        estado: 'Reserva',    rol: 'Jugador', suspended: false, goles: 1, asistencias: 2, partidos: 5, tarjAm: 0, tarjRoj: 0 },
+  { num: 11, initials: 'DR', name: 'Diego R.',   pos: 'Delantero',      sem: '4', prog: 'Ing. Biotecnología',   estado: 'Reserva',    rol: 'Jugador', suspended: false, goles: 3, asistencias: 0, partidos: 4, tarjAm: 1, tarjRoj: 0 },
+  { num: 12, initials: 'FG', name: 'Felipe G.',  pos: 'Mediocampista',  sem: '5', prog: 'Ing. Sistemas',        estado: 'Reserva',    rol: 'Jugador', suspended: false, goles: 0, asistencias: 1, partidos: 3, tarjAm: 0, tarjRoj: 0 },
+  { num: 13, initials: 'MA', name: 'Malon A.',   pos: 'Mediocampista',  sem: '4', prog: 'Ing. IA',              estado: 'Reserva',    rol: 'Jugador', suspended: false, goles: 2, asistencias: 0, partidos: 5, tarjAm: 1, tarjRoj: 0 },
+  { num: 14, initials: 'KR', name: 'Kriay R.',   pos: 'Mediocampista',  sem: '3', prog: 'Ing. Estadística',     estado: 'Reserva',    rol: 'Jugador', suspended: false, goles: 1, asistencias: 0, partidos: 4, tarjAm: 0, tarjRoj: 0 },
+  { num: 15, initials: 'EH', name: 'Erimes H.',  pos: 'Mediocampista',  sem: '5', prog: 'Ing. Ciberseguridad',  estado: 'Reserva',    rol: 'Jugador', suspended: false, goles: 1, asistencias: 0, partidos: 3, tarjAm: 0, tarjRoj: 0 },
+  { num: 20, initials: 'LM', name: 'Luis M.',    pos: 'Defensa',        sem: '4', prog: 'Ing. Sistemas',        estado: 'Suspendido', rol: 'Jugador', suspended: true,  goles: 0, asistencias: 0, partidos: 6, tarjAm: 2, tarjRoj: 1 },
+  { num: 21, initials: 'ML', name: 'Marry L.',   pos: 'Defensa',        sem: '3', prog: 'Ing. IA',              estado: 'Suspendido', rol: 'Jugador', suspended: true,  goles: 1, asistencias: 2, partidos: 7, tarjAm: 2, tarjRoj: 1 },
+];
+
+const MOCK_TEAM: TeamData = {
+  id: 1, name: 'FC KERNEL', captain: 'Carlos Pérez', uniform: 'Azul / Blanco', players: MOCK_ROSTER,
+};
 
 export const MyTeamPage: React.FC = () => {
   const navigate = useNavigate();
@@ -43,32 +61,16 @@ export const MyTeamPage: React.FC = () => {
   const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(''), 2500); };
 
   useEffect(() => {
-    const fetchTeam = async () => {
-      try {
-        const data = await teamService.getTeam(MY_TEAM_ID);
-        setTeamData(data);
-        setRoster(data.players ?? []);
-      } catch {
-        setError('No se pudo cargar el equipo');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchTeam();
+    setTeamData(MOCK_TEAM);
+    setRoster(MOCK_TEAM.players);
+    setLoading(false);
   }, []);
 
-  const handleDelete = async (num: number) => {
-    const player = roster.find(p => p.num === num);
-    if (!player) return;
-    try {
-      await teamService.removeMember(MY_TEAM_ID, player.num);
-      setRoster(prev => prev.filter(p => p.num !== num));
-      setConfirmDel(null);
-      if (selectedPlayer?.num === num) setSelectedPlayer(null);
-      showToast('Jugador eliminado del equipo');
-    } catch {
-      showToast('Error al eliminar el jugador');
-    }
+  const handleDelete = (num: number) => {
+    setRoster(prev => prev.filter(p => p.num !== num));
+    setConfirmDel(null);
+    if (selectedPlayer?.num === num) setSelectedPlayer(null);
+    showToast('Jugador eliminado del equipo');
   };
 
   const handleEditSave = async (num: number) => {

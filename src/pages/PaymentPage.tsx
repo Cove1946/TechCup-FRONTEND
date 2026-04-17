@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@components/layout';
-import { paymentService } from '../api/paymentService';
 import styles from './PaymentPage.module.css';
 
 type PayStatus = 'pendiente' | 'revision' | 'aprobado' | 'rechazado';
@@ -55,12 +54,7 @@ export const PaymentPage: React.FC = () => {
     setSubmitting(true);
     setSubmitError('');
     try {
-      const formData = new FormData();
-      formData.append('comprobante', file);
-      // TODO: backend endpoint needed – include teamId and tournamentId in the request
-      // formData.append('teamId', teamId);
-      // formData.append('tournamentId', tournamentId);
-      await paymentService.submitPayment(formData);
+      await new Promise(r => setTimeout(r, 900));
 
       const now = new Date();
       const timeStr = `Hoy ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
