@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { MainLayout } from '@components/layout';
 import { useNavigate } from 'react-router-dom';
 import { matchService } from '../api/matchService';
-import { teamService } from '../api/teamService';
 import styles from './DashboardPage.module.css';
 
 // TODO: backend endpoint needed – GET /api/tournaments/active/stats
@@ -17,6 +16,14 @@ interface Match {
   timeLabel: string;
   cancha: string;
 }
+
+const ROLE_LABELS: Record<string, string> = {
+  jugador:     'Jugador',
+  capitan:     'Capitán',
+  coordinador: 'Coordinador',
+  arbitro:     'Árbitro',
+  admin:       'Administrador',
+};
 
 interface Invitation {
   id: number | string;
@@ -39,7 +46,7 @@ const ACTIVE_TOURNAMENT_ID = 1;
 export const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const userStr = localStorage.getItem('user');
-  let user: { name: string; role: string; id?: number | string } = { name: 'Usuario', role: 'jugador' };
+  let user = { name: 'Usuario', role: 'jugador' };
   try { if (userStr) user = JSON.parse(userStr); } catch { /* localStorage corrupto */ }
   const role    = (user.role ?? 'jugador').toLowerCase();
   const actions = BANNER_ACTIONS[role] ?? BANNER_ACTIONS['jugador'];
@@ -55,6 +62,7 @@ export const DashboardPage: React.FC = () => {
     const fetchMatches = async () => {
       try {
         const data = await matchService.getMatchesByTournament(ACTIVE_TOURNAMENT_ID);
+        // Show only the next 3 upcoming matches
         setMatches(data.slice(0, 3));
       } catch {
         // Non-critical: dashboard still renders without matches
@@ -198,10 +206,9 @@ export const DashboardPage: React.FC = () => {
                     </div>
                   ))}
                 </div>
-              )}
+              ))}
             </div>
           )}
-
         </div>
 
       </div>

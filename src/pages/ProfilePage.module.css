@@ -75,7 +75,26 @@
 .dorsalInput { flex: 1; border: none; background: transparent; padding: 12px 0; font-size: 14px; color: #111; outline: none; }
 .hint { font-size: 12px; color: #888; margin-top: 4px; }
 
+.availableOn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 16px; border: 1.5px solid #16a34a; border-radius: 10px;
+  background: #f0fdf4; color: #15803d; font-size: 13px; font-weight: 600;
+  cursor: pointer; width: 100%; margin-bottom: 4px;
+}
+.availableOff {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 16px; border: 1.5px solid #d1d5db; border-radius: 10px;
+  background: #f9fafb; color: #6b7280; font-size: 13px; font-weight: 600;
+  cursor: pointer; width: 100%; margin-bottom: 4px;
+}
+.availableDot {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  background: currentColor;
+}
+
 .savedMsg { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 16px; }
+.errorMsg { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 16px; }
+.grid2col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
 .actionRow { display: grid; grid-template-columns: 1fr 1.5fr; gap: 12px; margin-bottom: 16px; }
 .btnCancel { padding: 12px; background: #fff; color: #333; border: 1.5px solid #d1d5db; border-radius: 10px; font-size: 14px; cursor: pointer; }

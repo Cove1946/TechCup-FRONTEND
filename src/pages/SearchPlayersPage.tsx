@@ -3,30 +3,63 @@ import { MainLayout } from '@components/layout';
 import { teamService } from '../api/teamService';
 import styles from './SearchPlayersPage.module.css';
 
-type Posicion = 'POR' | 'DEF' | 'MED' | 'DEL';
-type Genero = 'All' | 'M' | 'F';
+type PosShort = 'POR' | 'DEF' | 'MED' | 'DEL';
 
 interface Player {
-  id: number; initials: string; color: string;
-  name: string; program: string;
-  pos: Posicion; semestre: number; edad: number; genero: 'M' | 'F';
+  id: number;
+  userId: number;
+  initials: string;
+  color: string;
+  name: string;
+  pos: PosShort;
+  posLabel: string;
+  semestre: number | null;
   available: boolean;
 }
 
-const SORT_OPTIONS = ['Nombre', 'Posición', 'Semestre', 'Edad'];
+const POS_MAP: Record<string, PosShort> = {
+  PORTERO: 'POR', DEFENSA: 'DEF', MEDIOCAMPISTA: 'MED', DELANTERO: 'DEL',
+};
+const POS_LABEL: Record<string, string> = {
+  PORTERO: 'Portero', DEFENSA: 'Defensa', MEDIOCAMPISTA: 'Mediocampista', DELANTERO: 'Delantero',
+};
+const AVATAR_COLORS = ['#16a34a','#2563eb','#d97706','#7c3aed','#dc2626','#0891b2','#db2777'];
+
+function mapProfile(p: any): Player {
+  const firstName: string = p.firstName ?? '';
+  const lastName: string  = p.lastName ?? '';
+  const initials = `${firstName[0] ?? ''}${lastName[0] ?? ''}`.toUpperCase();
+  const color = AVATAR_COLORS[(p.userId ?? p.id ?? 0) % AVATAR_COLORS.length];
+  const posKey: string = p.primaryPosition ?? '';
+  return {
+    id:       p.id,
+    userId:   p.userId,
+    initials,
+    color,
+    name:     `${firstName} ${lastName}`.trim() || 'Sin nombre',
+    pos:      POS_MAP[posKey] ?? 'DEF',
+    posLabel: POS_LABEL[posKey] ?? posKey,
+    semestre: p.semester ?? null,
+    available: p.available ?? false,
+  };
+}
+
+const SORT_OPTIONS = ['Nombre', 'Posición', 'Semestre'];
 const PAGE_SIZE = 6;
 
-// TODO: backend endpoint needed – obtain current user's teamId to pass to invitePlayer
-const MY_TEAM_ID = 1;
-
 export const SearchPlayersPage: React.FC = () => {
+  const userStr = localStorage.getItem('user');
+  const userObj = userStr ? JSON.parse(userStr) : {};
+  const captainId: number = userObj.userId ?? 0;
+  const teamId: number    = userObj.teamId  ?? 0;
+
   const [allPlayers, setAllPlayers] = useState<Player[]>([]);
   const [loading, setLoading]       = useState(true);
   const [error, setError]           = useState<string | null>(null);
+  const [inviteError, setInviteError] = useState<string | null>(null);
 
   const [search, setSearch]         = useState('');
-  const [posFilter, setPosFilter]   = useState<Posicion[]>([]);
-  const [genero, setGenero]         = useState<Genero>('All');
+  const [posFilter, setPosFilter]   = useState<PosShort[]>([]);
   const [sortBy, setSortBy]         = useState('Nombre');
   const [invited, setInvited]       = useState<Set<number>>(new Set());
   const [searchError, setSearchError] = useState('');
@@ -36,7 +69,7 @@ export const SearchPlayersPage: React.FC = () => {
     const fetchPlayers = async () => {
       try {
         const data = await teamService.getAvailablePlayers();
-        setAllPlayers(data);
+        setAllPlayers((data as any[]).map(mapProfile));
       } catch {
         setError('No se pudieron cargar los jugadores disponibles');
       } finally {
@@ -46,24 +79,21 @@ export const SearchPlayersPage: React.FC = () => {
     fetchPlayers();
   }, []);
 
-  const togglePos = (p: Posicion) => {
+  const togglePos = (p: PosShort) => {
     setPosFilter(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p]);
     setPage(1);
   };
 
-  // Client-side filtering applied to data received from backend
   let filtered = allPlayers.filter(p => {
     if (posFilter.length > 0 && !posFilter.includes(p.pos)) return false;
-    if (genero !== 'All' && p.genero !== genero) return false;
     if (search.trim() && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
   });
 
   filtered = [...filtered].sort((a, b) => {
-    if (sortBy === 'Nombre')    return a.name.localeCompare(b.name);
-    if (sortBy === 'Posición')  return a.pos.localeCompare(b.pos);
-    if (sortBy === 'Semestre')  return a.semestre - b.semestre;
-    if (sortBy === 'Edad')      return a.edad - b.edad;
+    if (sortBy === 'Nombre')   return a.name.localeCompare(b.name);
+    if (sortBy === 'Posición') return a.pos.localeCompare(b.pos);
+    if (sortBy === 'Semestre') return (a.semestre ?? 0) - (b.semestre ?? 0);
     return 0;
   });
 
@@ -81,17 +111,19 @@ export const SearchPlayersPage: React.FC = () => {
   };
 
   const handleClear = () => {
-    setSearch(''); setPosFilter([]); setGenero('All');
+    setSearch(''); setPosFilter([]);
     setSearchError(''); setPage(1);
   };
 
-  const handleInvite = async (playerId: number) => {
-    if (invited.has(playerId)) return;
+  const handleInvite = async (player: Player) => {
+    if (invited.has(player.userId)) return;
+    setInviteError(null);
     try {
-      await teamService.invitePlayer(MY_TEAM_ID, { playerId });
-      setInvited(prev => new Set([...prev, playerId]));
-    } catch {
-      // Invitation failed; do not mark as invited
+      await teamService.invitePlayer(captainId, teamId, player.userId);
+      setInvited(prev => new Set([...prev, player.userId]));
+    } catch (err: any) {
+      const msg = err?.response?.data?.message ?? err?.message ?? 'Error al enviar invitación';
+      setInviteError(msg);
     }
   };
 
@@ -114,7 +146,6 @@ export const SearchPlayersPage: React.FC = () => {
             <strong>{filtered.length}</strong> jugadores encontrados &nbsp;·&nbsp; <strong>{available}</strong> disponibles
           </p>
           <div className={styles.sortRow}>
-            <span className={styles.sortLabel}>ℹ️ Hasta 5 invitaciones por día</span>
             <div className={styles.sortSelect}>
               <span className={styles.sortText}>Ordenar:</span>
               <select className={styles.select} value={sortBy} onChange={e => { setSortBy(e.target.value); setPage(1); }}>
@@ -147,18 +178,6 @@ export const SearchPlayersPage: React.FC = () => {
               </div>
             </div>
 
-            <div className={styles.filterGroup}>
-              <label className={styles.filterLabel}>Género</label>
-              <div className={styles.radioRow}>
-                {(['All', 'M', 'F'] as Genero[]).map(g => (
-                  <label key={g} className={styles.radioLabel}>
-                    <input type="radio" name="genero" checked={genero === g} onChange={() => { setGenero(g); setPage(1); }} />
-                    {g === 'All' ? 'Todos' : g === 'M' ? 'Masc.' : 'Fem.'}
-                  </label>
-                ))}
-              </div>
-            </div>
-
             <div className={styles.filterActions}>
               <button className={styles.btnSearch} onClick={handleSearch}>Buscar</button>
               <button className={styles.btnClear} onClick={handleClear}>Limpiar</button>
@@ -167,31 +186,30 @@ export const SearchPlayersPage: React.FC = () => {
 
           <div className={styles.main}>
             {searchError && <div className={styles.searchError}>✗ {searchError}</div>}
+            {inviteError && <div className={styles.searchError}>✗ {inviteError}</div>}
+            {!teamId && <div className={styles.searchError}>⚠ No tienes equipo creado. Crea un equipo antes de invitar jugadores.</div>}
 
             {paginated.length === 0 ? (
               <div className={styles.emptyState}>No se encontraron jugadores con los filtros aplicados</div>
             ) : (
               <div className={styles.playersGrid}>
                 {paginated.map(p => {
-                  const isInvited = invited.has(p.id);
+                  const isInvited = invited.has(p.userId);
                   return (
                     <div key={p.id} className={styles.playerCard}>
                       <div className={styles.avatar} style={{ background: p.color }}>{p.initials}</div>
                       <p className={styles.playerName}>{p.name}</p>
-                      <p className={styles.playerProgram}>{p.program}</p>
                       <div className={styles.playerTags}>
-                        <span className={styles.posTag}>{p.pos}</span>
-                        <span className={styles.infoTag}>Sem. {p.semestre}</span>
-                        <span className={styles.infoTag}>{p.edad} años</span>
-                        <span className={styles.infoTag}>{p.genero}</span>
+                        <span className={styles.posTag}>{p.posLabel}</span>
+                        {p.semestre != null && <span className={styles.infoTag}>Sem. {p.semestre}</span>}
                       </div>
                       <span className={`${styles.availBadge} ${p.available ? styles.availYes : styles.availNo}`}>
                         {p.available ? 'Disponible' : 'No disponible'}
                       </span>
                       {p.available ? (
                         <button className={`${styles.inviteBtn} ${isInvited ? styles.invitedBtn : ''}`}
-                          onClick={() => handleInvite(p.id)}
-                          disabled={isInvited}>
+                          onClick={() => handleInvite(p)}
+                          disabled={isInvited || !teamId}>
                           ✉ {isInvited ? 'Invitación enviada' : 'Invitar al equipo'}
                         </button>
                       ) : (

@@ -76,6 +76,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="/admin/roles" element={<RolesPage />} />
         <Route path="/organizer/payments" element={<PaymentManagementPage />} />
         <Route path="/organizer/config" element={<TournamentConfigPage />} />
+        <Route path="/organizer/config/:id" element={<TournamentConfigPage />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

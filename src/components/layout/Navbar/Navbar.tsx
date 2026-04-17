@@ -62,12 +62,12 @@ const PROFILE_BY_ROLE: Record<string, string> = {
 };
 
 const MI_EQUIPO_ALL  = [
-  { label: 'Mi perfil deportivo', to: '__profile__', roles: ['jugador','capitan','coordinador','arbitro','admin'] },
-  { label: 'Mi equipo',           to: '/my-team',      roles: ['jugador','capitan'] },
-  { label: 'Alineación',          to: '/alineacion',   roles: ['jugador','capitan'] },
+  { label: 'Mi perfil deportivo', to: '__profile__',    roles: ['jugador','capitan'] },
+  { label: 'Mi equipo',           to: '/my-team',       roles: ['jugador','capitan'] },
+  { label: 'Alineación',          to: '/alineacion',    roles: ['jugador','capitan'] },
   { label: 'Buscar jugadores',    to: '/search-players',roles: ['jugador','capitan'] },
-  { label: 'Inscripción & Pago',  to: '/payment',      roles: ['capitan'] },
-  { label: 'Crear equipo',        to: '/teams/create', roles: ['capitan'] },
+  { label: 'Inscripción & Pago',  to: '/payment',       roles: ['capitan'] },
+  { label: 'Crear equipo',        to: '/teams/create',  roles: ['capitan'] },
 ];
 
 const PARTIDOS_ITEMS = [
@@ -82,7 +82,7 @@ const PARTIDOS_ITEMS = [
 const ADMIN_ALL = [
   { label: 'Gestión de roles',  to: '/admin/roles',         roles: ['admin'] },
   { label: 'Gestión de pagos',  to: '/organizer/payments',  roles: ['admin','coordinador'] },
-  { label: 'Configurar torneo', to: '/organizer/config',    roles: ['admin','coordinador'] },
+  { label: 'Gestionar torneos', to: '/torneos',              roles: ['admin','coordinador'] },
   { label: 'Panel árbitro',     to: '/arbitro',             roles: ['admin','coordinador'] },
 ];
 
@@ -132,12 +132,14 @@ export const Navbar: React.FC<NavbarProps> = ({ userName, userAvatar }) => {
   const userRole = (userObj?.role ?? 'jugador').toLowerCase();
   const profileTo = PROFILE_BY_ROLE[userRole] ?? '/profile';
 
+  const showMiEquipo  = ['jugador','capitan'].includes(userRole);
   const miEquipoItems = MI_EQUIPO_ALL
     .filter(i => i.roles.includes(userRole))
     .map(i => ({ label: i.label, to: i.to === '__profile__' ? profileTo : i.to }));
 
-  const adminItems = ADMIN_ALL.filter(i => i.roles.includes(userRole));
-  const showAdmin  = adminItems.length > 0;
+  const adminItems      = ADMIN_ALL.filter(i => i.roles.includes(userRole));
+  const showAdmin       = adminItems.length > 0;
+  const adminMenuLabel  = userRole === 'coordinador' ? 'Coordinador' : 'Administrador';
 
   const notifications = NOTIFICATIONS_BY_ROLE[userRole] ?? NOTIFICATIONS_BY_ROLE['jugador'];
   const unreadCount   = notifications.filter(n => n.unread).length;
@@ -158,9 +160,10 @@ export const Navbar: React.FC<NavbarProps> = ({ userName, userAvatar }) => {
         </div>
 
         <div className={styles.navLinks}>
-          <NavDropdown label="Mi Equipo"    items={miEquipoItems} />
+          {showMiEquipo && <NavDropdown label="Mi Equipo" items={miEquipoItems} />}
           <NavDropdown label="Partidos"     items={PARTIDOS_ITEMS} />
-          {showAdmin && <NavDropdown label="Administrador" items={adminItems} />}
+          {showAdmin && <NavDropdown label={adminMenuLabel} items={adminItems} />}
+          {!showMiEquipo && <Link to={profileTo} className={styles.navLink}>Mi perfil</Link>}
         </div>
 
         <div className={styles.userSection}>
@@ -174,7 +177,7 @@ export const Navbar: React.FC<NavbarProps> = ({ userName, userAvatar }) => {
 
           {userName && (
             <>
-              <Link to="/profile" className={styles.userName}>{userName}</Link>
+              <Link to={profileTo} className={styles.userName}>{userName}</Link>
               {userAvatar
                 ? <img src={userAvatar} alt={userName} className={styles.avatar} />
                 : <div className={styles.avatarPlaceholder}>{userName.charAt(0).toUpperCase()}</div>

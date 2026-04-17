@@ -125,9 +125,10 @@ export const RegisterPage: React.FC = () => {
         });
         localStorage.setItem('token', response.token);
         localStorage.setItem('user', JSON.stringify({
+          userId: response.userId,
           name: `${data.nombre} ${data.apellido}`,
           email: response.email,
-          role: 'PLAYER',
+          role: 'jugador',
         }));
         setStep(3);
       } catch (err: any) {

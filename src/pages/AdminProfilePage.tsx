@@ -1,27 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@components/layout';
+import { adminService } from '../api/adminService';
 import styles from './AdminProfilePage.module.css';
-
-const ADMIN = {
-  name: 'Carlos Pérez',
-  email: 'cperez@tecn.mx',
-  rol: 'Administrador',
-  initials: 'CP',
-  phone: '+52 55 1234 5678',
-  since: 'Enero 2025',
-  torneos: 3,
-  equipos: 18,
-  partidos: 42,
-};
 
 export const AdminProfilePage: React.FC = () => {
   const navigate = useNavigate();
+
+  const userStr = localStorage.getItem('user');
+  let storedUser = { name: 'Administrador', email: '' };
+  try { if (userStr) storedUser = JSON.parse(userStr); } catch { /* ignore */ }
+
+  const initials = storedUser.name
+    .split(' ').slice(0, 2).map((w: string) => w[0] ?? '').join('').toUpperCase();
+
   const [editing, setEditing] = useState(false);
-  const [name, setName]     = useState(ADMIN.name);
-  const [email, setEmail]   = useState(ADMIN.email);
-  const [phone, setPhone]   = useState(ADMIN.phone);
+  const [name, setName]     = useState(storedUser.name);
+  const [email, setEmail]   = useState(storedUser.email);
+  const [phone, setPhone]   = useState('');
   const [saved, setSaved]   = useState(false);
+  const [stats, setStats]   = useState({ torneos: 0, equipos: 0, partidos: 0 });
+
+  useEffect(() => {
+    adminService.getStats().then(setStats).catch(() => {});
+  }, []);
 
   const handleSave = () => {
     setEditing(false);
@@ -39,8 +41,8 @@ export const AdminProfilePage: React.FC = () => {
 
         <div className={styles.profileCard}>
           <div className={styles.avatarWrap}>
-            <div className={styles.avatar}>{ADMIN.initials}</div>
-            <div className={styles.rolBadge}>{ADMIN.rol}</div>
+            <div className={styles.avatar}>{initials}</div>
+            <div className={styles.rolBadge}>Administrador</div>
           </div>
 
           <div className={styles.infoSection}>
@@ -65,7 +67,7 @@ export const AdminProfilePage: React.FC = () => {
               <div className={styles.fieldList}>
                 <div className={styles.fieldItem}><span className={styles.fieldKey}>Correo</span><span className={styles.fieldVal}>{email}</span></div>
                 <div className={styles.fieldItem}><span className={styles.fieldKey}>Teléfono</span><span className={styles.fieldVal}>{phone}</span></div>
-                <div className={styles.fieldItem}><span className={styles.fieldKey}>Administrador desde</span><span className={styles.fieldVal}>{ADMIN.since}</span></div>
+                <div className={styles.fieldItem}><span className={styles.fieldKey}>Rol</span><span className={styles.fieldVal}>Administrador</span></div>
               </div>
             )}
           </div>
@@ -73,15 +75,15 @@ export const AdminProfilePage: React.FC = () => {
 
         <div className={styles.statsRow}>
           <div className={styles.statCard}>
-            <span className={styles.statNum}>{ADMIN.torneos}</span>
+            <span className={styles.statNum}>{stats.torneos}</span>
             <span className={styles.statLbl}>Torneos gestionados</span>
           </div>
           <div className={styles.statCard}>
-            <span className={styles.statNum}>{ADMIN.equipos}</span>
+            <span className={styles.statNum}>{stats.equipos}</span>
             <span className={styles.statLbl}>Equipos registrados</span>
           </div>
           <div className={styles.statCard}>
-            <span className={styles.statNum}>{ADMIN.partidos}</span>
+            <span className={styles.statNum}>{stats.partidos}</span>
             <span className={styles.statLbl}>Partidos programados</span>
           </div>
         </div>
@@ -89,7 +91,7 @@ export const AdminProfilePage: React.FC = () => {
         <div className={styles.actionsGrid}>
           <button className={styles.actionBtn} onClick={() => navigate('/admin/roles')}>👥 Gestión de Roles</button>
           <button className={styles.actionBtn} onClick={() => navigate('/organizer/payments')}>💳 Gestión de Pagos</button>
-          <button className={styles.actionBtn} onClick={() => navigate('/organizer/config')}>⚙️ Configurar Torneo</button>
+          <button className={styles.actionBtn} onClick={() => navigate('/torneos')}>⚙️ Gestionar Torneos</button>
           <button className={styles.actionBtn} onClick={() => navigate('/teams')}>🏆 Ver Equipos</button>
         </div>
       </div>
