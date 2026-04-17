@@ -3,8 +3,23 @@
 .backBtn:hover { color: #16a34a; }
 .header { margin-bottom: 28px; }
 .title { font-size: 26px; font-weight: 800; color: #111; margin-bottom: 6px; }
+.subtitle { font-size: 14px; color: #6b7280; }
 .activeBadge { display: flex; align-items: center; gap: 6px; font-size: 14px; color: #333; }
 .activeDot { width: 8px; height: 8px; border-radius: 50%; background: #16a34a; flex-shrink: 0; }
+
+/* ── Tournament selection ── */
+.loadingText { color: #6b7280; font-size: 14px; }
+.emptyTorneos { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 14px; padding: 40px 24px; text-align: center; color: #6b7280; font-size: 14px; }
+.registerError { background: #fef2f2; border: 1px solid #fca5a5; border-radius: 10px; padding: 12px 16px; font-size: 13px; color: #dc2626; margin-bottom: 16px; }
+.torneoList { display: flex; flex-direction: column; gap: 14px; }
+.torneoCard { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; transition: border-color 0.15s; }
+.torneoCard:hover { border-color: #16a34a; }
+.torneoInfo { flex: 1; }
+.torneoName { font-size: 16px; font-weight: 700; color: #111; margin-bottom: 8px; }
+.torneoMeta { display: flex; gap: 20px; flex-wrap: wrap; font-size: 13px; color: #555; }
+.btnSeleccionar { flex-shrink: 0; padding: 10px 22px; background: #16a34a; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; white-space: nowrap; }
+.btnSeleccionar:hover:not(:disabled) { background: #15803d; }
+.btnSeleccionar:disabled { background: #d1d5db; cursor: not-allowed; }
 
 .layout { display: grid; grid-template-columns: 1fr 300px; gap: 24px; align-items: start; }
 .main { display: flex; flex-direction: column; gap: 16px; }

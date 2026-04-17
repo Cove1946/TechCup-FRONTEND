@@ -1,10 +1,22 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@components/layout';
 import { paymentService } from '../api/paymentService';
+import { tournamentService } from '../api/tournamentService';
 import styles from './PaymentPage.module.css';
 
 type PayStatus = 'pendiente' | 'revision' | 'aprobado' | 'rechazado';
+type PageStep  = 'select' | 'pay';
+
+interface Torneo {
+  id: number;
+  name?: string;
+  startDate: string;
+  endDate: string;
+  totalTeams: number;
+  registrationCost: number;
+  status: string;
+}
 
 interface Step { key: PayStatus; label: string; }
 const STEPS: Step[] = [
@@ -16,20 +28,57 @@ const STEPS: Step[] = [
 const STATUS_INDEX: Record<PayStatus, number> = { pendiente: 0, revision: 1, aprobado: 2, rechazado: -1 };
 
 export const PaymentPage: React.FC = () => {
-  const navigate = useNavigate();
-  const fileRef  = useRef<HTMLInputElement>(null);
+  const navigate  = useNavigate();
+  const fileRef   = useRef<HTMLInputElement>(null);
 
-  const [status, setStatus]   = useState<PayStatus>('pendiente');
-  const [file, setFile]       = useState<File | null>(null);
-  const [fileError, setFileError] = useState('');
+  const userStr = localStorage.getItem('user');
+  let captainId: number | string = 0;
+  try { if (userStr) { const u = JSON.parse(userStr); captainId = u.id ?? u.userId ?? 0; } } catch { /* ignore */ }
+  const teamId = localStorage.getItem('teamId') ?? '0';
+
+  // ── Step state ──
+  const [pageStep, setPageStep]         = useState<PageStep>('select');
+  const [torneos, setTorneos]           = useState<Torneo[]>([]);
+  const [loadingTorneos, setLoadingTorneos] = useState(true);
+  const [selectedTorneo, setSelectedTorneo] = useState<Torneo | null>(null);
+  const [registrationId, setRegistrationId] = useState<number | null>(null);
+  const [registering, setRegistering]   = useState<number | null>(null);
+  const [registerError, setRegisterError] = useState('');
+
+  // ── Payment state ──
+  const [status, setStatus]     = useState<PayStatus>('pendiente');
+  const [file, setFile]         = useState<File | null>(null);
+  const [fileError, setFileError]   = useState('');
   const [submitError, setSubmitError] = useState('');
   const [submitting, setSubmitting]   = useState(false);
-  const [timeline, setTimeline]   = useState([
+  const [timeline, setTimeline] = useState([
     { label: 'Pendiente', time: 'Hoy 08:00', color: '#f59e0b' },
   ]);
 
   const isRejected = status === 'rechazado';
   const currentIdx = STATUS_INDEX[status] ?? 0;
+
+  useEffect(() => {
+    tournamentService.getTournaments()
+      .then((data: Torneo[]) => setTorneos(data.filter(t => t.status === 'ACTIVE')))
+      .catch(() => {})
+      .finally(() => setLoadingTorneos(false));
+  }, []);
+
+  const handleSelectTorneo = async (torneo: Torneo) => {
+    setRegistering(torneo.id);
+    setRegisterError('');
+    try {
+      const reg = await paymentService.registerPayment({ tournamentId: torneo.id, teamId: Number(teamId) });
+      setRegistrationId(reg.id);
+      setSelectedTorneo(torneo);
+      setPageStep('pay');
+    } catch (err: any) {
+      setRegisterError(err?.response?.data?.message ?? 'Error al registrarse. Intenta nuevamente.');
+    } finally {
+      setRegistering(null);
+    }
+  };
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0] ?? null;
@@ -57,9 +106,8 @@ export const PaymentPage: React.FC = () => {
     try {
       const formData = new FormData();
       formData.append('comprobante', file);
-      // TODO: backend endpoint needed – include teamId and tournamentId in the request
-      // formData.append('teamId', teamId);
-      // formData.append('tournamentId', tournamentId);
+      if (registrationId) formData.append('registrationId', String(registrationId));
+      if (captainId)      formData.append('captainId', String(captainId));
       await paymentService.submitPayment(formData);
 
       const now = new Date();
@@ -75,13 +123,64 @@ export const PaymentPage: React.FC = () => {
     }
   };
 
+  // ── Render: tournament selection ──
+  if (pageStep === 'select') {
+    return (
+      <MainLayout>
+        <div className={styles.page}>
+          <button className={styles.backBtn} onClick={() => navigate(-1)}>← Volver</button>
+          <div className={styles.header}>
+            <h1 className={styles.title}>Inscripción & Pago</h1>
+            <p className={styles.subtitle}>Selecciona el torneo al que quieres inscribir tu equipo</p>
+          </div>
+
+          {registerError && <div className={styles.registerError}>⚠️ {registerError}</div>}
+
+          {loadingTorneos ? (
+            <p className={styles.loadingText}>Cargando torneos disponibles...</p>
+          ) : torneos.length === 0 ? (
+            <div className={styles.emptyTorneos}>
+              <p>No hay torneos activos disponibles para inscripción en este momento.</p>
+            </div>
+          ) : (
+            <div className={styles.torneoList}>
+              {torneos.map(t => (
+                <div key={t.id} className={styles.torneoCard}>
+                  <div className={styles.torneoInfo}>
+                    <h2 className={styles.torneoName}>{t.name ?? `Torneo #${t.id}`}</h2>
+                    <div className={styles.torneoMeta}>
+                      <span>📅 {t.startDate} → {t.endDate}</span>
+                      <span>👥 {t.totalTeams} equipos máx.</span>
+                      <span>💵 ${t.registrationCost.toLocaleString()} COP</span>
+                    </div>
+                  </div>
+                  <button
+                    className={styles.btnSeleccionar}
+                    onClick={() => handleSelectTorneo(t)}
+                    disabled={registering === t.id}
+                  >
+                    {registering === t.id ? 'Registrando...' : 'Seleccionar →'}
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </MainLayout>
+    );
+  }
+
+  // ── Render: payment form ──
   return (
     <MainLayout>
       <div className={styles.page}>
-        <button className={styles.backBtn} onClick={() => navigate(-1)}>← Volver</button>
+        <button className={styles.backBtn} onClick={() => setPageStep('select')}>← Cambiar torneo</button>
         <div className={styles.header}>
           <h1 className={styles.title}>Inscripción & Pago</h1>
-          <p className={styles.activeBadge}><span className={styles.activeDot} /> 2026-1 · Activo</p>
+          <p className={styles.activeBadge}>
+            <span className={styles.activeDot} />
+            {selectedTorneo?.name ?? 'Torneo'} · Activo
+          </p>
         </div>
 
         <div className={styles.layout}>
@@ -117,7 +216,8 @@ export const PaymentPage: React.FC = () => {
 
             <div className={styles.infoCard}>
               <div className={styles.infoRow}>
-                <div><p className={styles.infoKey}>Valor</p><p className={styles.infoVal}>$80,000 COP</p></div>
+                <div><p className={styles.infoKey}>Torneo</p><p className={styles.infoVal}>{selectedTorneo?.name ?? `#${selectedTorneo?.id}`}</p></div>
+                <div><p className={styles.infoKey}>Valor</p><p className={styles.infoVal}>${selectedTorneo?.registrationCost?.toLocaleString()} COP</p></div>
                 <div><p className={styles.infoKey}>Método</p><p className={styles.infoVal}>NEQUI / Efectivo</p></div>
                 <div>
                   <p className={styles.infoKey}>Estado</p>
@@ -143,7 +243,7 @@ export const PaymentPage: React.FC = () => {
                   </div>
                 )}
 
-                {fileError && <div className={styles.fileError}>⚠️ {fileError}</div>}
+                {fileError   && <div className={styles.fileError}>⚠️ {fileError}</div>}
                 {submitError && <div className={styles.fileError}>⚠️ {submitError}</div>}
 
                 <button className={styles.selectBtn} onClick={() => fileRef.current?.click()}>
@@ -170,7 +270,7 @@ export const PaymentPage: React.FC = () => {
                 <span className={styles.approvedIcon}>✅</span>
                 <div>
                   <p className={styles.approvedTitle}>Pago aprobado</p>
-                  <p className={styles.approvedSub}>Tu inscripción está confirmada para la temporada 2026-1</p>
+                  <p className={styles.approvedSub}>Tu inscripción está confirmada para {selectedTorneo?.name ?? 'el torneo'}</p>
                 </div>
               </div>
             )}
