@@ -2,8 +2,11 @@
 .backBtn { background: none; border: none; color: #6b7280; font-size: 14px; cursor: pointer; padding: 0; margin-bottom: 8px; display: flex; align-items: center; gap: 4px; font-family: inherit; }
 .backBtn:hover { color: #16a34a; }
 .subtitle { font-size: 13px; color: #6b7280; margin: 0 0 6px; }
-.titleRow { margin-bottom: 20px; }
+.titleRow { margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
 .title { font-size: 22px; font-weight: 800; color: #111; margin: 0; }
+.empty { text-align: center; padding: 40px 20px; color: #6b7280; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.btnPrimary { background: #16a34a; color: #fff; border: none; border-radius: 8px; padding: 9px 18px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.btnPrimary:hover { background: #15803d; }
 .cardList { display: flex; flex-direction: column; gap: 16px; }
 .card { background: #fff; border: 1.5px solid #e5e7eb; border-radius: 14px; padding: 20px; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; }
 .card:hover { border-color: #16a34a; box-shadow: 0 2px 12px rgba(22,163,74,0.08); }

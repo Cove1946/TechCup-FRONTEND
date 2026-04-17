@@ -28,9 +28,9 @@ const ROLE_LABELS: Record<string, string> = {
 const BANNER_ACTIONS: Record<string, { label: string; to: string; outline?: boolean }[]> = {
   jugador:     [{ label: 'Mi Equipo', to: '/my-team' }],
   capitan:     [{ label: 'Mi Equipo', to: '/my-team' }, { label: 'Alineación', to: '/alineacion', outline: true }, { label: 'Crear Equipo +', to: '/teams/create', outline: true }],
-  coordinador: [{ label: 'Ver Torneos', to: '/torneos' }, { label: 'Gestión de Pagos', to: '/organizer/payments', outline: true }, { label: 'Configurar Torneo', to: '/organizer/config', outline: true }],
+  coordinador: [{ label: 'Gestionar Torneos', to: '/torneos' }, { label: 'Gestión de Pagos', to: '/organizer/payments', outline: true }],
   arbitro:     [{ label: 'Panel Árbitro', to: '/arbitro' }, { label: 'Ver Calendario', to: '/calendar', outline: true }],
-  admin:       [{ label: 'Gestión de Pagos', to: '/organizer/payments' }, { label: 'Gestión de Roles', to: '/admin/roles', outline: true }, { label: 'Configurar Torneo', to: '/organizer/config', outline: true }],
+  admin:       [{ label: 'Gestionar Torneos', to: '/torneos' }, { label: 'Gestión de Pagos', to: '/organizer/payments', outline: true }, { label: 'Gestión de Roles', to: '/admin/roles', outline: true }],
 };
 
 // TODO: backend endpoint needed – obtain active tournamentId for the current user's context

@@ -29,6 +29,7 @@ export const TournamentConfigPage: React.FC = () => {
     setError(null);
     try {
       await tournamentService.createTournament(userId, {
+        name: nombre,
         startDate: fechaInicio,
         endDate: fechaFin,
         totalTeams: Number(maxEquipos),

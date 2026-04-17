@@ -82,7 +82,7 @@ const PARTIDOS_ITEMS = [
 const ADMIN_ALL = [
   { label: 'Gestión de roles',  to: '/admin/roles',         roles: ['admin'] },
   { label: 'Gestión de pagos',  to: '/organizer/payments',  roles: ['admin','coordinador'] },
-  { label: 'Configurar torneo', to: '/organizer/config',    roles: ['admin','coordinador'] },
+  { label: 'Gestionar torneos', to: '/torneos',              roles: ['admin','coordinador'] },
   { label: 'Panel árbitro',     to: '/arbitro',             roles: ['admin','coordinador'] },
 ];
 
