@@ -5,10 +5,6 @@ import { matchService } from '../api/matchService';
 import { teamService } from '../api/teamService';
 import styles from './DashboardPage.module.css';
 
-// TODO: backend endpoint needed – GET /api/tournaments/active/stats
-// Should return { partidosJugados, totalPartidos, golesTotales, tarjetasAmarillas }
-// for the current active tournament.
-
 interface Match {
   id: number;
   home: string;
@@ -18,19 +14,19 @@ interface Match {
   cancha: string;
 }
 
-const ROLE_LABELS: Record<string, string> = {
-  jugador:     'Jugador',
-  capitan:     'Capitán',
-  coordinador: 'Coordinador',
-  arbitro:     'Árbitro',
-  admin:       'Administrador',
-};
-
 interface Invitation {
   id: number | string;
   teamId: number | string;
   teamName: string;
   captainName?: string;
+}
+
+interface PlayerStats {
+  golesTotales: number | null;
+  // TODO: backend needs GET /api/players/{id}/stats → partidosJugados, asistencias, tarjetasAmarillas
+  partidosJugados: number | null;
+  asistencias: number | null;
+  tarjetasAmarillas: number | null;
 }
 
 const BANNER_ACTIONS: Record<string, { label: string; to: string; outline?: boolean }[]> = {
@@ -41,7 +37,7 @@ const BANNER_ACTIONS: Record<string, { label: string; to: string; outline?: bool
   admin:       [{ label: 'Gestión de Pagos', to: '/organizer/payments' }, { label: 'Gestión de Roles', to: '/admin/roles', outline: true }, { label: 'Configurar Torneo', to: '/organizer/config', outline: true }],
 };
 
-// TODO: backend endpoint needed – obtain active tournamentId for the current user's context
+// TODO: obtain active tournamentId for the current user's context
 const ACTIVE_TOURNAMENT_ID = 1;
 
 export const DashboardPage: React.FC = () => {
@@ -59,11 +55,17 @@ export const DashboardPage: React.FC = () => {
   const [loadingInvitations, setLoadingInvitations] = useState(false);
   const [respondingId, setRespondingId] = useState<number | string | null>(null);
 
+  const [stats, setStats] = useState<PlayerStats>({
+    golesTotales: null,
+    partidosJugados: null,
+    asistencias: null,
+    tarjetasAmarillas: null,
+  });
+
   useEffect(() => {
     const fetchMatches = async () => {
       try {
         const data = await matchService.getMatchesByTournament(ACTIVE_TOURNAMENT_ID);
-        // Show only the next 3 upcoming matches
         setMatches(data.slice(0, 3));
       } catch {
         // Non-critical: dashboard still renders without matches
@@ -73,6 +75,20 @@ export const DashboardPage: React.FC = () => {
     };
     fetchMatches();
   }, []);
+
+  useEffect(() => {
+    if (!user.id) return;
+    const fetchStats = async () => {
+      try {
+        const scorers = await matchService.getTopScorers(ACTIVE_TOURNAMENT_ID);
+        const me = scorers.find((s: { userId: number | string }) => String(s.userId) === String(user.id));
+        setStats(prev => ({ ...prev, golesTotales: me?.totalGoals ?? 0 }));
+      } catch {
+        // Non-critical
+      }
+    };
+    fetchStats();
+  }, [user.id]);
 
   useEffect(() => {
     if (role !== 'jugador' || !user.id) return;
@@ -102,6 +118,8 @@ export const DashboardPage: React.FC = () => {
     }
   };
 
+  const fmt = (v: number | null) => v === null ? '--' : String(v);
+
   return (
     <MainLayout>
       <div className={styles.dashboard}>
@@ -127,6 +145,50 @@ export const DashboardPage: React.FC = () => {
           <div className={styles.bannerBadge}>
             <div className={styles.shield}>
               <span className={styles.shieldEmoji}>🛡️</span>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Stats ── */}
+        <div className={styles.statsRow}>
+          <div className={styles.statCard}>
+            <div className={styles.statTop}>
+              <div>
+                <p className={styles.statLabel}>Partidos jugados</p>
+                <p className={styles.statValue}>{fmt(stats.partidosJugados)}</p>
+                <p className={styles.statSub}>de programados</p>
+              </div>
+              <div className={styles.statIcon}>⚽</div>
+            </div>
+          </div>
+          <div className={styles.statCard}>
+            <div className={styles.statTop}>
+              <div>
+                <p className={styles.statLabel}>Goles totales</p>
+                <p className={styles.statValue}>{fmt(stats.golesTotales)}</p>
+                <p className={styles.statSub}>en el torneo</p>
+              </div>
+              <div className={styles.statIcon}>🥅</div>
+            </div>
+          </div>
+          <div className={styles.statCard}>
+            <div className={styles.statTop}>
+              <div>
+                <p className={styles.statLabel}>Asistencias</p>
+                <p className={styles.statValue}>{fmt(stats.asistencias)}</p>
+                <p className={styles.statSub}>realizadas</p>
+              </div>
+              <div className={styles.statIcon}>🎯</div>
+            </div>
+          </div>
+          <div className={styles.statCard}>
+            <div className={styles.statTop}>
+              <div>
+                <p className={styles.statLabel}>Tarjetas amarillas</p>
+                <p className={styles.statValue}>{fmt(stats.tarjetasAmarillas)}</p>
+                <p className={styles.statSub}>acumuladas</p>
+              </div>
+              <div className={styles.statIcon}>🟨</div>
             </div>
           </div>
         </div>
@@ -210,6 +272,7 @@ export const DashboardPage: React.FC = () => {
               )}
             </div>
           )}
+
         </div>
 
       </div>

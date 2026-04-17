@@ -17,7 +17,7 @@
 .shieldScore { color: #4ade80; font-size: 16px; font-weight: 800; }
 
 /* ── Stats ── */
-.statsRow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 28px; }
+.statsRow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 28px; }
 .statCard { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 20px 22px; }
 .statTop { display: flex; justify-content: space-between; align-items: flex-start; }
 .statLabel { font-size: 13px; color: #666; margin-bottom: 8px; }
@@ -68,7 +68,7 @@
 @media (max-width: 768px) {
   .dashboard { padding: 0 0 40px; }
   .banner { flex-direction: column; align-items: flex-start; padding: 24px 20px; }
-  .statsRow { grid-template-columns: 1fr; }
+  .statsRow { grid-template-columns: repeat(2, 1fr); }
   .bottomGrid { grid-template-columns: 1fr; }
   .matchRow { grid-template-columns: 1fr; gap: 4px; }
   .matchMeta { flex-wrap: wrap; }
