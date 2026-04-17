@@ -20,13 +20,13 @@ interface TeamData {
 const AVATAR_COLORS = ['#16a34a','#2563eb','#9333ea','#ea580c','#0891b2','#be185d'];
 
 const MOCK_ROSTER: Player[] = [
-  { num: 7,  initials: 'CM', name: 'Carlos M.',  pos: 'Portero',       sem: '6', prog: 'Ing. Sistemas',       estado: 'Titular',    rol: 'Capitán', suspended: false, goles: 0, asistencias: 2, partidos: 8, tarjAm: 1, tarjRoj: 0 },
-  { num: 5,  initials: 'LD', name: 'Luis D.',    pos: 'Defensa',       sem: '4', prog: 'Ing. Sistemas',       estado: 'Titular',    rol: 'Jugador', suspended: false, goles: 1, asistencias: 3, partidos: 8, tarjAm: 0, tarjRoj: 0 },
-  { num: 6,  initials: 'RS', name: 'Rodrigo S.', pos: 'Defensa',       sem: '5', prog: 'Ing. IA',             estado: 'Titular',    rol: 'Jugador', suspended: false, goles: 2, asistencias: 1, partidos: 7, tarjAm: 2, tarjRoj: 0 },
+  { num: 1,  initials: 'PK', name: 'Pablo K.',   pos: 'Delantero',     sem: '6', prog: 'Ing. Estadística',    estado: 'Titular',    rol: 'Jugador', suspended: false, goles: 5, asistencias: 1, partidos: 8, tarjAm: 1, tarjRoj: 0 },
   { num: 2,  initials: 'PH', name: 'Pablo H.',   pos: 'Mediocampista', sem: '3', prog: 'Ing. Sistemas',       estado: 'Titular',    rol: 'Jugador', suspended: false, goles: 1, asistencias: 2, partidos: 8, tarjAm: 0, tarjRoj: 0 },
   { num: 3,  initials: 'AT', name: 'Andrés T.',  pos: 'Mediocampista', sem: '5', prog: 'Ing. Ciberseguridad', estado: 'Titular',    rol: 'Jugador', suspended: false, goles: 0, asistencias: 1, partidos: 6, tarjAm: 1, tarjRoj: 0 },
   { num: 4,  initials: 'JV', name: 'Juan V.',    pos: 'Mediocampista', sem: '4', prog: 'Ing. IA',             estado: 'Titular',    rol: 'Jugador', suspended: false, goles: 3, asistencias: 2, partidos: 8, tarjAm: 0, tarjRoj: 0 },
-  { num: 1,  initials: 'PK', name: 'Pablo K.',   pos: 'Delantero',     sem: '6', prog: 'Ing. Estadística',    estado: 'Titular',    rol: 'Jugador', suspended: false, goles: 5, asistencias: 1, partidos: 8, tarjAm: 1, tarjRoj: 0 },
+  { num: 5,  initials: 'LD', name: 'Luis D.',    pos: 'Defensa',       sem: '4', prog: 'Ing. Sistemas',       estado: 'Titular',    rol: 'Jugador', suspended: false, goles: 1, asistencias: 3, partidos: 8, tarjAm: 0, tarjRoj: 0 },
+  { num: 6,  initials: 'RS', name: 'Rodrigo S.', pos: 'Defensa',       sem: '5', prog: 'Ing. IA',             estado: 'Titular',    rol: 'Jugador', suspended: false, goles: 2, asistencias: 1, partidos: 7, tarjAm: 2, tarjRoj: 0 },
+  { num: 7,  initials: 'CM', name: 'Carlos M.',  pos: 'Portero',       sem: '6', prog: 'Ing. Sistemas',       estado: 'Titular',    rol: 'Capitán', suspended: false, goles: 0, asistencias: 2, partidos: 8, tarjAm: 1, tarjRoj: 0 },
   { num: 10, initials: 'PH', name: 'Pablo H.',   pos: 'Mediocampista', sem: '3', prog: 'Ing. Sistemas',       estado: 'Reserva',    rol: 'Jugador', suspended: false, goles: 1, asistencias: 2, partidos: 5, tarjAm: 0, tarjRoj: 0 },
   { num: 11, initials: 'DR', name: 'Diego R.',   pos: 'Delantero',     sem: '4', prog: 'Ing. Biotecnología',  estado: 'Reserva',    rol: 'Jugador', suspended: false, goles: 3, asistencias: 0, partidos: 4, tarjAm: 1, tarjRoj: 0 },
   { num: 12, initials: 'FG', name: 'Felipe G.',  pos: 'Mediocampista', sem: '5', prog: 'Ing. Sistemas',       estado: 'Reserva',    rol: 'Jugador', suspended: false, goles: 0, asistencias: 1, partidos: 3, tarjAm: 0, tarjRoj: 0 }
