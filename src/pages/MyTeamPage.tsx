@@ -103,8 +103,8 @@ export const MyTeamPage: React.FC = () => {
             </div>
           </div>
           <div className={styles.teamCenter}>
-            <div className={styles.playerCount}>{roster.length} / 12 jugadores</div>
-            <div className={styles.progressBar}><div className={styles.progressFill} style={{ width: `${(roster.length/12)*100}%` }} /></div>
+            <div className={styles.playerCount}>{roster.length} / {MOCK_ROSTER.length} jugadores</div>
+            <div className={styles.progressBar}><div className={styles.progressFill} style={{ width: `${(roster.length/MOCK_ROSTER.length)*100}%` }} /></div>
           </div>
           <div className={styles.teamActions}>
             <button className={styles.btnOutline} onClick={() => navigate('/alineacion')}>👤 Ver alineación</button>
