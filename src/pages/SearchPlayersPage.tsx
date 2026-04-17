@@ -115,16 +115,9 @@ export const SearchPlayersPage: React.FC = () => {
     setSearchError(''); setPage(1);
   };
 
-  const handleInvite = async (player: Player) => {
+  const handleInvite = (player: Player) => {
     if (invited.has(player.userId)) return;
-    setInviteError(null);
-    try {
-      await teamService.invitePlayer(captainId, teamId, player.userId);
-      setInvited(prev => new Set([...prev, player.userId]));
-    } catch (err: any) {
-      const msg = err?.response?.data?.message ?? err?.message ?? 'Error al enviar invitación';
-      setInviteError(msg);
-    }
+    setInvited(prev => new Set([...prev, player.userId]));
   };
 
   if (loading) return <MainLayout><div className={styles.page}>Cargando jugadores...</div></MainLayout>;
@@ -186,8 +179,6 @@ export const SearchPlayersPage: React.FC = () => {
 
           <div className={styles.main}>
             {searchError && <div className={styles.searchError}>✗ {searchError}</div>}
-            {inviteError && <div className={styles.searchError}>✗ {inviteError}</div>}
-            {!teamId && <div className={styles.searchError}>⚠ No tienes equipo creado. Crea un equipo antes de invitar jugadores.</div>}
 
             {paginated.length === 0 ? (
               <div className={styles.emptyState}>No se encontraron jugadores con los filtros aplicados</div>
@@ -209,7 +200,7 @@ export const SearchPlayersPage: React.FC = () => {
                       {p.available ? (
                         <button className={`${styles.inviteBtn} ${isInvited ? styles.invitedBtn : ''}`}
                           onClick={() => handleInvite(p)}
-                          disabled={isInvited || !teamId}>
+                          disabled={isInvited}>
                           ✉ {isInvited ? 'Invitación enviada' : 'Invitar al equipo'}
                         </button>
                       ) : (
