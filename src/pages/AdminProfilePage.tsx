@@ -3,24 +3,20 @@ import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@components/layout';
 import styles from './AdminProfilePage.module.css';
 
-const ADMIN = {
-  name: 'Carlos Pérez',
-  email: 'cperez@tecn.mx',
-  rol: 'Administrador',
-  initials: 'CP',
-  phone: '+52 55 1234 5678',
-  since: 'Enero 2025',
-  torneos: 3,
-  equipos: 18,
-  partidos: 42,
-};
-
 export const AdminProfilePage: React.FC = () => {
   const navigate = useNavigate();
+
+  const userStr = localStorage.getItem('user');
+  let storedUser = { name: 'Administrador', email: '' };
+  try { if (userStr) storedUser = JSON.parse(userStr); } catch { /* ignore */ }
+
+  const initials = storedUser.name
+    .split(' ').slice(0, 2).map((w: string) => w[0] ?? '').join('').toUpperCase();
+
   const [editing, setEditing] = useState(false);
-  const [name, setName]     = useState(ADMIN.name);
-  const [email, setEmail]   = useState(ADMIN.email);
-  const [phone, setPhone]   = useState(ADMIN.phone);
+  const [name, setName]     = useState(storedUser.name);
+  const [email, setEmail]   = useState(storedUser.email);
+  const [phone, setPhone]   = useState('');
   const [saved, setSaved]   = useState(false);
 
   const handleSave = () => {
@@ -39,8 +35,8 @@ export const AdminProfilePage: React.FC = () => {
 
         <div className={styles.profileCard}>
           <div className={styles.avatarWrap}>
-            <div className={styles.avatar}>{ADMIN.initials}</div>
-            <div className={styles.rolBadge}>{ADMIN.rol}</div>
+            <div className={styles.avatar}>{initials}</div>
+            <div className={styles.rolBadge}>Administrador</div>
           </div>
 
           <div className={styles.infoSection}>
@@ -65,7 +61,7 @@ export const AdminProfilePage: React.FC = () => {
               <div className={styles.fieldList}>
                 <div className={styles.fieldItem}><span className={styles.fieldKey}>Correo</span><span className={styles.fieldVal}>{email}</span></div>
                 <div className={styles.fieldItem}><span className={styles.fieldKey}>Teléfono</span><span className={styles.fieldVal}>{phone}</span></div>
-                <div className={styles.fieldItem}><span className={styles.fieldKey}>Administrador desde</span><span className={styles.fieldVal}>{ADMIN.since}</span></div>
+                <div className={styles.fieldItem}><span className={styles.fieldKey}>Rol</span><span className={styles.fieldVal}>Administrador</span></div>
               </div>
             )}
           </div>

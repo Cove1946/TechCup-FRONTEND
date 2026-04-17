@@ -177,7 +177,7 @@ export const Navbar: React.FC<NavbarProps> = ({ userName, userAvatar }) => {
 
           {userName && (
             <>
-              <Link to="/profile" className={styles.userName}>{userName}</Link>
+              <Link to={profileTo} className={styles.userName}>{userName}</Link>
               {userAvatar
                 ? <img src={userAvatar} alt={userName} className={styles.avatar} />
                 : <div className={styles.avatarPlaceholder}>{userName.charAt(0).toUpperCase()}</div>

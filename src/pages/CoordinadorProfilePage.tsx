@@ -3,17 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@components/layout';
 import styles from './CoordinadorProfilePage.module.css';
 
-const COORD = {
-  name: 'Sofía Torres',
-  email: 'storres@tecn.mx',
-  initials: 'ST',
-  phone: '+52 55 5555 1234',
-  since: 'Enero 2025',
-  torneos: 2,
-  equipos: 12,
-  incidencias: 5,
-};
-
 const TORNEOS = [
   { id: 1, nombre: 'TechCup Primavera 2026', equipos: 12, estado: 'Activo' },
   { id: 2, nombre: 'TechCup Otoño 2025', equipos: 10, estado: 'Finalizado' },
@@ -21,10 +10,18 @@ const TORNEOS = [
 
 export const CoordinadorProfilePage: React.FC = () => {
   const navigate = useNavigate();
+
+  const userStr = localStorage.getItem('user');
+  let storedUser = { name: 'Coordinador', email: '' };
+  try { if (userStr) storedUser = JSON.parse(userStr); } catch { /* ignore */ }
+
+  const initials = storedUser.name
+    .split(' ').slice(0, 2).map((w: string) => w[0] ?? '').join('').toUpperCase();
+
   const [editing, setEditing] = useState(false);
-  const [name, setName]       = useState(COORD.name);
-  const [email, setEmail]     = useState(COORD.email);
-  const [phone, setPhone]     = useState(COORD.phone);
+  const [name, setName]       = useState(storedUser.name);
+  const [email, setEmail]     = useState(storedUser.email);
+  const [phone, setPhone]     = useState('');
   const [saved, setSaved]     = useState(false);
 
   const handleSave = () => { setEditing(false); setSaved(true); setTimeout(() => setSaved(false), 2500); };
@@ -39,7 +36,7 @@ export const CoordinadorProfilePage: React.FC = () => {
 
         <div className={styles.profileCard}>
           <div className={styles.avatarWrap}>
-            <div className={styles.avatar}>{COORD.initials}</div>
+            <div className={styles.avatar}>{initials}</div>
             <div className={styles.rolBadge}>Coordinador</div>
           </div>
 
@@ -65,7 +62,7 @@ export const CoordinadorProfilePage: React.FC = () => {
               <div className={styles.fieldList}>
                 <div className={styles.fieldItem}><span className={styles.fieldKey}>Correo</span><span className={styles.fieldVal}>{email}</span></div>
                 <div className={styles.fieldItem}><span className={styles.fieldKey}>Teléfono</span><span className={styles.fieldVal}>{phone}</span></div>
-                <div className={styles.fieldItem}><span className={styles.fieldKey}>Coordinador desde</span><span className={styles.fieldVal}>{COORD.since}</span></div>
+                <div className={styles.fieldItem}><span className={styles.fieldKey}>Rol</span><span className={styles.fieldVal}>Coordinador</span></div>
               </div>
             )}
           </div>
