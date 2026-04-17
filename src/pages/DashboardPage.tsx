@@ -17,6 +17,14 @@ interface Match {
   cancha: string;
 }
 
+const ROLE_LABELS: Record<string, string> = {
+  jugador:     'Jugador',
+  capitan:     'Capitán',
+  coordinador: 'Coordinador',
+  arbitro:     'Árbitro',
+  admin:       'Administrador',
+};
+
 const BANNER_ACTIONS: Record<string, { label: string; to: string; outline?: boolean }[]> = {
   jugador:     [{ label: 'Mi Equipo', to: '/my-team' }],
   capitan:     [{ label: 'Mi Equipo', to: '/my-team' }, { label: 'Alineación', to: '/alineacion', outline: true }, { label: 'Crear Equipo +', to: '/teams/create', outline: true }],
@@ -33,8 +41,9 @@ export const DashboardPage: React.FC = () => {
   const userStr = localStorage.getItem('user');
   let user = { name: 'Usuario', role: 'jugador' };
   try { if (userStr) user = JSON.parse(userStr); } catch { /* localStorage corrupto */ }
-  const role    = (user.role ?? 'jugador').toLowerCase();
-  const actions = BANNER_ACTIONS[role] ?? BANNER_ACTIONS['jugador'];
+  const role      = (user.role ?? 'jugador').toLowerCase();
+  const roleLabel = ROLE_LABELS[role] ?? 'Jugador';
+  const actions   = BANNER_ACTIONS[role] ?? BANNER_ACTIONS['jugador'];
 
   const [matches, setMatches] = useState<Match[]>([]);
   const [loadingMatches, setLoadingMatches] = useState(true);
@@ -63,7 +72,7 @@ export const DashboardPage: React.FC = () => {
           <div className={styles.bannerLeft}>
             <p className={styles.bannerGreet}>👋 Bienvenido de regreso</p>
             <h1 className={styles.bannerName}>{user.name}</h1>
-            <p className={styles.bannerInfo}>{user.role ?? 'Jugador'} · 2026-1</p>
+            <p className={styles.bannerInfo}>{roleLabel} · 2026-1</p>
             <div className={styles.bannerActions}>
               {actions.map(a => (
                 <button
