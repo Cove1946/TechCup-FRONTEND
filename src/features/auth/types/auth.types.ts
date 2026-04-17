@@ -4,10 +4,13 @@ export interface LoginCredentials {
 }
 
 export interface RegisterData {
+  firstName: string;
+  lastName: string;
+  documentId: string;
   email: string;
   password: string;
-  name: string;
-  confirmPassword: string;
+  userType?: string;
+  confirmPassword?: string;
 }
 
 export interface AuthResponse {

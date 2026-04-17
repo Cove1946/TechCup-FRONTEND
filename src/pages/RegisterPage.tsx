@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logoImage from '@assets/Logo.png';
 import styles from './RegisterPage.module.css';
+import { authService } from '../api/authService';
 
 type TipoUsuario = 'Estudiante' | 'Graduado' | 'Profesor' | 'Familiar';
 type Posicion = 'Portero' | 'Defensa' | 'Mediocampista' | 'Delantero';
@@ -9,6 +10,7 @@ type Posicion = 'Portero' | 'Defensa' | 'Mediocampista' | 'Delantero';
 interface FormData {
   nombre: string;
   apellido: string;
+  documentId: string;
   tipoUsuario: TipoUsuario | '';
   email: string;
   password: string;
@@ -54,8 +56,10 @@ export const RegisterPage: React.FC = () => {
 
   const [step, setStep] = useState(1);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState<FormData>({
-    nombre: '', apellido: '', tipoUsuario: '', email: '',
+    nombre: '', apellido: '', documentId: '', tipoUsuario: '', email: '',
     password: '', confirmPassword: '',
     foto: null, posicion: '', dorsal: '',
   });
@@ -70,6 +74,7 @@ export const RegisterPage: React.FC = () => {
     const e: Partial<Record<keyof FormData, string>> = {};
     if (!data.nombre.trim()) e.nombre = 'El nombre es requerido';
     if (!data.apellido.trim()) e.apellido = 'El apellido es requerido';
+    if (!data.documentId.trim()) e.documentId = 'El documento es requerido';
     if (!data.tipoUsuario) e.tipoUsuario = 'Selecciona un tipo de usuario';
     if (!/\S+@\S+\.\S+/.test(data.email)) e.email = 'Ingresa un correo válido';
     if (data.password.length < 8) e.password = 'Mínimo 8 caracteres';
@@ -87,19 +92,28 @@ export const RegisterPage: React.FC = () => {
     return Object.keys(e).length === 0;
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (step === 1 && validateStep1()) { setStep(2); return; }
     if (step === 2 && validateStep2()) {
-      localStorage.setItem('token', 'mock-token-123');
-      localStorage.setItem('user', JSON.stringify({
-        name: `${data.nombre} ${data.apellido}`,
-        email: data.email,
-        role: data.tipoUsuario,
-        posicion: data.posicion,
-        dorsal: data.dorsal,
-        avatar: previewUrl ?? undefined,
-      }));
-      setStep(3);
+      setLoading(true);
+      setApiError(null);
+      try {
+        const response = await authService.register({
+          firstName: data.nombre,
+          lastName: data.apellido,
+          documentId: data.documentId,
+          email: data.email,
+          password: data.password,
+          userType: 'PLAYER',
+        });
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('user', JSON.stringify(response.user));
+        setStep(3);
+      } catch (err: any) {
+        setApiError(err?.response?.data?.message ?? 'Error al registrar. Intenta de nuevo.');
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -156,6 +170,17 @@ export const RegisterPage: React.FC = () => {
                 />
                 {errors.apellido && <span className={styles.errMsg}>{errors.apellido}</span>}
               </div>
+            </div>
+
+            <div className={styles.field}>
+              <label className={styles.label}>Número de documento <span className={styles.req}>*</span></label>
+              <input
+                className={`${styles.input} ${errors.documentId ? styles.inputErr : ''}`}
+                placeholder="Ej: 1234567890"
+                value={data.documentId}
+                onChange={e => set('documentId', e.target.value)}
+              />
+              {errors.documentId && <span className={styles.errMsg}>{errors.documentId}</span>}
             </div>
 
             <div className={styles.field}>
@@ -232,6 +257,7 @@ export const RegisterPage: React.FC = () => {
         )}
 
         {/* Step 2 — Datos jugador */}
+        {step === 2 && apiError && <div className={styles.error}>{apiError}</div>}
         {step === 2 && (
           <div className={styles.card}>
             {/* Foto */}
