@@ -6,6 +6,11 @@ export const teamService = {
     return response.data;
   },
 
+  async getTeamByCaptain(captainId: number | string) {
+    const response = await apiClient.get(`/api/teams/captain/${captainId}`);
+    return response.data;
+  },
+
   async getTeamsByTournament(tournamentId: number | string) {
     const response = await apiClient.get(`/api/teams/tournament/${tournamentId}`);
     return response.data;

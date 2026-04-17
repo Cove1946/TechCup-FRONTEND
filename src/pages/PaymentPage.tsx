@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@components/layout';
 import { paymentService } from '../api/paymentService';
 import { tournamentService } from '../api/tournamentService';
+import { teamService } from '../api/teamService';
 import styles from './PaymentPage.module.css';
 
 type PayStatus = 'pendiente' | 'revision' | 'aprobado' | 'rechazado';
@@ -34,12 +35,14 @@ export const PaymentPage: React.FC = () => {
   const userStr = localStorage.getItem('user');
   let captainId: number | string = 0;
   try { if (userStr) { const u = JSON.parse(userStr); captainId = u.id ?? u.userId ?? 0; } } catch { /* ignore */ }
-  const teamId = localStorage.getItem('teamId') ?? '0';
 
   // ── Step state ──
   const [pageStep, setPageStep]         = useState<PageStep>('select');
   const [torneos, setTorneos]           = useState<Torneo[]>([]);
   const [loadingTorneos, setLoadingTorneos] = useState(true);
+  const [teamId, setTeamId]             = useState<number | null>(null);
+  const [loadingTeam, setLoadingTeam]   = useState(true);
+  const [noTeamError, setNoTeamError]   = useState(false);
   const [selectedTorneo, setSelectedTorneo] = useState<Torneo | null>(null);
   const [registrationId, setRegistrationId] = useState<number | null>(null);
   const [registering, setRegistering]   = useState<number | null>(null);
@@ -59,6 +62,14 @@ export const PaymentPage: React.FC = () => {
   const currentIdx = STATUS_INDEX[status] ?? 0;
 
   useEffect(() => {
+    if (!captainId) { setLoadingTeam(false); setNoTeamError(true); return; }
+    teamService.getTeamByCaptain(captainId)
+      .then((data: { id: number }) => setTeamId(data.id))
+      .catch(() => setNoTeamError(true))
+      .finally(() => setLoadingTeam(false));
+  }, []);
+
+  useEffect(() => {
     tournamentService.getTournaments()
       .then((data: Torneo[]) => setTorneos(data.filter(t => t.status === 'ACTIVE')))
       .catch(() => {})
@@ -69,7 +80,7 @@ export const PaymentPage: React.FC = () => {
     setRegistering(torneo.id);
     setRegisterError('');
     try {
-      const reg = await paymentService.registerPayment(captainId, { tournamentId: torneo.id, teamId: Number(teamId) });
+      const reg = await paymentService.registerPayment(captainId, { tournamentId: torneo.id, teamId });
       setRegistrationId(reg.id);
       setSelectedTorneo(torneo);
       setPageStep('pay');
@@ -134,9 +145,15 @@ export const PaymentPage: React.FC = () => {
             <p className={styles.subtitle}>Selecciona el torneo al que quieres inscribir tu equipo</p>
           </div>
 
+          {noTeamError && (
+            <div className={styles.registerError}>
+              ⚠️ No tienes un equipo creado. Debes crear tu equipo antes de inscribirte a un torneo.
+            </div>
+          )}
+
           {registerError && <div className={styles.registerError}>⚠️ {registerError}</div>}
 
-          {loadingTorneos ? (
+          {loadingTorneos || loadingTeam ? (
             <p className={styles.loadingText}>Cargando torneos disponibles...</p>
           ) : torneos.length === 0 ? (
             <div className={styles.emptyTorneos}>
@@ -157,7 +174,7 @@ export const PaymentPage: React.FC = () => {
                   <button
                     className={styles.btnSeleccionar}
                     onClick={() => handleSelectTorneo(t)}
-                    disabled={registering === t.id}
+                    disabled={registering === t.id || !teamId}
                   >
                     {registering === t.id ? 'Registrando...' : 'Seleccionar →'}
                   </button>
