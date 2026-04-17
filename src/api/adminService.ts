@@ -30,4 +30,9 @@ export const adminService = {
     const response = await apiClient.patch(`/api/administrators/${adminId}/assign-role`, data);
     return response.data;
   },
+
+  async getStats(): Promise<{ torneos: number; equipos: number; partidos: number }> {
+    const response = await apiClient.get('/api/administrators/stats');
+    return response.data;
+  },
 };

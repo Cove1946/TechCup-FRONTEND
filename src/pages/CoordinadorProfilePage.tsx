@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@components/layout';
+import { adminService } from '../api/adminService';
 import styles from './CoordinadorProfilePage.module.css';
 
 const TORNEOS = [
@@ -23,6 +24,11 @@ export const CoordinadorProfilePage: React.FC = () => {
   const [email, setEmail]     = useState(storedUser.email);
   const [phone, setPhone]     = useState('');
   const [saved, setSaved]     = useState(false);
+  const [stats, setStats]     = useState({ torneos: 0, equipos: 0, partidos: 0 });
+
+  useEffect(() => {
+    adminService.getStats().then(setStats).catch(() => {});
+  }, []);
 
   const handleSave = () => { setEditing(false); setSaved(true); setTimeout(() => setSaved(false), 2500); };
 
@@ -70,16 +76,16 @@ export const CoordinadorProfilePage: React.FC = () => {
 
         <div className={styles.statsRow}>
           <div className={styles.statCard}>
-            <span className={styles.statNum}>{COORD.torneos}</span>
+            <span className={styles.statNum}>{stats.torneos}</span>
             <span className={styles.statLbl}>Torneos coordinados</span>
           </div>
           <div className={styles.statCard}>
-            <span className={styles.statNum}>{COORD.equipos}</span>
+            <span className={styles.statNum}>{stats.equipos}</span>
             <span className={styles.statLbl}>Equipos gestionados</span>
           </div>
           <div className={styles.statCard}>
-            <span className={styles.statNum}>{COORD.incidencias}</span>
-            <span className={styles.statLbl}>Incidencias resueltas</span>
+            <span className={styles.statNum}>{stats.partidos}</span>
+            <span className={styles.statLbl}>Partidos programados</span>
           </div>
         </div>
 
