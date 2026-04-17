@@ -16,11 +16,8 @@ export const paymentService = {
     return response.data;
   },
 
-  // Submits a payment proof (multipart/form-data with PDF file)
-  async submitPayment(formData: FormData) {
-    const response = await apiClient.post('/api/payments/submit', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+  async submitPayment(captainId: number | string, data: { registrationId: number; fileUrl: string; paymentMethod: string }) {
+    const response = await apiClient.post(`/api/payments/submit?captainId=${captainId}`, data);
     return response.data;
   },
 

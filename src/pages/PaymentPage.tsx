@@ -111,15 +111,15 @@ export const PaymentPage: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    if (!file) return;
+    if (!file || !registrationId) return;
     setSubmitting(true);
     setSubmitError('');
     try {
-      const formData = new FormData();
-      formData.append('comprobante', file);
-      if (registrationId) formData.append('registrationId', String(registrationId));
-      if (captainId)      formData.append('captainId', String(captainId));
-      await paymentService.submitPayment(formData);
+      await paymentService.submitPayment(captainId, {
+        registrationId,
+        fileUrl: file.name,
+        paymentMethod: 'NEQUI',
+      });
 
       const now = new Date();
       const timeStr = `Hoy ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
