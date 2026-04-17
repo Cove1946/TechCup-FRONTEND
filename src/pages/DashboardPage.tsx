@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { MainLayout } from '@components/layout';
 import { useNavigate } from 'react-router-dom';
 import { matchService } from '../api/matchService';
+import { teamService } from '../api/teamService';
 import styles from './DashboardPage.module.css';
 
 // TODO: backend endpoint needed – GET /api/tournaments/active/stats
@@ -46,7 +47,7 @@ const ACTIVE_TOURNAMENT_ID = 1;
 export const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const userStr = localStorage.getItem('user');
-  let user = { name: 'Usuario', role: 'jugador' };
+  let user: { name: string; role: string; id?: number | string } = { name: 'Usuario', role: 'jugador' };
   try { if (userStr) user = JSON.parse(userStr); } catch { /* localStorage corrupto */ }
   const role    = (user.role ?? 'jugador').toLowerCase();
   const actions = BANNER_ACTIONS[role] ?? BANNER_ACTIONS['jugador'];
