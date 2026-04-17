@@ -27,14 +27,22 @@ export const TorneosPage: React.FC = () => {
 
   const userStr = localStorage.getItem('user');
   let userRole = 'jugador';
-  try { if (userStr) userRole = JSON.parse(userStr).role ?? 'jugador'; } catch { /* ignore */ }
+  let userId = 0;
+  try {
+    if (userStr) {
+      const u = JSON.parse(userStr);
+      userRole = u.role ?? 'jugador';
+      userId   = u.userId ?? 0;
+    }
+  } catch { /* ignore */ }
   const canManage = ['admin', 'coordinador'].includes(userRole);
 
-  const [selected, setSelected]   = useState<number | null>(null);
-  const [torneos, setTorneos]     = useState<Torneo[]>([]);
-  const [loading, setLoading]     = useState(true);
-  const [error, setError]         = useState<string | null>(null);
-  const [deleting, setDeleting]   = useState<number | null>(null);
+  const [selected, setSelected]     = useState<number | null>(null);
+  const [torneos, setTorneos]       = useState<Torneo[]>([]);
+  const [loading, setLoading]       = useState(true);
+  const [error, setError]           = useState<string | null>(null);
+  const [deleting, setDeleting]     = useState<number | null>(null);
+  const [advancing, setAdvancing]   = useState<number | null>(null);
 
   const loadTorneos = () => {
     tournamentService.getTournaments()
@@ -57,6 +65,25 @@ export const TorneosPage: React.FC = () => {
       setError(err?.response?.data?.message ?? 'Error al eliminar el torneo.');
     } finally {
       setDeleting(null);
+    }
+  };
+
+  const handleAdvance = async (t: Torneo, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const labels: Record<string, string> = {
+      SKETCH: 'activar', ACTIVE: 'iniciar', INPROGRESS: 'finalizar',
+    };
+    if (!confirm(`¿${labels[t.status] ?? 'avanzar'} este torneo?`)) return;
+    setAdvancing(t.id);
+    try {
+      if (t.status === 'SKETCH')     await tournamentService.startTournament(userId, t.id);
+      else if (t.status === 'ACTIVE') await tournamentService.progressTournament(t.id);
+      else if (t.status === 'INPROGRESS') await tournamentService.finishTournament(userId, t.id);
+      loadTorneos();
+    } catch (err: any) {
+      setError(err?.response?.data?.message ?? 'Error al cambiar el estado del torneo.');
+    } finally {
+      setAdvancing(null);
     }
   };
 
@@ -130,12 +157,30 @@ export const TorneosPage: React.FC = () => {
                         </>
                       )}
                       {canManage && t.status === 'SKETCH' && (
+                        <button className={styles.btnOutline} onClick={() => navigate(`/organizer/config/${t.id}`)}>
+                          ✏️ Editar
+                        </button>
+                      )}
+                      {canManage && t.status !== 'FINALIZED' && (
+                        <button
+                          className={styles.btnPrimary}
+                          disabled={advancing === t.id}
+                          onClick={e => handleAdvance(t, e)}
+                        >
+                          {advancing === t.id ? 'Procesando...' : (
+                            t.status === 'SKETCH'     ? '▶ Activar torneo' :
+                            t.status === 'ACTIVE'     ? '▶ Iniciar torneo' :
+                                                        '🏁 Finalizar torneo'
+                          )}
+                        </button>
+                      )}
+                      {canManage && t.status === 'SKETCH' && (
                         <button
                           className={styles.btnDanger}
                           disabled={deleting === t.id}
                           onClick={e => handleDelete(t.id, e)}
                         >
-                          {deleting === t.id ? 'Eliminando...' : '🗑 Eliminar borrador'}
+                          {deleting === t.id ? 'Eliminando...' : '🗑 Eliminar'}
                         </button>
                       )}
                     </div>

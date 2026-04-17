@@ -117,7 +117,7 @@ export const CoordinadorProfilePage: React.FC = () => {
         </div>
 
         <div className={styles.actionsGrid}>
-          <button className={styles.actionBtn} onClick={() => navigate('/organizer/config')}>⚙️ Configurar Torneo</button>
+          <button className={styles.actionBtn} onClick={() => navigate('/torneos')}>⚙️ Gestionar Torneos</button>
           <button className={styles.actionBtn} onClick={() => navigate('/organizer/payments')}>💳 Gestión de Pagos</button>
           <button className={styles.actionBtn} onClick={() => navigate('/teams')}>🏆 Ver Equipos</button>
           <button className={styles.actionBtn} onClick={() => navigate('/llaves')}>🔑 Ver Llaves</button>

@@ -91,7 +91,7 @@ export const AdminProfilePage: React.FC = () => {
         <div className={styles.actionsGrid}>
           <button className={styles.actionBtn} onClick={() => navigate('/admin/roles')}>👥 Gestión de Roles</button>
           <button className={styles.actionBtn} onClick={() => navigate('/organizer/payments')}>💳 Gestión de Pagos</button>
-          <button className={styles.actionBtn} onClick={() => navigate('/organizer/config')}>⚙️ Configurar Torneo</button>
+          <button className={styles.actionBtn} onClick={() => navigate('/torneos')}>⚙️ Gestionar Torneos</button>
           <button className={styles.actionBtn} onClick={() => navigate('/teams')}>🏆 Ver Equipos</button>
         </div>
       </div>

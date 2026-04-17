@@ -1,48 +1,77 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { MainLayout } from '@components/layout';
 import { tournamentService } from '../api/tournamentService';
 import styles from './TournamentConfigPage.module.css';
 
 export const TournamentConfigPage: React.FC = () => {
   const navigate = useNavigate();
+  const { id } = useParams<{ id?: string }>();
+  const isEditing = !!id;
 
   const userStr = localStorage.getItem('user');
   let userId = 0;
   try { if (userStr) userId = JSON.parse(userStr).userId ?? 0; } catch { /* ignore */ }
 
-  const [nombre, setNombre]                   = useState('');
-  const [fechaInicio, setFechaInicio]         = useState('');
-  const [fechaFin, setFechaFin]               = useState('');
-  const [maxEquipos, setMaxEquipos]           = useState('16');
+  const [nombre, setNombre]                         = useState('');
+  const [fechaInicio, setFechaInicio]               = useState('');
+  const [fechaFin, setFechaFin]                     = useState('');
+  const [maxEquipos, setMaxEquipos]                 = useState('16');
   const [jugadoresPorEquipo, setJugadoresPorEquipo] = useState('7');
-  const [inscripcion, setInscripcion]         = useState('500');
-  const [descripcion, setDescripcion]         = useState('');
-  const [loading, setLoading]                 = useState(false);
-  const [error, setError]                     = useState<string | null>(null);
-  const [saved, setSaved]                     = useState(false);
+  const [inscripcion, setInscripcion]               = useState('500');
+  const [descripcion, setDescripcion]               = useState('');
+  const [loading, setLoading]                       = useState(false);
+  const [loadingData, setLoadingData]               = useState(isEditing);
+  const [error, setError]                           = useState<string | null>(null);
+  const [saved, setSaved]                           = useState(false);
+
+  useEffect(() => {
+    if (!isEditing) return;
+    tournamentService.getTournament(id!)
+      .then((t: any) => {
+        setNombre(t.name ?? '');
+        setFechaInicio(t.startDate ?? '');
+        setFechaFin(t.endDate ?? '');
+        setMaxEquipos(String(t.totalTeams ?? 16));
+        setInscripcion(String(t.registrationCost ?? 500));
+      })
+      .catch(() => setError('No se pudo cargar el torneo.'))
+      .finally(() => setLoadingData(false));
+  }, [id, isEditing]);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!userId) { setError('No se pudo obtener el ID del usuario. Vuelve a iniciar sesión.'); return; }
+    if (!isEditing && !userId) {
+      setError('No se pudo obtener el ID del usuario. Vuelve a iniciar sesión.');
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
-      await tournamentService.createTournament(userId, {
+      const payload = {
         name: nombre,
         startDate: fechaInicio,
         endDate: fechaFin,
         totalTeams: Number(maxEquipos),
         registrationCost: Number(inscripcion),
-      });
+      };
+      if (isEditing) {
+        await tournamentService.updateTournament(id!, payload);
+      } else {
+        await tournamentService.createTournament(userId, payload);
+      }
       setSaved(true);
-      setTimeout(() => setSaved(false), 3000);
+      setTimeout(() => { setSaved(false); navigate('/torneos'); }, 1500);
     } catch (err: any) {
-      setError(err?.response?.data?.message ?? 'Error al crear el torneo. Intenta de nuevo.');
+      setError(err?.response?.data?.message ?? `Error al ${isEditing ? 'actualizar' : 'crear'} el torneo.`);
     } finally {
       setLoading(false);
     }
   };
+
+  if (loadingData) {
+    return <MainLayout><div className={styles.page}>Cargando torneo...</div></MainLayout>;
+  }
 
   return (
     <MainLayout>
@@ -51,10 +80,10 @@ export const TournamentConfigPage: React.FC = () => {
         <p className={styles.subtitle}>Panel de administración</p>
 
         <div className={styles.titleRow}>
-          <h1 className={styles.title}>Crear Torneo</h1>
+          <h1 className={styles.title}>{isEditing ? 'Editar Torneo' : 'Crear Torneo'}</h1>
         </div>
 
-        {saved  && <div className={styles.savedBanner}>✓ Torneo creado correctamente</div>}
+        {saved  && <div className={styles.savedBanner}>✓ Torneo {isEditing ? 'actualizado' : 'creado'} correctamente</div>}
         {error  && <div className={styles.errorBanner}>{error}</div>}
 
         <form className={styles.form} onSubmit={handleSave}>
@@ -101,7 +130,7 @@ export const TournamentConfigPage: React.FC = () => {
           <div className={styles.formActions}>
             <button type="button" className={styles.btnCancel} onClick={() => navigate(-1)}>Cancelar</button>
             <button type="submit" className={styles.btnPrimary} disabled={loading}>
-              {loading ? 'Creando...' : '💾 Crear torneo'}
+              {loading ? (isEditing ? 'Guardando...' : 'Creando...') : (isEditing ? '💾 Guardar cambios' : '💾 Crear torneo')}
             </button>
           </div>
         </form>
