@@ -63,7 +63,6 @@ const PROFILE_BY_ROLE: Record<string, string> = {
 
 const MI_EQUIPO_ALL  = [
   { label: 'Mi perfil deportivo', to: '__profile__',    roles: ['jugador','capitan'] },
-  { label: 'Mi perfil',           to: '__profile__',    roles: ['coordinador','admin','arbitro'] },
   { label: 'Mi equipo',           to: '/my-team',       roles: ['jugador','capitan'] },
   { label: 'Alineación',          to: '/alineacion',    roles: ['jugador','capitan'] },
   { label: 'Buscar jugadores',    to: '/search-players',roles: ['jugador','capitan'] },
@@ -133,6 +132,7 @@ export const Navbar: React.FC<NavbarProps> = ({ userName, userAvatar }) => {
   const userRole = (userObj?.role ?? 'jugador').toLowerCase();
   const profileTo = PROFILE_BY_ROLE[userRole] ?? '/profile';
 
+  const showMiEquipo  = ['jugador','capitan'].includes(userRole);
   const miEquipoItems = MI_EQUIPO_ALL
     .filter(i => i.roles.includes(userRole))
     .map(i => ({ label: i.label, to: i.to === '__profile__' ? profileTo : i.to }));
@@ -160,9 +160,10 @@ export const Navbar: React.FC<NavbarProps> = ({ userName, userAvatar }) => {
         </div>
 
         <div className={styles.navLinks}>
-          <NavDropdown label="Mi Equipo"    items={miEquipoItems} />
+          {showMiEquipo && <NavDropdown label="Mi Equipo" items={miEquipoItems} />}
           <NavDropdown label="Partidos"     items={PARTIDOS_ITEMS} />
           {showAdmin && <NavDropdown label={adminMenuLabel} items={adminItems} />}
+          {!showMiEquipo && <Link to={profileTo} className={styles.navLink}>Mi perfil</Link>}
         </div>
 
         <div className={styles.userSection}>
