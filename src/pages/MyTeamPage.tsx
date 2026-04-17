@@ -29,12 +29,7 @@ const MOCK_ROSTER: Player[] = [
   { num: 1,  initials: 'PK', name: 'Pablo K.',   pos: 'Delantero',     sem: '6', prog: 'Ing. Estadística',    estado: 'Titular',    rol: 'Jugador', suspended: false, goles: 5, asistencias: 1, partidos: 8, tarjAm: 1, tarjRoj: 0 },
   { num: 10, initials: 'PH', name: 'Pablo H.',   pos: 'Mediocampista', sem: '3', prog: 'Ing. Sistemas',       estado: 'Reserva',    rol: 'Jugador', suspended: false, goles: 1, asistencias: 2, partidos: 5, tarjAm: 0, tarjRoj: 0 },
   { num: 11, initials: 'DR', name: 'Diego R.',   pos: 'Delantero',     sem: '4', prog: 'Ing. Biotecnología',  estado: 'Reserva',    rol: 'Jugador', suspended: false, goles: 3, asistencias: 0, partidos: 4, tarjAm: 1, tarjRoj: 0 },
-  { num: 12, initials: 'FG', name: 'Felipe G.',  pos: 'Mediocampista', sem: '5', prog: 'Ing. Sistemas',       estado: 'Reserva',    rol: 'Jugador', suspended: false, goles: 0, asistencias: 1, partidos: 3, tarjAm: 0, tarjRoj: 0 },
-  { num: 13, initials: 'MA', name: 'Malon A.',   pos: 'Mediocampista', sem: '4', prog: 'Ing. IA',             estado: 'Reserva',    rol: 'Jugador', suspended: false, goles: 2, asistencias: 0, partidos: 5, tarjAm: 1, tarjRoj: 0 },
-  { num: 14, initials: 'KR', name: 'Kriay R.',   pos: 'Mediocampista', sem: '3', prog: 'Ing. Estadística',    estado: 'Reserva',    rol: 'Jugador', suspended: false, goles: 1, asistencias: 0, partidos: 4, tarjAm: 0, tarjRoj: 0 },
-  { num: 15, initials: 'EH', name: 'Erimes H.',  pos: 'Mediocampista', sem: '5', prog: 'Ing. Ciberseguridad', estado: 'Reserva',    rol: 'Jugador', suspended: false, goles: 1, asistencias: 0, partidos: 3, tarjAm: 0, tarjRoj: 0 },
-  { num: 20, initials: 'LM', name: 'Luis M.',    pos: 'Defensa',       sem: '4', prog: 'Ing. Sistemas',       estado: 'Suspendido', rol: 'Jugador', suspended: true,  goles: 0, asistencias: 0, partidos: 6, tarjAm: 2, tarjRoj: 1 },
-  { num: 21, initials: 'ML', name: 'Marry L.',   pos: 'Defensa',       sem: '3', prog: 'Ing. IA',             estado: 'Suspendido', rol: 'Jugador', suspended: true,  goles: 1, asistencias: 2, partidos: 7, tarjAm: 2, tarjRoj: 1 },
+  { num: 12, initials: 'FG', name: 'Felipe G.',  pos: 'Mediocampista', sem: '5', prog: 'Ing. Sistemas',       estado: 'Reserva',    rol: 'Jugador', suspended: false, goles: 0, asistencias: 1, partidos: 3, tarjAm: 0, tarjRoj: 0 }
 ];
 
 const MOCK_TEAM: TeamData = {
