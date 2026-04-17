@@ -50,12 +50,16 @@ export const CreateTeamPage: React.FC = () => {
     setLoading(true);
     setApiError(null);
     try {
-      await teamService.createTeam(captainId, {
+      const team = await teamService.createTeam(captainId, {
         name: nombre.trim(),
         shieldUrl: null,
         mainColor,
         secondaryColor,
       });
+      if (team?.id) {
+        const u = JSON.parse(localStorage.getItem('user') || '{}');
+        localStorage.setItem('user', JSON.stringify({ ...u, teamId: team.id }));
+      }
       navigate('/teams');
     } catch (err: any) {
       const status = err?.response?.status;
