@@ -136,8 +136,9 @@ export const Navbar: React.FC<NavbarProps> = ({ userName, userAvatar }) => {
     .filter(i => i.roles.includes(userRole))
     .map(i => ({ label: i.label, to: i.to === '__profile__' ? profileTo : i.to }));
 
-  const adminItems = ADMIN_ALL.filter(i => i.roles.includes(userRole));
-  const showAdmin  = adminItems.length > 0;
+  const adminItems      = ADMIN_ALL.filter(i => i.roles.includes(userRole));
+  const showAdmin       = adminItems.length > 0;
+  const adminMenuLabel  = userRole === 'coordinador' ? 'Coordinador' : 'Administrador';
 
   const notifications = NOTIFICATIONS_BY_ROLE[userRole] ?? NOTIFICATIONS_BY_ROLE['jugador'];
   const unreadCount   = notifications.filter(n => n.unread).length;
@@ -160,7 +161,7 @@ export const Navbar: React.FC<NavbarProps> = ({ userName, userAvatar }) => {
         <div className={styles.navLinks}>
           <NavDropdown label="Mi Equipo"    items={miEquipoItems} />
           <NavDropdown label="Partidos"     items={PARTIDOS_ITEMS} />
-          {showAdmin && <NavDropdown label="Administrador" items={adminItems} />}
+          {showAdmin && <NavDropdown label={adminMenuLabel} items={adminItems} />}
         </div>
 
         <div className={styles.userSection}>
