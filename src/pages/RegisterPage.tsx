@@ -93,7 +93,24 @@ export const RegisterPage: React.FC = () => {
   };
 
   const handleNext = async () => {
-    if (step === 1 && validateStep1()) { setStep(2); return; }
+    if (step === 1 && validateStep1()) {
+      try {
+        const res = await import('../api/axiosConfig').then(m =>
+          m.default.get('/auth/check-availability', {
+            params: { email: data.email, documentId: data.documentId },
+          })
+        );
+        const { emailTaken, documentIdTaken } = res.data;
+        const e: Partial<Record<keyof FormData, string>> = {};
+        if (emailTaken)      e.email      = 'Este correo ya está registrado';
+        if (documentIdTaken) e.documentId = 'Este documento ya está registrado';
+        if (Object.keys(e).length > 0) { setErrors(e); return; }
+      } catch {
+        // si el check falla, dejamos continuar (el back rechazará en registro si hay duplicado)
+      }
+      setStep(2);
+      return;
+    }
     if (step === 2 && validateStep2()) {
       setLoading(true);
       setApiError(null);
