@@ -65,4 +65,8 @@ export const tournamentService = {
     const response = await apiClient.get(`/api/tournaments/${tournamentId}/historial`);
     return response.data;
   },
+
+  async deleteTournament(tournamentId: number | string) {
+    await apiClient.delete(`/api/tournaments/${tournamentId}`);
+  },
 };

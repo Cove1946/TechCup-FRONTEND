@@ -16,9 +16,10 @@ interface Torneo {
 }
 
 const STATUS_CONFIG: Record<string, { label: string; bg: string; color: string }> = {
-  ACTIVE:   { label: 'Activo',     bg: '#f0fdf4', color: '#15803d' },
-  PENDING:  { label: 'Próximo',    bg: '#eff6ff', color: '#1e3a8a' },
-  FINISHED: { label: 'Finalizado', bg: '#f3f4f6', color: '#6b7280' },
+  SKETCH:     { label: 'Borrador',   bg: '#fefce8', color: '#854d0e' },
+  ACTIVE:     { label: 'Activo',     bg: '#f0fdf4', color: '#15803d' },
+  INPROGRESS: { label: 'En curso',   bg: '#eff6ff', color: '#1e3a8a' },
+  FINALIZED:  { label: 'Finalizado', bg: '#f3f4f6', color: '#6b7280' },
 };
 
 export const TorneosPage: React.FC = () => {
@@ -29,17 +30,35 @@ export const TorneosPage: React.FC = () => {
   try { if (userStr) userRole = JSON.parse(userStr).role ?? 'jugador'; } catch { /* ignore */ }
   const canManage = ['admin', 'coordinador'].includes(userRole);
 
-  const [selected, setSelected] = useState<number | null>(null);
-  const [torneos, setTorneos]   = useState<Torneo[]>([]);
-  const [loading, setLoading]   = useState(true);
-  const [error, setError]       = useState<string | null>(null);
+  const [selected, setSelected]   = useState<number | null>(null);
+  const [torneos, setTorneos]     = useState<Torneo[]>([]);
+  const [loading, setLoading]     = useState(true);
+  const [error, setError]         = useState<string | null>(null);
+  const [deleting, setDeleting]   = useState<number | null>(null);
 
-  useEffect(() => {
+  const loadTorneos = () => {
     tournamentService.getTournaments()
       .then(setTorneos)
       .catch(() => setError('No se pudieron cargar los torneos'))
       .finally(() => setLoading(false));
-  }, []);
+  };
+
+  useEffect(() => { loadTorneos(); }, []);
+
+  const handleDelete = async (id: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!confirm('¿Eliminar este torneo en borrador? Esta acción no se puede deshacer.')) return;
+    setDeleting(id);
+    try {
+      await tournamentService.deleteTournament(id);
+      setTorneos(prev => prev.filter(t => t.id !== id));
+      if (selected === id) setSelected(null);
+    } catch (err: any) {
+      setError(err?.response?.data?.message ?? 'Error al eliminar el torneo.');
+    } finally {
+      setDeleting(null);
+    }
+  };
 
   if (loading) return <MainLayout><div className={styles.page}>Cargando torneos...</div></MainLayout>;
 
@@ -100,11 +119,24 @@ export const TorneosPage: React.FC = () => {
 
                   {isOpen && (
                     <div className={styles.cardActions} onClick={e => e.stopPropagation()}>
-                      <button className={styles.btnOutline} onClick={() => navigate('/llaves')}>🔑 Ver llaves</button>
-                      <button className={styles.btnOutline} onClick={() => navigate('/tabla')}>📊 Posiciones</button>
-                      <button className={styles.btnOutline} onClick={() => navigate('/calendar')}>📅 Calendario</button>
-                      {canManage && (
-                        <button className={styles.btnOutline} onClick={() => navigate('/estadisticas')}>📈 Estadísticas</button>
+                      {t.status !== 'SKETCH' && (
+                        <>
+                          <button className={styles.btnOutline} onClick={() => navigate('/llaves')}>🔑 Ver llaves</button>
+                          <button className={styles.btnOutline} onClick={() => navigate('/tabla')}>📊 Posiciones</button>
+                          <button className={styles.btnOutline} onClick={() => navigate('/calendar')}>📅 Calendario</button>
+                          {canManage && (
+                            <button className={styles.btnOutline} onClick={() => navigate('/estadisticas')}>📈 Estadísticas</button>
+                          )}
+                        </>
+                      )}
+                      {canManage && t.status === 'SKETCH' && (
+                        <button
+                          className={styles.btnDanger}
+                          disabled={deleting === t.id}
+                          onClick={e => handleDelete(t.id, e)}
+                        >
+                          {deleting === t.id ? 'Eliminando...' : '🗑 Eliminar borrador'}
+                        </button>
                       )}
                     </div>
                   )}
