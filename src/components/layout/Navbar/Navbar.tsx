@@ -62,12 +62,13 @@ const PROFILE_BY_ROLE: Record<string, string> = {
 };
 
 const MI_EQUIPO_ALL  = [
-  { label: 'Mi perfil deportivo', to: '__profile__', roles: ['jugador','capitan','coordinador','arbitro','admin'] },
-  { label: 'Mi equipo',           to: '/my-team',      roles: ['jugador','capitan'] },
-  { label: 'Alineación',          to: '/alineacion',   roles: ['jugador','capitan'] },
+  { label: 'Mi perfil deportivo', to: '__profile__',    roles: ['jugador','capitan'] },
+  { label: 'Mi perfil',           to: '__profile__',    roles: ['coordinador','admin','arbitro'] },
+  { label: 'Mi equipo',           to: '/my-team',       roles: ['jugador','capitan'] },
+  { label: 'Alineación',          to: '/alineacion',    roles: ['jugador','capitan'] },
   { label: 'Buscar jugadores',    to: '/search-players',roles: ['jugador','capitan'] },
-  { label: 'Inscripción & Pago',  to: '/payment',      roles: ['capitan'] },
-  { label: 'Crear equipo',        to: '/teams/create', roles: ['capitan'] },
+  { label: 'Inscripción & Pago',  to: '/payment',       roles: ['capitan'] },
+  { label: 'Crear equipo',        to: '/teams/create',  roles: ['capitan'] },
 ];
 
 const PARTIDOS_ITEMS = [
