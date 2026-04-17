@@ -19,7 +19,6 @@ export const TournamentConfigPage: React.FC = () => {
   const [maxEquipos, setMaxEquipos]                 = useState('16');
   const [jugadoresPorEquipo, setJugadoresPorEquipo] = useState('7');
   const [inscripcion, setInscripcion]               = useState('500');
-  const [descripcion, setDescripcion]               = useState('');
   const [loading, setLoading]                       = useState(false);
   const [loadingData, setLoadingData]               = useState(isEditing);
   const [error, setError]                           = useState<string | null>(null);
@@ -95,10 +94,6 @@ export const TournamentConfigPage: React.FC = () => {
               <div className={styles.field}>
                 <label className={styles.label}>Nombre del torneo *</label>
                 <input className={styles.input} value={nombre} onChange={e => setNombre(e.target.value)} required />
-              </div>
-              <div className={styles.field}>
-                <label className={styles.label}>Descripción</label>
-                <input className={styles.input} value={descripcion} onChange={e => setDescripcion(e.target.value)} />
               </div>
               <div className={styles.field}>
                 <label className={styles.label}>Fecha de inicio *</label>
