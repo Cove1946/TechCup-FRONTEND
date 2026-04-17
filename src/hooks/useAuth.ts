@@ -8,12 +8,20 @@ export const useAuth = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
+  const ROLE_MAP: Record<string, string> = {
+    PLAYER:        'jugador',
+    CAPTAIN:       'capitan',
+    ORGANIZER:     'coordinador',
+    REFEREE:       'arbitro',
+    ADMINISTRATOR: 'admin',
+  };
+
   const ROLE_ROUTES: Record<string, string> = {
-    PLAYER:        '/dashboard',
-    CAPTAIN:       '/dashboard',
-    ORGANIZER:     '/dashboard',
-    REFEREE:       '/arbitro',
-    ADMINISTRATOR: '/dashboard',
+    jugador:     '/dashboard',
+    capitan:     '/dashboard',
+    coordinador: '/dashboard',
+    arbitro:     '/arbitro',
+    admin:       '/dashboard',
   };
 
   const login = async (credentials: LoginCredentials) => {
@@ -21,14 +29,14 @@ export const useAuth = () => {
       setLoading(true);
       setError(null);
       const response = await authService.login(credentials);
+      const role = ROLE_MAP[response.userType] ?? 'jugador';
       localStorage.setItem('token', response.token);
       localStorage.setItem('user', JSON.stringify({
         name: `${response.firstName} ${response.lastName}`,
         email: response.email,
-        role: response.userType,
+        role,
       }));
-      const route = ROLE_ROUTES[response.userType] ?? '/dashboard';
-      navigate(route);
+      navigate(ROLE_ROUTES[role] ?? '/dashboard');
     } catch (err: any) {
       setError(err?.response?.data?.message ?? 'Credenciales incorrectas');
     } finally {
@@ -42,10 +50,11 @@ export const useAuth = () => {
       setError(null);
       const response = await authService.register(data);
       localStorage.setItem('token', response.token);
+      const role = ROLE_MAP[response.userType] ?? 'jugador';
       localStorage.setItem('user', JSON.stringify({
         name: `${response.firstName} ${response.lastName}`,
         email: response.email,
-        role: response.userType,
+        role,
       }));
       navigate('/dashboard');
     } catch (err: any) {
