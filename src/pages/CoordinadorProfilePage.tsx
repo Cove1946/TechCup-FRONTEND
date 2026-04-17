@@ -2,12 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@components/layout';
 import { adminService } from '../api/adminService';
+import { tournamentService } from '../api/tournamentService';
 import styles from './CoordinadorProfilePage.module.css';
 
-const TORNEOS = [
-  { id: 1, nombre: 'TechCup Primavera 2026', equipos: 12, estado: 'Activo' },
-  { id: 2, nombre: 'TechCup Otoño 2025', equipos: 10, estado: 'Finalizado' },
-];
+interface Torneo {
+  id: number;
+  startDate: string;
+  endDate: string;
+  status: string;
+  totalTeams: number;
+  organizerName?: string;
+}
 
 export const CoordinadorProfilePage: React.FC = () => {
   const navigate = useNavigate();
@@ -25,9 +30,11 @@ export const CoordinadorProfilePage: React.FC = () => {
   const [phone, setPhone]     = useState('');
   const [saved, setSaved]     = useState(false);
   const [stats, setStats]     = useState({ torneos: 0, equipos: 0, partidos: 0 });
+  const [torneos, setTorneos] = useState<Torneo[]>([]);
 
   useEffect(() => {
     adminService.getStats().then(setStats).catch(() => {});
+    tournamentService.getTournaments().then(setTorneos).catch(() => {});
   }, []);
 
   const handleSave = () => { setEditing(false); setSaved(true); setTimeout(() => setSaved(false), 2500); };
@@ -91,14 +98,19 @@ export const CoordinadorProfilePage: React.FC = () => {
 
         <div className={styles.sectionCard}>
           <h3 className={styles.sectionTitle}>Torneos a cargo</h3>
-          {TORNEOS.map(t => (
+          {torneos.length === 0 ? (
+            <p style={{ color: '#6b7280', fontSize: '0.9rem' }}>No hay torneos registrados aún.</p>
+          ) : torneos.map(t => (
             <div key={t.id} className={styles.torneoRow}>
               <div>
-                <div className={styles.torneoName}>{t.nombre}</div>
-                <div className={styles.torneoMeta}>{t.equipos} equipos</div>
+                <div className={styles.torneoName}>{t.startDate} → {t.endDate}</div>
+                <div className={styles.torneoMeta}>{t.totalTeams} equipos máx.</div>
               </div>
-              <span className={styles.estadoBadge} style={{ background: t.estado === 'Activo' ? '#f0fdf4' : '#f3f4f6', color: t.estado === 'Activo' ? '#15803d' : '#6b7280' }}>
-                {t.estado}
+              <span className={styles.estadoBadge} style={{
+                background: t.status === 'ACTIVE' ? '#f0fdf4' : '#f3f4f6',
+                color:      t.status === 'ACTIVE' ? '#15803d' : '#6b7280',
+              }}>
+                {t.status === 'ACTIVE' ? 'Activo' : t.status === 'FINISHED' ? 'Finalizado' : t.status}
               </span>
             </div>
           ))}

@@ -32,6 +32,7 @@ export const useAuth = () => {
       const role = ROLE_MAP[response.userType] ?? 'jugador';
       localStorage.setItem('token', response.token);
       localStorage.setItem('user', JSON.stringify({
+        userId: response.userId,
         name: `${response.firstName} ${response.lastName}`,
         email: response.email,
         role,
@@ -52,6 +53,7 @@ export const useAuth = () => {
       localStorage.setItem('token', response.token);
       const role = ROLE_MAP[response.userType] ?? 'jugador';
       localStorage.setItem('user', JSON.stringify({
+        userId: response.userId,
         name: `${response.firstName} ${response.lastName}`,
         email: response.email,
         role,

@@ -16,18 +16,18 @@ export const tournamentService = {
     return response.data;
   },
 
-  async createTournament(data: Record<string, unknown>) {
-    const response = await apiClient.post('/api/tournaments', data);
+  async createTournament(organizerId: number, data: Record<string, unknown>) {
+    const response = await apiClient.post(`/api/tournaments?organizerId=${organizerId}`, data);
     return response.data;
   },
 
-  async startTournament(tournamentId: number | string) {
-    const response = await apiClient.patch(`/api/tournaments/${tournamentId}/start`);
+  async startTournament(organizerId: number, tournamentId: number | string) {
+    const response = await apiClient.patch(`/api/tournaments/${tournamentId}/start?organizerId=${organizerId}`);
     return response.data;
   },
 
-  async finishTournament(tournamentId: number | string) {
-    const response = await apiClient.patch(`/api/tournaments/${tournamentId}/finish`);
+  async finishTournament(organizerId: number, tournamentId: number | string) {
+    const response = await apiClient.patch(`/api/tournaments/${tournamentId}/finish?organizerId=${organizerId}`);
     return response.data;
   },
 

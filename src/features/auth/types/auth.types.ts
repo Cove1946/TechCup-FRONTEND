@@ -14,6 +14,7 @@ export interface RegisterData {
 }
 
 export interface AuthResponse {
+  userId: number;
   token: string;
   type: string;
   email: string;
