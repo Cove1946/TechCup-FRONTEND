@@ -48,15 +48,9 @@ const SORT_OPTIONS = ['Nombre', 'Posición', 'Semestre'];
 const PAGE_SIZE = 6;
 
 export const SearchPlayersPage: React.FC = () => {
-  const userStr = localStorage.getItem('user');
-  const userObj = userStr ? JSON.parse(userStr) : {};
-  const captainId: number = userObj.userId ?? 0;
-  const teamId: number    = userObj.teamId  ?? 0;
-
   const [allPlayers, setAllPlayers] = useState<Player[]>([]);
   const [loading, setLoading]       = useState(true);
   const [error, setError]           = useState<string | null>(null);
-  const [inviteError, setInviteError] = useState<string | null>(null);
 
   const [search, setSearch]         = useState('');
   const [posFilter, setPosFilter]   = useState<PosShort[]>([]);
@@ -197,15 +191,12 @@ export const SearchPlayersPage: React.FC = () => {
                       <span className={`${styles.availBadge} ${p.available ? styles.availYes : styles.availNo}`}>
                         {p.available ? 'Disponible' : 'No disponible'}
                       </span>
-                      {p.available ? (
-                        <button className={`${styles.inviteBtn} ${isInvited ? styles.invitedBtn : ''}`}
-                          onClick={() => handleInvite(p)}
-                          disabled={isInvited}>
-                          ✉ {isInvited ? 'Invitación enviada' : 'Invitar al equipo'}
-                        </button>
-                      ) : (
-                        <button className={styles.disabledBtn} disabled>✉ No disponible</button>
-                      )}
+                      <button
+                        className={`${styles.inviteBtn} ${isInvited ? styles.invitedBtn : ''}`}
+                        onClick={() => handleInvite(p)}
+                        disabled={isInvited}>
+                        ✉ {isInvited ? 'Invitación enviada' : 'Invitar al equipo'}
+                      </button>
                     </div>
                   );
                 })}
