@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import logoImage from '@assets/Logo.png';
 import styles from './RegisterPage.module.css';
 import { authService } from '../api/authService';
+import { playerService } from '../api/playerService';
 
 type TipoUsuario = 'Estudiante' | 'Graduado' | 'Profesor' | 'Familiar';
 type Posicion = 'Portero' | 'Defensa' | 'Mediocampista' | 'Delantero';
@@ -124,6 +125,24 @@ export const RegisterPage: React.FC = () => {
           userType: 'PLAYER',
         });
         localStorage.setItem('token', response.token);
+
+        const POS_ENUM: Record<string, string> = {
+          'Portero': 'PORTERO', 'Defensa': 'DEFENSA',
+          'Mediocampista': 'MEDIOCAMPISTA', 'Delantero': 'DELANTERO',
+        };
+        try {
+          await playerService.createSportProfile(response.userId, {
+            primaryPosition: POS_ENUM[data.posicion] ?? 'DEFENSA',
+            jerseyNumber: parseInt(data.dorsal) || 1,
+            photoUrl: previewUrl ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(data.nombre + '+' + data.apellido)}`,
+            birthDate: '2000-01-01',
+            available: true,
+            semester: 1,
+          });
+        } catch {
+          // sport profile failed — user registered but won't appear in search yet
+        }
+
         localStorage.setItem('user', JSON.stringify({
           userId: response.userId,
           name: `${data.nombre} ${data.apellido}`,
