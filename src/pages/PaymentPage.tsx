@@ -69,7 +69,7 @@ export const PaymentPage: React.FC = () => {
     setRegistering(torneo.id);
     setRegisterError('');
     try {
-      const reg = await paymentService.registerPayment({ tournamentId: torneo.id, teamId: Number(teamId) });
+      const reg = await paymentService.registerPayment(captainId, { tournamentId: torneo.id, teamId: Number(teamId) });
       setRegistrationId(reg.id);
       setSelectedTorneo(torneo);
       setPageStep('pay');

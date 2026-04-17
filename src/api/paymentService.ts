@@ -11,8 +11,8 @@ export const paymentService = {
     return response.data;
   },
 
-  async registerPayment(data: Record<string, unknown>) {
-    const response = await apiClient.post('/api/payments/register', data);
+  async registerPayment(captainId: number | string, data: Record<string, unknown>) {
+    const response = await apiClient.post(`/api/payments/register?captainId=${captainId}`, data);
     return response.data;
   },
 
