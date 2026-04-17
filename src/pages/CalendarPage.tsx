@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@components/layout';
+import { matchService } from '../api/matchService';
 import styles from './CalendarPage.module.css';
 
 type View = 'semanal' | 'mensual';
@@ -11,16 +12,6 @@ interface Match {
   away: string; awayInitials: string; awayColor: string;
   cancha: string;
 }
-
-const MATCHES: Match[] = [
-  { id: 1, date: '2026-04-13', timeLabel: '2:00 PM',  home: 'FC KERNEL',      homeInitials: 'FCK', homeColor: '#15803d', away: 'LOS DEBUGGERS',  awayInitials: 'DBG', awayColor: '#1e3a8a', cancha: 'Cancha 1' },
-  { id: 2, date: '2026-04-13', timeLabel: '4:00 PM',  home: 'STACK OVERFLOW', homeInitials: 'SOF', homeColor: '#dc2626', away: 'BYTE FORCE',      awayInitials: 'BTF', awayColor: '#7c3aed', cancha: 'Cancha 2' },
-  { id: 3, date: '2026-04-15', timeLabel: '3:00 PM',  home: 'NULL POINTERS',  homeInitials: 'NLP', homeColor: '#d97706', away: 'RUNTIME ERROR',   awayInitials: 'RTE', awayColor: '#0f766e', cancha: 'Cancha 1' },
-  { id: 4, date: '2026-04-17', timeLabel: '10:00 AM', home: 'GIT PUSH FORCE', homeInitials: 'GPF', homeColor: '#4b5563', away: '404 NOT FOUND',   awayInitials: '404', awayColor: '#6b7280', cancha: 'Cancha 3' },
-  { id: 5, date: '2026-04-19', timeLabel: '11:00 AM', home: 'FC KERNEL',      homeInitials: 'FCK', homeColor: '#15803d', away: 'BYTE FORCE',      awayInitials: 'BTF', awayColor: '#7c3aed', cancha: 'Cancha 2' },
-  { id: 6, date: '2026-04-22', timeLabel: '3:00 PM',  home: 'LOS DEBUGGERS',  homeInitials: 'DBG', homeColor: '#1e3a8a', away: 'STACK OVERFLOW',  awayInitials: 'SOF', awayColor: '#dc2626', cancha: 'Cancha 1' },
-  { id: 7, date: '2026-04-25', timeLabel: '5:00 PM',  home: 'STACK OVERFLOW', homeInitials: 'SOF', homeColor: '#dc2626', away: 'FC KERNEL',       awayInitials: 'FCK', awayColor: '#15803d', cancha: 'Cancha 2' },
-];
 
 const MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const WEEK_LABELS = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
@@ -44,26 +35,48 @@ function getWeekDates(monday: Date): Date[] {
 
 export const CalendarPage: React.FC = () => {
   const navigate = useNavigate();
-  const today = new Date(2026, 3, 14);
+  const today = new Date();
 
   const [view, setView]           = useState<View>('semanal');
   const [weekStart, setWeekStart] = useState<Date>(getMonday(today));
   const [selectedDay, setSelectedDay] = useState<string>(toYMD(today));
-  const [monthDate, setMonthDate] = useState<Date>(new Date(2026, 3, 1));
+  const [monthDate, setMonthDate] = useState<Date>(new Date(today.getFullYear(), today.getMonth(), 1));
+  const [matches, setMatches]     = useState<Match[]>([]);
+  const [loading, setLoading]     = useState(true);
+  const [error, setError]         = useState<string | null>(null);
+
+  // TODO: backend endpoint needed – obtain active tournamentId for the current user's context
+  const ACTIVE_TOURNAMENT_ID = 1;
+
+  useEffect(() => {
+    const fetchMatches = async () => {
+      try {
+        const data = await matchService.getMatchesByTournament(ACTIVE_TOURNAMENT_ID);
+        setMatches(data);
+      } catch {
+        setError('No se pudieron cargar los partidos');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMatches();
+  }, []);
 
   const weekDates = getWeekDates(weekStart);
-  const matchesForDay = MATCHES.filter(m => m.date === selectedDay);
+  const matchesForDay = matches.filter(m => m.date === selectedDay);
 
-  // Monthly grid
   const year = monthDate.getFullYear();
   const month = monthDate.getMonth();
-  const firstDayOfWeek = (new Date(year, month, 1).getDay() + 6) % 7; // Mon=0
+  const firstDayOfWeek = (new Date(year, month, 1).getDay() + 6) % 7;
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const cells: (number | null)[] = [
     ...Array(firstDayOfWeek).fill(null),
     ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
   ];
   while (cells.length % 7 !== 0) cells.push(null);
+
+  if (loading) return <MainLayout><div className={styles.page}>Cargando calendario...</div></MainLayout>;
+  if (error) return <MainLayout><div className={styles.page}>{error}</div></MainLayout>;
 
   return (
     <MainLayout>
@@ -79,7 +92,6 @@ export const CalendarPage: React.FC = () => {
           </div>
         </div>
 
-        {/* ── SEMANAL ── */}
         {view === 'semanal' && (
           <>
             <div className={styles.weekNav}>
@@ -93,7 +105,7 @@ export const CalendarPage: React.FC = () => {
             <div className={styles.dayStrip}>
               {weekDates.map((d, i) => {
                 const ymd = toYMD(d);
-                const hasMatch = MATCHES.some(m => m.date === ymd);
+                const hasMatch = matches.some(m => m.date === ymd);
                 const isActive = ymd === selectedDay;
                 return (
                   <button key={i} className={isActive ? styles.dayBtnActive : styles.dayBtn} onClick={() => setSelectedDay(ymd)}>
@@ -137,7 +149,6 @@ export const CalendarPage: React.FC = () => {
           </>
         )}
 
-        {/* ── MENSUAL ── */}
         {view === 'mensual' && (
           <>
             <div className={styles.monthNav}>
@@ -153,7 +164,7 @@ export const CalendarPage: React.FC = () => {
               {cells.map((day, i) => {
                 if (!day) return <div key={i} className={styles.calCell} />;
                 const ymd = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-                const dayMatches = MATCHES.filter(m => m.date === ymd);
+                const dayMatches = matches.filter(m => m.date === ymd);
                 const isToday = ymd === toYMD(today);
                 return (
                   <div key={i} className={`${styles.calCell} ${isToday ? styles.calCellToday : ''}`}>

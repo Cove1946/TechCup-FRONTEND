@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@components/layout';
+import { matchService } from '../api/matchService';
+import { tournamentService } from '../api/tournamentService';
 import styles from './EstadisticasPage.module.css';
 
 interface Jugador {
@@ -8,16 +10,12 @@ interface Jugador {
   goles: number; partidos: number; tarjAm: number; tarjRoj: number;
 }
 
-const JUGADORES: Jugador[] = [
-  { pos: 1, name: 'Carlos M.',   equipo: 'FC KERNEL',      initials: 'CM', color: '#78350f', goles: 8, partidos: 6, tarjAm: 1, tarjRoj: 0 },
-  { pos: 2, name: 'Santiago M.', equipo: 'LOS DEBUGGERS',  initials: 'SM', color: '#1e3a8a', goles: 7, partidos: 6, tarjAm: 0, tarjRoj: 0 },
-  { pos: 3, name: 'Andrés T.',   equipo: 'FC KERNEL',      initials: 'AT', color: '#0f766e', goles: 5, partidos: 6, tarjAm: 2, tarjRoj: 0 },
-  { pos: 4, name: 'Felipe P.',   equipo: 'LOS DEBUGGERS',  initials: 'FP', color: '#1e40af', goles: 5, partidos: 5, tarjAm: 1, tarjRoj: 0 },
-  { pos: 5, name: 'Diego R.',    equipo: 'STACK OVERFLOW', initials: 'DR', color: '#dc2626', goles: 4, partidos: 6, tarjAm: 0, tarjRoj: 0 },
-  { pos: 6, name: 'Luis D.',     equipo: 'FC KERNEL',      initials: 'LD', color: '#1e3a8a', goles: 3, partidos: 6, tarjAm: 1, tarjRoj: 1 },
-  { pos: 7, name: 'Pablo H.',    equipo: 'FC KERNEL',      initials: 'PH', color: '#4b5563', goles: 3, partidos: 5, tarjAm: 0, tarjRoj: 0 },
-  { pos: 8, name: 'José C.',     equipo: 'LOS DEBUGGERS',  initials: 'JC', color: '#6d28d9', goles: 2, partidos: 6, tarjAm: 3, tarjRoj: 0 },
-];
+interface TournamentStats {
+  jornadasJugadas: number;
+  equipos: number;
+  golesTotales: number;
+  partidosJugados: number;
+}
 
 type SortKey = 'goles' | 'partidos';
 
@@ -25,8 +23,37 @@ export const EstadisticasPage: React.FC = () => {
   const navigate = useNavigate();
   const [sortBy, setSortBy] = useState<SortKey>('goles');
   const [selected, setSelected] = useState<Jugador | null>(null);
+  const [jugadores, setJugadores] = useState<Jugador[]>([]);
+  const [stats, setStats] = useState<TournamentStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const sorted = [...JUGADORES].sort((a, b) => b[sortBy] - a[sortBy]);
+  // TODO: backend endpoint needed – obtain active tournamentId for the current user's context
+  const ACTIVE_TOURNAMENT_ID = 1;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [scorers, tournamentStats] = await Promise.all([
+          matchService.getTopScorers(ACTIVE_TOURNAMENT_ID),
+          tournamentService.getTournamentStatistics(ACTIVE_TOURNAMENT_ID),
+        ]);
+        setJugadores(scorers);
+        setStats(tournamentStats);
+      } catch {
+        setError('No se pudieron cargar las estadísticas');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  if (loading) return <MainLayout><div className={styles.page}>Cargando estadísticas...</div></MainLayout>;
+  if (error) return <MainLayout><div className={styles.page}>{error}</div></MainLayout>;
+
+  // Sorting is presentation-only; backend sends data already ordered by goals by default
+  const sorted = [...jugadores].sort((a, b) => b[sortBy] - a[sortBy]);
 
   return (
     <MainLayout>
@@ -46,12 +73,14 @@ export const EstadisticasPage: React.FC = () => {
           </div>
         </div>
 
-        <div className={styles.summaryRow}>
-          <div className={styles.summaryCard}><span className={styles.summaryNum}>6</span><span className={styles.summaryLbl}>Jornadas jugadas</span></div>
-          <div className={styles.summaryCard}><span className={styles.summaryNum}>8</span><span className={styles.summaryLbl}>Equipos</span></div>
-          <div className={styles.summaryCard}><span className={styles.summaryNum}>37</span><span className={styles.summaryLbl}>Goles totales</span></div>
-          <div className={styles.summaryCard}><span className={styles.summaryNum}>48</span><span className={styles.summaryLbl}>Partidos jugados</span></div>
-        </div>
+        {stats && (
+          <div className={styles.summaryRow}>
+            <div className={styles.summaryCard}><span className={styles.summaryNum}>{stats.jornadasJugadas}</span><span className={styles.summaryLbl}>Jornadas jugadas</span></div>
+            <div className={styles.summaryCard}><span className={styles.summaryNum}>{stats.equipos}</span><span className={styles.summaryLbl}>Equipos</span></div>
+            <div className={styles.summaryCard}><span className={styles.summaryNum}>{stats.golesTotales}</span><span className={styles.summaryLbl}>Goles totales</span></div>
+            <div className={styles.summaryCard}><span className={styles.summaryNum}>{stats.partidosJugados}</span><span className={styles.summaryLbl}>Partidos jugados</span></div>
+          </div>
+        )}
 
         <p className={styles.hint}>Haz click en un jugador para ver sus detalles</p>
 
@@ -92,7 +121,6 @@ export const EstadisticasPage: React.FC = () => {
           </table>
         </div>
 
-        {/* Player popup */}
         {selected && (
           <div className={styles.overlay} onClick={() => setSelected(null)}>
             <div className={styles.modal} onClick={e => e.stopPropagation()}>

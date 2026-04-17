@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@components/layout';
+import { teamService } from '../api/teamService';
 import styles from './MyTeamPage.module.css';
 
 interface Player {
@@ -9,20 +10,18 @@ interface Player {
   goles?: number; asistencias?: number; partidos?: number; tarjAm?: number; tarjRoj?: number;
 }
 
-const ROSTER: Player[] = [
-  { num: 1,  initials: 'CP', name: 'Carlos Pérez',   pos: 'Delantero',    sem: 'RF-6', prog: 'Sistemas',       estado: 'Titular',    rol: 'Capitán',    suspended: false, goles: 8, asistencias: 3, partidos: 6, tarjAm: 1, tarjRoj: 0 },
-  { num: 2,  initials: 'RB', name: 'Rogelio B.',     pos: 'Central',      sem: 'RF-5', prog: 'Sistemas',       estado: 'Suspendido', rol: 'Estudiante', suspended: true,  goles: 2, asistencias: 1, partidos: 5, tarjAm: 3, tarjRoj: 1 },
-  { num: 3,  initials: 'CB', name: 'Carlos Brotez',  pos: 'Defensa',      sem: 'RF-5', prog: 'Estadística',    estado: 'Titular',    rol: 'Estudiante', suspended: false, goles: 0, asistencias: 2, partidos: 6, tarjAm: 0, tarjRoj: 0 },
-  { num: 4,  initials: 'CG', name: 'Carlos Granma',  pos: 'Centrocampista',sem: 'RF-5', prog: 'Sistemas',      estado: 'Titular',    rol: 'Estudiante', suspended: false, goles: 3, asistencias: 4, partidos: 6, tarjAm: 1, tarjRoj: 0 },
-  { num: 5,  initials: 'CB', name: 'Carlos Brotez',  pos: 'Delantero',    sem: 'RF-5', prog: 'Ciberseguridad', estado: 'Titular',    rol: 'Estudiante', suspended: false, goles: 5, asistencias: 2, partidos: 5, tarjAm: 0, tarjRoj: 0 },
-  { num: 6,  initials: 'CP', name: 'Carlos Pérez',   pos: 'Defensa',      sem: 'RF-4', prog: 'Ciberseguridad', estado: 'Titular',    rol: 'Estudiante', suspended: false, goles: 1, asistencias: 0, partidos: 4, tarjAm: 2, tarjRoj: 0 },
-  { num: 7,  initials: 'CP', name: 'Carlos Pérez',   pos: 'Defensa',      sem: 'RF-4', prog: 'Estadística',    estado: 'Reserva',    rol: 'Estudiante', suspended: false, goles: 0, asistencias: 1, partidos: 3, tarjAm: 0, tarjRoj: 0 },
-  { num: 8,  initials: 'KP', name: 'Kanor Phonez',   pos: 'Delantero',    sem: 'RF-4', prog: 'IA',             estado: 'Reserva',    rol: 'Estudiante', suspended: false, goles: 2, asistencias: 3, partidos: 4, tarjAm: 0, tarjRoj: 0 },
-  { num: 9,  initials: 'RB', name: 'Rogelio B.',     pos: 'Lateral',      sem: 'RF-3', prog: 'IA',             estado: 'Reserva',    rol: 'Estudiante', suspended: true,  goles: 0, asistencias: 0, partidos: 2, tarjAm: 1, tarjRoj: 1 },
-  { num: 10, initials: 'CP', name: 'Carlos Pérez',   pos: 'Lateral',      sem: 'RF-5', prog: 'Sistemas',       estado: 'Reserva',    rol: 'Estudiante', suspended: false, goles: 1, asistencias: 2, partidos: 5, tarjAm: 0, tarjRoj: 0 },
-];
+interface TeamData {
+  id: number;
+  name: string;
+  captain: string;
+  uniform: string;
+  players: Player[];
+}
 
 const AVATAR_COLORS = ['#16a34a','#2563eb','#9333ea','#ea580c','#0891b2','#be185d'];
+
+// TODO: backend endpoint needed – obtain current user's teamId from session/profile
+const MY_TEAM_ID = 1;
 
 export const MyTeamPage: React.FC = () => {
   const navigate = useNavigate();
@@ -30,29 +29,59 @@ export const MyTeamPage: React.FC = () => {
   const role     = (userStr ? JSON.parse(userStr).role : 'jugador').toLowerCase();
   const canEdit  = role === 'capitan' || role === 'admin';
 
-  const [roster, setRoster]         = useState<Player[]>(ROSTER);
+  const [teamData, setTeamData]         = useState<TeamData | null>(null);
+  const [roster, setRoster]             = useState<Player[]>([]);
+  const [loading, setLoading]           = useState(true);
+  const [error, setError]               = useState<string | null>(null);
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
-  const [confirmDel, setConfirmDel] = useState<number | null>(null);
-  const [editingNum, setEditingNum] = useState<number | null>(null);
-  const [editPos, setEditPos]       = useState('');
-  const [editEstado, setEditEstado] = useState('');
-  const [toast, setToast]           = useState('');
+  const [confirmDel, setConfirmDel]     = useState<number | null>(null);
+  const [editingNum, setEditingNum]     = useState<number | null>(null);
+  const [editPos, setEditPos]           = useState('');
+  const [editEstado, setEditEstado]     = useState('');
+  const [toast, setToast]               = useState('');
 
   const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(''), 2500); };
 
-  const handleDelete = (num: number) => {
-    setRoster(prev => prev.filter(p => p.num !== num));
-    setConfirmDel(null);
-    if (selectedPlayer?.num === num) setSelectedPlayer(null);
-    showToast('Jugador eliminado del equipo');
+  useEffect(() => {
+    const fetchTeam = async () => {
+      try {
+        const data = await teamService.getTeam(MY_TEAM_ID);
+        setTeamData(data);
+        setRoster(data.players ?? []);
+      } catch {
+        setError('No se pudo cargar el equipo');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTeam();
+  }, []);
+
+  const handleDelete = async (num: number) => {
+    const player = roster.find(p => p.num === num);
+    if (!player) return;
+    try {
+      await teamService.removeMember(MY_TEAM_ID, player.num);
+      setRoster(prev => prev.filter(p => p.num !== num));
+      setConfirmDel(null);
+      if (selectedPlayer?.num === num) setSelectedPlayer(null);
+      showToast('Jugador eliminado del equipo');
+    } catch {
+      showToast('Error al eliminar el jugador');
+    }
   };
 
-  const handleEditSave = (num: number) => {
+  const handleEditSave = async (num: number) => {
+    // TODO: backend endpoint needed – PUT/PATCH /api/teams/{teamId}/members/{playerId}
+    // Should update the player's position and status within the team.
     setRoster(prev => prev.map(p => p.num === num ? { ...p, pos: editPos, estado: editEstado } : p));
     if (selectedPlayer?.num === num) setSelectedPlayer(prev => prev ? { ...prev, pos: editPos, estado: editEstado } : prev);
     setEditingNum(null);
     showToast('Jugador actualizado correctamente');
   };
+
+  if (loading) return <MainLayout><div className={styles.page}>Cargando equipo...</div></MainLayout>;
+  if (error) return <MainLayout><div className={styles.page}>{error}</div></MainLayout>;
 
   return (
     <MainLayout>
@@ -67,14 +96,13 @@ export const MyTeamPage: React.FC = () => {
           <span className={styles.activeBadge}>2026-1 · Activo</span>
         </div>
 
-        {/* Team header */}
         <div className={styles.teamCard}>
           <div className={styles.teamLeft}>
             <div className={styles.shield}>🛡️</div>
             <div className={styles.teamInfo}>
-              <div className={styles.teamName}>FC KERNEL</div>
-              <div className={styles.teamMeta}>Uniforme: Verde - Blanco</div>
-              <div className={styles.teamMeta}>Capitán: Carlos Pérez</div>
+              <div className={styles.teamName}>{teamData?.name ?? ''}</div>
+              <div className={styles.teamMeta}>Uniforme: {teamData?.uniform ?? ''}</div>
+              <div className={styles.teamMeta}>Capitán: {teamData?.captain ?? ''}</div>
             </div>
           </div>
           <div className={styles.teamCenter}>
@@ -98,7 +126,6 @@ export const MyTeamPage: React.FC = () => {
         <div className={styles.validationStrip}>
           <span className={styles.validItem}>✓ Mínimo 7 jugadores</span>
           <span className={styles.validItem}>✓ Máximo 12 jugadores</span>
-          <span className={styles.validItem}>✓ Elegibilidad de programas (88%)</span>
           <span className={styles.validItem}>✓ Sin duplicados</span>
         </div>
 
@@ -121,9 +148,9 @@ export const MyTeamPage: React.FC = () => {
                         <div className={styles.avatar} style={{ background: AVATAR_COLORS[i % AVATAR_COLORS.length] }}>{p.initials}</div>
                         <div>
                           <div className={styles.playerName}>
-                              {p.name}
-                              {p.rol === 'Capitán' && <span className={styles.captainBadge} title="Capitán">©</span>}
-                            </div>
+                            {p.name}
+                            {p.rol === 'Capitán' && <span className={styles.captainBadge} title="Capitán">©</span>}
+                          </div>
                           {p.suspended && <span className={styles.suspTag}>Suspendido</span>}
                         </div>
                       </div>
@@ -177,7 +204,6 @@ export const MyTeamPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Modal jugador */}
         {selectedPlayer && (
           <div className={styles.modalOverlay} onClick={() => setSelectedPlayer(null)}>
             <div className={styles.modal} onClick={e => e.stopPropagation()}>

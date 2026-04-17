@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@components/layout';
+import { adminService } from '../api/adminService';
 import styles from './RolesPage.module.css';
 
 type Role = 'jugador' | 'capitan' | 'coordinador' | 'arbitro' | 'admin';
@@ -28,19 +29,11 @@ const ROLE_COLORS: Record<Role, string> = {
   admin: '#dc2626',
 };
 
-const INITIAL_USERS: User[] = [
-  { id: 1, name: 'Carlos Pérez',    email: 'cperez@tecn.mx',    rol: 'admin' },
-  { id: 2, name: 'Sofía Torres',    email: 'storres@tecn.mx',   rol: 'coordinador' },
-  { id: 3, name: 'Luis Durán',      email: 'lduran@tecn.mx',    rol: 'arbitro' },
-  { id: 4, name: 'Ana García',      email: 'agarcia@tecn.mx',   rol: 'capitan' },
-  { id: 5, name: 'Rodrigo Salas',   email: 'rsalas@tecn.mx',    rol: 'jugador' },
-  { id: 6, name: 'Pablo Herrera',   email: 'pherrera@tecn.mx',  rol: 'jugador' },
-  { id: 7, name: 'Andrés Tapia',    email: 'atapia@tecn.mx',    rol: 'jugador' },
-];
-
 export const RolesPage: React.FC = () => {
   const navigate = useNavigate();
-  const [users, setUsers]           = useState<User[]>(INITIAL_USERS);
+  const [users, setUsers]           = useState<User[]>([]);
+  const [loading, setLoading]       = useState(true);
+  const [error, setError]           = useState<string | null>(null);
   const [editId, setEditId]         = useState<number | null>(null);
   const [editRol, setEditRol]       = useState<Role>('jugador');
   const [confirmDel, setConfirmDel] = useState<number | null>(null);
@@ -50,20 +43,61 @@ export const RolesPage: React.FC = () => {
   const [newRol, setNewRol]         = useState<Role>('jugador');
   const [saved, setSaved]           = useState(false);
 
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const data = await adminService.getAdministrators();
+        setUsers(data);
+      } catch {
+        setError('No se pudieron cargar los usuarios');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUsers();
+  }, []);
+
   const handleEdit = (u: User) => { setEditId(u.id); setEditRol(u.rol); };
-  const handleSave = (id: number) => {
-    setUsers(prev => prev.map(u => u.id === id ? { ...u, rol: editRol } : u));
-    setEditId(null);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2500);
+
+  const handleSave = async (id: number) => {
+    try {
+      await adminService.assignRole(id, { role: editRol });
+      setUsers(prev => prev.map(u => u.id === id ? { ...u, rol: editRol } : u));
+      setEditId(null);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2500);
+    } catch {
+      // Error handled silently; state remains unchanged
+    }
   };
-  const handleDelete = (id: number) => { setUsers(prev => prev.filter(u => u.id !== id)); setConfirmDel(null); };
-  const handleAdd = () => {
+
+  const handleDelete = async (id: number) => {
+    try {
+      await adminService.deleteAdministrator(id);
+      setUsers(prev => prev.filter(u => u.id !== id));
+      setConfirmDel(null);
+    } catch {
+      // Error handled silently
+    }
+  };
+
+  const handleAdd = async () => {
     if (!newName.trim() || !newEmail.trim()) return;
-    const newUser: User = { id: Date.now(), name: newName.trim(), email: newEmail.trim(), rol: newRol };
-    setUsers(prev => [...prev, newUser]);
-    setNewName(''); setNewEmail(''); setNewRol('jugador'); setShowAdd(false);
+    try {
+      const created = await adminService.createAdministrator({
+        name: newName.trim(),
+        email: newEmail.trim(),
+        role: newRol,
+      });
+      setUsers(prev => [...prev, created]);
+      setNewName(''); setNewEmail(''); setNewRol('jugador'); setShowAdd(false);
+    } catch {
+      // Error handled silently
+    }
   };
+
+  if (loading) return <MainLayout><div className={styles.page}>Cargando usuarios...</div></MainLayout>;
+  if (error) return <MainLayout><div className={styles.page}>{error}</div></MainLayout>;
 
   return (
     <MainLayout>

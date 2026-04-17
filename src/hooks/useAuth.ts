@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authService } from '../services';
-import type { LoginCredentials, RegisterData } from '../types';
+import { authService } from '../api/authService';
+import type { LoginCredentials, RegisterData } from '../features/auth/types';
 
 export const useAuth = () => {
   const [loading, setLoading] = useState(false);
@@ -12,21 +12,9 @@ export const useAuth = () => {
     try {
       setLoading(true);
       setError(null);
-
-      // Simulación temporal - reemplazar con llamada real a API
-      const mockResponse = {
-        user: {
-          id: '1',
-          email: credentials.email,
-          name: 'Usuario Demo',
-          role: 'player',
-        },
-        token: 'mock-token-123',
-      };
-
-      localStorage.setItem('token', mockResponse.token);
-      localStorage.setItem('user', JSON.stringify(mockResponse.user));
-
+      const response = await authService.login(credentials);
+      localStorage.setItem('token', response.token);
+      localStorage.setItem('user', JSON.stringify(response.user));
       navigate('/dashboard');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
@@ -39,21 +27,9 @@ export const useAuth = () => {
     try {
       setLoading(true);
       setError(null);
-
-      // Simulación temporal
-      const mockResponse = {
-        user: {
-          id: '1',
-          email: data.email,
-          name: data.name,
-          role: 'player',
-        },
-        token: 'mock-token-123',
-      };
-
-      localStorage.setItem('token', mockResponse.token);
-      localStorage.setItem('user', JSON.stringify(mockResponse.user));
-
+      const response = await authService.register(data);
+      localStorage.setItem('token', response.token);
+      localStorage.setItem('user', JSON.stringify(response.user));
       navigate('/dashboard');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
@@ -62,9 +38,8 @@ export const useAuth = () => {
     }
   };
 
-  const logout = async () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+  const logout = () => {
+    authService.logout();
     navigate('/login');
   };
 

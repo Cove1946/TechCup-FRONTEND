@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@components/layout';
+import { tournamentService } from '../api/tournamentService';
 import styles from './TorneosPage.module.css';
 
 interface Torneo {
@@ -16,45 +17,6 @@ interface Torneo {
   descripcion: string;
 }
 
-const TORNEOS: Torneo[] = [
-  {
-    id: 1,
-    nombre: 'TechCup Primavera 2026',
-    temporada: '2026-1',
-    equipos: 12,
-    maxEquipos: 16,
-    inicio: '1 Mar 2026',
-    fin: '30 Jun 2026',
-    cancha: 'Cancha Principal TecNM',
-    estado: 'activo',
-    descripcion: 'Torneo universitario de fútbol rápido 7v7 para equipos de la carrera de Sistemas.',
-  },
-  {
-    id: 2,
-    nombre: 'TechCup Otoño 2025',
-    temporada: '2025-2',
-    equipos: 10,
-    maxEquipos: 10,
-    inicio: '1 Sep 2025',
-    fin: '15 Dic 2025',
-    cancha: 'Cancha B',
-    estado: 'finalizado',
-    descripcion: 'Segunda edición del torneo universitario. 10 equipos participaron en formato de eliminación directa.',
-  },
-  {
-    id: 3,
-    nombre: 'TechCup Verano 2026',
-    temporada: '2026-2',
-    equipos: 0,
-    maxEquipos: 16,
-    inicio: '15 Jul 2026',
-    fin: '30 Oct 2026',
-    cancha: 'Por definir',
-    estado: 'proximo',
-    descripcion: 'Convocatoria abierta. Inscripciones disponibles a partir del 1 de julio.',
-  },
-];
-
 const ESTADO_CONFIG = {
   activo:     { label: 'Activo',     bg: '#f0fdf4', color: '#15803d' },
   proximo:    { label: 'Próximo',    bg: '#eff6ff', color: '#1e3a8a' },
@@ -64,6 +26,26 @@ const ESTADO_CONFIG = {
 export const TorneosPage: React.FC = () => {
   const navigate = useNavigate();
   const [selected, setSelected] = useState<Torneo | null>(null);
+  const [torneos, setTorneos] = useState<Torneo[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchTorneos = async () => {
+      try {
+        const data = await tournamentService.getTournaments();
+        setTorneos(data);
+      } catch {
+        setError('No se pudieron cargar los torneos');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTorneos();
+  }, []);
+
+  if (loading) return <MainLayout><div className={styles.page}>Cargando torneos...</div></MainLayout>;
+  if (error) return <MainLayout><div className={styles.page}>{error}</div></MainLayout>;
 
   return (
     <MainLayout>
@@ -76,8 +58,8 @@ export const TorneosPage: React.FC = () => {
         </div>
 
         <div className={styles.cardList}>
-          {TORNEOS.map(t => {
-            const cfg = ESTADO_CONFIG[t.estado];
+          {torneos.map(t => {
+            const cfg = ESTADO_CONFIG[t.estado] ?? ESTADO_CONFIG['proximo'];
             return (
               <div key={t.id} className={`${styles.card} ${selected?.id === t.id ? styles.cardSelected : ''}`}
                 onClick={() => setSelected(prev => prev?.id === t.id ? null : t)}>

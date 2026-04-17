@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@components/layout';
+import { paymentService } from '../api/paymentService';
 import styles from './PaymentPage.module.css';
 
 type PayStatus = 'pendiente' | 'revision' | 'aprobado' | 'rechazado';
@@ -21,6 +22,8 @@ export const PaymentPage: React.FC = () => {
   const [status, setStatus]   = useState<PayStatus>('pendiente');
   const [file, setFile]       = useState<File | null>(null);
   const [fileError, setFileError] = useState('');
+  const [submitError, setSubmitError] = useState('');
+  const [submitting, setSubmitting]   = useState(false);
   const [timeline, setTimeline]   = useState([
     { label: 'Pendiente', time: 'Hoy 08:00', color: '#f59e0b' },
   ]);
@@ -47,14 +50,29 @@ export const PaymentPage: React.FC = () => {
     setFile(selected);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!file) return;
-    const now = new Date();
-    const timeStr = `Hoy ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-    setStatus('revision');
-    setTimeline(prev => [{ label: 'En revisión', time: timeStr, color: '#16a34a' }, ...prev]);
-    setFile(null);
-    if (fileRef.current) fileRef.current.value = '';
+    setSubmitting(true);
+    setSubmitError('');
+    try {
+      const formData = new FormData();
+      formData.append('comprobante', file);
+      // TODO: backend endpoint needed – include teamId and tournamentId in the request
+      // formData.append('teamId', teamId);
+      // formData.append('tournamentId', tournamentId);
+      await paymentService.submitPayment(formData);
+
+      const now = new Date();
+      const timeStr = `Hoy ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+      setStatus('revision');
+      setTimeline(prev => [{ label: 'En revisión', time: timeStr, color: '#16a34a' }, ...prev]);
+      setFile(null);
+      if (fileRef.current) fileRef.current.value = '';
+    } catch {
+      setSubmitError('Error al enviar el comprobante. Intenta nuevamente.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -67,10 +85,8 @@ export const PaymentPage: React.FC = () => {
         </div>
 
         <div className={styles.layout}>
-          {/* ── Main ── */}
           <div className={styles.main}>
 
-            {/* Stepper */}
             <div className={styles.stepperCard}>
               {isRejected ? (
                 <div className={styles.rejectedBanner}>
@@ -99,10 +115,8 @@ export const PaymentPage: React.FC = () => {
               )}
             </div>
 
-            {/* Info del pago */}
             <div className={styles.infoCard}>
               <div className={styles.infoRow}>
-                <div><p className={styles.infoKey}>Equipo</p><p className={styles.infoVal}>FC KERNEL</p></div>
                 <div><p className={styles.infoKey}>Valor</p><p className={styles.infoVal}>$80,000 COP</p></div>
                 <div><p className={styles.infoKey}>Método</p><p className={styles.infoVal}>NEQUI / Efectivo</p></div>
                 <div>
@@ -114,7 +128,6 @@ export const PaymentPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Upload — solo si no está aprobado */}
             {status !== 'aprobado' && (
               <div className={styles.uploadCard}>
                 <div className={styles.uploadIcon}>📄</div>
@@ -131,6 +144,7 @@ export const PaymentPage: React.FC = () => {
                 )}
 
                 {fileError && <div className={styles.fileError}>⚠️ {fileError}</div>}
+                {submitError && <div className={styles.fileError}>⚠️ {submitError}</div>}
 
                 <button className={styles.selectBtn} onClick={() => fileRef.current?.click()}>
                   {file ? 'Cambiar archivo' : 'Seleccionar PDF'}
@@ -138,11 +152,11 @@ export const PaymentPage: React.FC = () => {
                 <input ref={fileRef} type="file" accept=".pdf,application/pdf" className={styles.hiddenInput} onChange={handleFile} />
 
                 <button
-                  className={`${styles.submitBtn} ${!file ? styles.submitDisabled : ''}`}
+                  className={`${styles.submitBtn} ${(!file || submitting) ? styles.submitDisabled : ''}`}
                   onClick={handleSubmit}
-                  disabled={!file}
+                  disabled={!file || submitting}
                 >
-                  {status === 'revision' ? '🔄 Reenviar comprobante' : '📤 Enviar comprobante'}
+                  {submitting ? 'Enviando...' : status === 'revision' ? '🔄 Reenviar comprobante' : '📤 Enviar comprobante'}
                 </button>
 
                 {status === 'revision' && (
@@ -162,7 +176,6 @@ export const PaymentPage: React.FC = () => {
             )}
           </div>
 
-          {/* ── Sidebar ── */}
           <div className={styles.sidebar}>
             <div className={styles.sideTitle}>Historial</div>
             {timeline.map((t, i) => (

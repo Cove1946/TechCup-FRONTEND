@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MainLayout } from '@components/layout';
+import { teamService } from '../api/teamService';
 import styles from './SearchPlayersPage.module.css';
 
 type Posicion = 'POR' | 'DEF' | 'MED' | 'DEL';
@@ -12,25 +13,17 @@ interface Player {
   available: boolean;
 }
 
-const PLAYERS: Player[] = [
-  { id: 1,  initials: 'SM',  color: '#6366f1', name: 'Sofía Martínez',     program: 'Ingeniería de Sistemas',       pos: 'POR', semestre: 4, edad: 20, genero: 'F', available: true  },
-  { id: 2,  initials: 'CRG', color: '#10b981', name: 'Cristian Guerrero',   program: 'Ingeniería de Sistemas',       pos: 'DEF', semestre: 5, edad: 20, genero: 'M', available: true  },
-  { id: 3,  initials: 'JNT', color: '#f59e0b', name: 'Juan Tellez',         program: 'Ingeniería de Sistemas',       pos: 'DEF', semestre: 6, edad: 22, genero: 'M', available: false },
-  { id: 4,  initials: 'DNP', color: '#06b6d4', name: 'Daniela Plazas',      program: 'Ing. en Ciberseguridad',       pos: 'POR', semestre: 2, edad: 18, genero: 'F', available: true  },
-  { id: 5,  initials: 'LRS', color: '#a855f7', name: 'Laura Sanchez',       program: 'Ingeniería de Sistemas',       pos: 'DEF', semestre: 3, edad: 19, genero: 'F', available: false },
-  { id: 6,  initials: 'ADC', color: '#f97316', name: 'Adrian Ducara',       program: 'Ingeniería de Sistemas',       pos: 'POR', semestre: 6, edad: 22, genero: 'M', available: true  },
-  { id: 7,  initials: 'MJR', color: '#ec4899', name: 'María Jiménez',       program: 'Ing. Industrial',              pos: 'MED', semestre: 4, edad: 21, genero: 'F', available: true  },
-  { id: 8,  initials: 'CPV', color: '#14b8a6', name: 'Carlos Pedraza',      program: 'Ingeniería de Sistemas',       pos: 'DEL', semestre: 5, edad: 21, genero: 'M', available: true  },
-  { id: 9,  initials: 'ARL', color: '#8b5cf6', name: 'Andrés Rojas',        program: 'Ing. Electrónica',             pos: 'MED', semestre: 7, edad: 23, genero: 'M', available: false },
-  { id: 10, initials: 'VSG', color: '#0ea5e9', name: 'Valentina Soto',      program: 'Ing. en Ciberseguridad',       pos: 'DEL', semestre: 3, edad: 19, genero: 'F', available: true  },
-  { id: 11, initials: 'JMO', color: '#16a34a', name: 'Julián Moreno',       program: 'Ingeniería de Sistemas',       pos: 'DEF', semestre: 6, edad: 22, genero: 'M', available: true  },
-  { id: 12, initials: 'KBT', color: '#dc2626', name: 'Karen Bautista',      program: 'Ing. Industrial',              pos: 'MED', semestre: 2, edad: 18, genero: 'F', available: true  },
-];
-
 const SORT_OPTIONS = ['Nombre', 'Posición', 'Semestre', 'Edad'];
 const PAGE_SIZE = 6;
 
+// TODO: backend endpoint needed – obtain current user's teamId to pass to invitePlayer
+const MY_TEAM_ID = 1;
+
 export const SearchPlayersPage: React.FC = () => {
+  const [allPlayers, setAllPlayers] = useState<Player[]>([]);
+  const [loading, setLoading]       = useState(true);
+  const [error, setError]           = useState<string | null>(null);
+
   const [search, setSearch]         = useState('');
   const [posFilter, setPosFilter]   = useState<Posicion[]>([]);
   const [genero, setGenero]         = useState<Genero>('All');
@@ -39,12 +32,27 @@ export const SearchPlayersPage: React.FC = () => {
   const [searchError, setSearchError] = useState('');
   const [page, setPage]             = useState(1);
 
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      try {
+        const data = await teamService.getAvailablePlayers();
+        setAllPlayers(data);
+      } catch {
+        setError('No se pudieron cargar los jugadores disponibles');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPlayers();
+  }, []);
+
   const togglePos = (p: Posicion) => {
     setPosFilter(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p]);
     setPage(1);
   };
 
-  let filtered = PLAYERS.filter(p => {
+  // Client-side filtering applied to data received from backend
+  let filtered = allPlayers.filter(p => {
     if (posFilter.length > 0 && !posFilter.includes(p.pos)) return false;
     if (genero !== 'All' && p.genero !== genero) return false;
     if (search.trim() && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
@@ -65,7 +73,7 @@ export const SearchPlayersPage: React.FC = () => {
 
   const handleSearch = () => {
     setPage(1);
-    if (search.trim() && !PLAYERS.some(p => p.name.toLowerCase().includes(search.toLowerCase()))) {
+    if (search.trim() && !allPlayers.some(p => p.name.toLowerCase().includes(search.toLowerCase()))) {
       setSearchError(`No se encontró "${search}"`);
     } else {
       setSearchError('');
@@ -76,6 +84,19 @@ export const SearchPlayersPage: React.FC = () => {
     setSearch(''); setPosFilter([]); setGenero('All');
     setSearchError(''); setPage(1);
   };
+
+  const handleInvite = async (playerId: number) => {
+    if (invited.has(playerId)) return;
+    try {
+      await teamService.invitePlayer(MY_TEAM_ID, { playerId });
+      setInvited(prev => new Set([...prev, playerId]));
+    } catch {
+      // Invitation failed; do not mark as invited
+    }
+  };
+
+  if (loading) return <MainLayout><div className={styles.page}>Cargando jugadores...</div></MainLayout>;
+  if (error) return <MainLayout><div className={styles.page}>{error}</div></MainLayout>;
 
   return (
     <MainLayout>
@@ -104,7 +125,6 @@ export const SearchPlayersPage: React.FC = () => {
         </div>
 
         <div className={styles.layout}>
-          {/* Sidebar */}
           <div className={styles.sidebar}>
             <h3 className={styles.filterTitle}>Filtros</h3>
 
@@ -145,7 +165,6 @@ export const SearchPlayersPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Grid */}
           <div className={styles.main}>
             {searchError && <div className={styles.searchError}>✗ {searchError}</div>}
 
@@ -171,7 +190,7 @@ export const SearchPlayersPage: React.FC = () => {
                       </span>
                       {p.available ? (
                         <button className={`${styles.inviteBtn} ${isInvited ? styles.invitedBtn : ''}`}
-                          onClick={() => !isInvited && setInvited(prev => new Set([...prev, p.id]))}
+                          onClick={() => handleInvite(p.id)}
                           disabled={isInvited}>
                           ✉ {isInvited ? 'Invitación enviada' : 'Invitar al equipo'}
                         </button>
@@ -184,7 +203,6 @@ export const SearchPlayersPage: React.FC = () => {
               </div>
             )}
 
-            {/* Pagination */}
             {totalPages > 1 && (
               <div className={styles.pagination}>
                 <button className={styles.pgBtn} onClick={() => setPage(p => Math.max(1, p-1))} disabled={page === 1}>← Anterior</button>

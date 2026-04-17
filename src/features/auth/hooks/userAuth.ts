@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../services';
-import { LoginCredentials } from '../types';
+import type { LoginCredentials } from '../types';
 
 export const useAuth = () => {
   const [loading, setLoading] = useState(false);
@@ -13,10 +13,8 @@ export const useAuth = () => {
       setLoading(true);
       setError(null);
       const response = await authService.login(credentials);
-
       localStorage.setItem('token', response.token);
       localStorage.setItem('user', JSON.stringify(response.user));
-
       navigate('/dashboard');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
@@ -26,7 +24,7 @@ export const useAuth = () => {
   };
 
   const logout = async () => {
-    await authService.logout();
+    authService.logout();
     navigate('/login');
   };
 
