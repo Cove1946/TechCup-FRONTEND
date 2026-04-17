@@ -63,7 +63,9 @@ export const TournamentConfigPage: React.FC = () => {
       setSaved(true);
       setTimeout(() => { setSaved(false); navigate('/torneos'); }, 1500);
     } catch (err: any) {
-      setError(err?.response?.data?.message ?? `Error al ${isEditing ? 'actualizar' : 'crear'} el torneo.`);
+      const status = err?.response?.status;
+      const msg    = err?.response?.data?.message ?? err?.response?.data?.error ?? err?.message;
+      setError(msg ? `[${status}] ${msg}` : `Error al ${isEditing ? 'actualizar' : 'crear'} el torneo (HTTP ${status ?? 'sin respuesta'}).`);
     } finally {
       setLoading(false);
     }
