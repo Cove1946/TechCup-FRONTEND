@@ -85,7 +85,10 @@ export const PaymentPage: React.FC = () => {
       setSelectedTorneo(torneo);
       setPageStep('pay');
     } catch (err: any) {
-      setRegisterError(err?.response?.data?.message ?? 'Error al registrarse. Intenta nuevamente.');
+      const msg = err?.response?.data?.message ?? '';
+      setRegisterError(msg.toLowerCase().includes('already registered') || msg.toLowerCase().includes('already registered')
+        ? 'Este equipo ya está inscrito en ese torneo.'
+        : msg || 'Error al registrarse. Intenta nuevamente.');
     } finally {
       setRegistering(null);
     }

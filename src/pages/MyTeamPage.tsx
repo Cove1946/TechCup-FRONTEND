@@ -20,15 +20,16 @@ interface TeamData {
 
 const AVATAR_COLORS = ['#16a34a','#2563eb','#9333ea','#ea580c','#0891b2','#be185d'];
 
-// TODO: backend endpoint needed – obtain current user's teamId from session/profile
-const MY_TEAM_ID = 1;
-
 export const MyTeamPage: React.FC = () => {
   const navigate = useNavigate();
   const userStr  = localStorage.getItem('user');
-  const role     = (userStr ? JSON.parse(userStr).role : 'jugador').toLowerCase();
+  let userObj: { role?: string; userId?: number; id?: number } = {};
+  try { if (userStr) userObj = JSON.parse(userStr); } catch { /* ignore */ }
+  const role     = (userObj.role ?? 'jugador').toLowerCase();
+  const userId   = userObj.id ?? userObj.userId ?? 0;
   const canEdit  = role === 'capitan' || role === 'admin';
 
+  const [teamId, setTeamId]             = useState<number | null>(null);
   const [teamData, setTeamData]         = useState<TeamData | null>(null);
   const [roster, setRoster]             = useState<Player[]>([]);
   const [loading, setLoading]           = useState(true);
@@ -45,9 +46,17 @@ export const MyTeamPage: React.FC = () => {
   useEffect(() => {
     const fetchTeam = async () => {
       try {
-        const data = await teamService.getTeam(MY_TEAM_ID);
+        let data;
+        if (role === 'capitan' || role === 'admin') {
+          data = await teamService.getTeamByCaptain(userId);
+        } else {
+          const storedTeamId = localStorage.getItem('teamId');
+          if (!storedTeamId) throw new Error('no team');
+          data = await teamService.getTeam(storedTeamId);
+        }
+        setTeamId(data.id);
         setTeamData(data);
-        setRoster(data.players ?? []);
+        setRoster(data.players ?? data.members ?? []);
       } catch {
         setError('No se pudo cargar el equipo');
       } finally {
@@ -61,7 +70,7 @@ export const MyTeamPage: React.FC = () => {
     const player = roster.find(p => p.num === num);
     if (!player) return;
     try {
-      await teamService.removeMember(MY_TEAM_ID, player.num);
+      await teamService.removeMember(teamId!, player.num);
       setRoster(prev => prev.filter(p => p.num !== num));
       setConfirmDel(null);
       if (selectedPlayer?.num === num) setSelectedPlayer(null);
