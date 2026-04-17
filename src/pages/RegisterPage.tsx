@@ -107,7 +107,11 @@ export const RegisterPage: React.FC = () => {
           userType: 'PLAYER',
         });
         localStorage.setItem('token', response.token);
-        localStorage.setItem('user', JSON.stringify(response.user));
+        localStorage.setItem('user', JSON.stringify({
+          name: `${data.nombre} ${data.apellido}`,
+          email: response.email,
+          role: 'PLAYER',
+        }));
         setStep(3);
       } catch (err: any) {
         setApiError(err?.response?.data?.message ?? 'Error al registrar. Intenta de nuevo.');

@@ -31,7 +31,8 @@ const ACTIVE_TOURNAMENT_ID = 1;
 export const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const userStr = localStorage.getItem('user');
-  const user    = userStr ? JSON.parse(userStr) : { name: 'Usuario', role: 'jugador' };
+  let user = { name: 'Usuario', role: 'jugador' };
+  try { if (userStr) user = JSON.parse(userStr); } catch { /* localStorage corrupto */ }
   const role    = (user.role ?? 'jugador').toLowerCase();
   const actions = BANNER_ACTIONS[role] ?? BANNER_ACTIONS['jugador'];
 
