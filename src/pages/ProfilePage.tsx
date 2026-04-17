@@ -28,6 +28,7 @@ export const ProfilePage: React.FC = () => {
   const [posSecundaria, setPosSecundaria] = useState<Posicion | ''>('');
   const [dorsal, setDorsal]             = useState('');
   const [semester, setSemester]         = useState('');
+  const [available, setAvailable]       = useState(false);
   const [saved, setSaved]               = useState(false);
   const [loading, setLoading]           = useState(false);
   const [error, setError]               = useState<string | null>(null);
@@ -43,6 +44,7 @@ export const ProfilePage: React.FC = () => {
         if (p.secondaryPosition) setPosSecundaria(ENUM_TO_POS[p.secondaryPosition] ?? '');
         if (p.jerseyNumber)      setDorsal(String(p.jerseyNumber));
         if (p.semester)          setSemester(String(p.semester));
+        if (p.available !== undefined) setAvailable(p.available);
       })
       .catch(() => {}); // 404 es normal si todavía no tiene perfil
   }, [userId]);
@@ -61,7 +63,7 @@ export const ProfilePage: React.FC = () => {
         primaryPosition:   POS_TO_ENUM[posPrincipal],
         secondaryPosition: posSecundaria ? POS_TO_ENUM[posSecundaria] : null,
         jerseyNumber:      Number(dorsal) || 0,
-        available:         true,
+        available,
         semester:          semester ? Number(semester) : null,
       });
       setSaved(true);
@@ -206,6 +208,23 @@ export const ProfilePage: React.FC = () => {
                   </div>
                   <span className={styles.hint}>Del 1 al 10</span>
                 </div>
+              </div>
+
+              <div className={styles.field}>
+                <label className={styles.label}>Disponibilidad</label>
+                <button
+                  type="button"
+                  className={available ? styles.availableOn : styles.availableOff}
+                  onClick={() => setAvailable(v => !v)}
+                >
+                  <span className={styles.availableDot} />
+                  {available ? 'Disponible para equipos' : 'No disponible'}
+                </button>
+                <span className={styles.hint}>
+                  {available
+                    ? 'Los capitanes pueden encontrarte y enviarte invitaciones'
+                    : 'No aparecerás en búsquedas de capitanes'}
+                </span>
               </div>
 
               {error && <div className={styles.errorMsg}>{error}</div>}
