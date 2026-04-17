@@ -11,8 +11,8 @@ export const teamService = {
     return response.data;
   },
 
-  async createTeam(data: Record<string, unknown>) {
-    const response = await apiClient.post('/api/teams', data);
+  async createTeam(captainId: number | string, data: Record<string, unknown>) {
+    const response = await apiClient.post('/api/teams', data, { params: { captainId } });
     return response.data;
   },
 
