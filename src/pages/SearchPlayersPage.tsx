@@ -111,7 +111,7 @@ export const SearchPlayersPage: React.FC = () => {
   };
 
   const handleClear = () => {
-    setSearch(''); setPosFilter([]); setGenero('All');
+    setSearch(''); setPosFilter([]);
     setSearchError(''); setPage(1);
   };
 
@@ -146,7 +146,6 @@ export const SearchPlayersPage: React.FC = () => {
             <strong>{filtered.length}</strong> jugadores encontrados &nbsp;·&nbsp; <strong>{available}</strong> disponibles
           </p>
           <div className={styles.sortRow}>
-            <span className={styles.sortLabel}>ℹ️ Hasta 5 invitaciones por día</span>
             <div className={styles.sortSelect}>
               <span className={styles.sortText}>Ordenar:</span>
               <select className={styles.select} value={sortBy} onChange={e => { setSortBy(e.target.value); setPage(1); }}>
